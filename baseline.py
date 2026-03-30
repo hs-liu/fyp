@@ -69,7 +69,7 @@ def evaluate_model(model_fn, questions, model_name="model"):
         if is_correct:
             correct += 1
 
-        results.append({
+        res.append({
             "id": i, 
             "question": sample["question"],
             "ground_truth": ground_truth,
@@ -79,7 +79,7 @@ def evaluate_model(model_fn, questions, model_name="model"):
 
     accuracy = correct / total if total > 0 else 0
     print(f"{model_name} Accuracy: {accuracy:.2%}")
-    return results, accuracy
+    return res, accuracy
 
 
 # In[4]:
@@ -98,8 +98,8 @@ print("GPU memory:", torch.cuda.get_device_properties(0).total_memory / 1e9, "GB
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 model_id = "BioMistral/BioMistral-7B"
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch.float16)
+tokenizer = AutoTokenizer.from_pretrained(model_id, token='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')
+model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch.float16, token='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')
 pipe = pipeline(
     "text-generation",
     model=model,
