@@ -1,0 +1,10 @@
+.env
+corpus/textbooks/
+logs/
+venv/
+models/
+lib/
+__pycache__/
+graphs/
+data/
+archive/

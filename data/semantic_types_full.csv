@@ -1,0 +1,128 @@
+tui,name,treeNumber,definition,group_abbr,group_name
+T001,Organism,A1.1,"Generally, a living individual, including all plants and animals.",LIVB,Living Beings
+T002,Plant,A1.1.3.3,"An organism having cellulose cell walls, growing by synthesis of inorganic substances, generally distinguished by the presence of chlorophyll, and lacking the power of locomotion. Plant parts are included here as well.",LIVB,Living Beings
+T004,Fungus,A1.1.3.2,"A eukaryotic organism characterized by the absence of chlorophyll and the presence of a rigid cell wall. Included here are both slime molds and true fungi such as yeasts, molds, mildews, and mushrooms.",LIVB,Living Beings
+T005,Virus,A1.1.4,An organism consisting of a core of a single nucleic acid enclosed in a protective coat of protein. A virus may replicate only inside a host living cell. A virus exhibits some but not all of the usual characteristics of living things.,LIVB,Living Beings
+T007,Bacterium,A1.1.2,"A small, typically one-celled, prokaryotic micro-organism.",LIVB,Living Beings
+T008,Animal,A1.1.3.1,"An organism with eukaryotic cells, and lacking stiff cell walls, plastids and photosynthetic pigments.",LIVB,Living Beings
+T010,Vertebrate,A1.1.3.1.1,An animal which has a spinal column.,LIVB,Living Beings
+T011,Amphibian,A1.1.3.1.1.1,"A cold-blooded, smooth-skinned vertebrate which characteristically hatches as an aquatic larva, breathing by gills. When mature, the amphibian breathes with lungs.",LIVB,Living Beings
+T012,Bird,A1.1.3.1.1.2,A vertebrate having a constant body temperature and characterized by the presence of feathers.,LIVB,Living Beings
+T013,Fish,A1.1.3.1.1.3,"A cold-blooded aquatic vertebrate characterized by fins and breathing by gills. Included here are fishes having either a bony skeleton, such as a perch, or a cartilaginous skeleton, such as a shark, or those lacking a jaw, such as a lamprey or hagfish.",LIVB,Living Beings
+T014,Reptile,A1.1.3.1.1.5,A cold-blooded vertebrate having an external covering of scales or horny plates. Reptiles breathe by means of lungs and are generally egg-laying.,LIVB,Living Beings
+T015,Mammal,A1.1.3.1.1.4,"A vertebrate having a constant body temperature and characterized by the presence of hair, mammary glands and sweat glands.",LIVB,Living Beings
+T016,Human,A1.1.3.1.1.4.1,"Modern man, the only remaining species of the Homo genus.",LIVB,Living Beings
+T017,Anatomical Structure,A1.2,A normal or pathological part of the anatomy or structural organization of an organism.,ANAT,Anatomy
+T018,Embryonic Structure,A1.2.1,"An anatomical structure that exists only before the organism is fully formed; in mammals, for example, a structure that exists only prior to the birth of the organism. This structure may be normal or abnormal.",ANAT,Anatomy
+T019,Congenital Abnormality,A1.2.2.1,"An abnormal structure, or one that is abnormal in size or location, present at birth or evolving over time as a result of a defect in embryogenesis.",DISO,Disorders
+T020,Acquired Abnormality,A1.2.2.2,"An abnormal structure, or one that is abnormal in size or location, found in or deriving from a previously normal structure. Acquired abnormalities are distinguished from diseases even though they may result in pathological functioning (e.g., ""hernias incarcerate"").",DISO,Disorders
+T021,Fully Formed Anatomical Structure,A1.2.3,"An anatomical structure in a fully formed organism; in mammals, for example, a structure in the body after the birth of the organism.",ANAT,Anatomy
+T022,Body System,A2.1.4.1,A complex of anatomical structures that performs a common function.,ANAT,Anatomy
+T023,"Body Part, Organ, or Organ Component",A1.2.3.1,A collection of cells and tissues which are localized to a specific area or combine and carry out one or more specialized functions of an organism. This ranges from gross structures to small components of complex organs. These structures are relatively localized in comparison to tissues.,ANAT,Anatomy
+T024,Tissue,A1.2.3.2,"An aggregation of similarly specialized cells and the associated intercellular substance. Tissues are relatively non-localized in comparison to body parts, organs or organ components.",ANAT,Anatomy
+T025,Cell,A1.2.3.3,The fundamental structural and functional unit of living organisms.,ANAT,Anatomy
+T026,Cell Component,A1.2.3.4,"A part of a cell or the intercellular matrix, generally visible by light microscopy.",ANAT,Anatomy
+T028,Gene or Genome,A1.2.3.5,"A specific sequence, or in the case of the genome the complete sequence, of nucleotides along a molecule of DNA or RNA (in the case of some viruses) which represent the functional units of heredity.",GENE,Genes & Molecular Sequences
+T029,Body Location or Region,A2.1.5.2,"An area, subdivision, or region of the body demarcated for the purpose of topographical description.",ANAT,Anatomy
+T030,Body Space or Junction,A2.1.5.1,An area enclosed or surrounded by body parts or organs or the place where two anatomical structures meet or connect.,ANAT,Anatomy
+T031,Body Substance,A1.4.2,"Extracellular material, or mixtures of cells and extracellular material, produced, excreted, or accreted by the body. Included here are substances such as saliva, dental enamel, sweat, and gastric acid.",ANAT,Anatomy
+T032,Organism Attribute,A2.3,A property of the organism or its major parts.,PHYS,Physiology
+T033,Finding,A2.2,"That which is discovered by direct observation or measurement of an organism attribute or condition, including the clinical history of the patient. The history of the presence of a disease is a 'Finding' and is distinguished from the disease itself.",DISO,Disorders
+T034,Laboratory or Test Result,A2.2.1,"The outcome of a specific test to measure an attribute or to determine the presence, absence, or degree of a condition.",PHEN,Phenomena
+T037,Injury or Poisoning,B2.3,"A traumatic wound, injury, or poisoning caused by an external agent or force.",DISO,Disorders
+T038,Biologic Function,B2.2.1,"A state, activity or process of the body or one of its systems or parts.",PHEN,Phenomena
+T039,Physiologic Function,B2.2.1.1,"A normal process, activity, or state of the body.",PHYS,Physiology
+T040,Organism Function,B2.2.1.1.1,"A physiologic function of the organism as a whole, of multiple organ systems, or of multiple organs or tissues.",PHYS,Physiology
+T041,Mental Process,B2.2.1.1.1.1,A physiologic function involving the mind or cognitive processing.,PHYS,Physiology
+T042,Organ or Tissue Function,B2.2.1.1.2,"A physiologic function of a particular organ, organ system, or tissue.",PHYS,Physiology
+T043,Cell Function,B2.2.1.1.3,A physiologic function inherent to cells or cell components.,PHYS,Physiology
+T044,Molecular Function,B2.2.1.1.4,A physiologic function occurring at the molecular level.,PHYS,Physiology
+T045,Genetic Function,B2.2.1.1.4.1,"Functions of or related to the maintenance, translation or expression of the genetic material.",PHYS,Physiology
+T046,Pathologic Function,B2.2.1.2,"A disordered process, activity, or state of the organism as a whole, of a body system or systems, or of multiple organs or tissues. Included here are normal responses to a negative stimulus as well as patholologic conditions or states that are less specific than a disease. Pathologic functions frequ",DISO,Disorders
+T047,Disease or Syndrome,B2.2.1.2.1,"A condition which alters or interferes with a normal process, state, or activity of an organism. It is usually characterized by the abnormal functioning of one or more of the host's systems, parts, or organs. Included here is a complex of symptoms descriptive of a disorder.",DISO,Disorders
+T048,Mental or Behavioral Dysfunction,B2.2.1.2.1.1,A clinically significant dysfunction whose major manifestation is behavioral or psychological. These dysfunctions may have identified or presumed biological etiologies or manifestations.,DISO,Disorders
+T049,Cell or Molecular Dysfunction,B2.2.1.2.2,"A pathologic function inherent to cells, parts of cells, or molecules.",DISO,Disorders
+T050,Experimental Model of Disease,B2.2.1.2.3,A representation in a non-human organism of a human disease for the purpose of research into its mechanism or treatment.,DISO,Disorders
+T051,Event,B,"A broad type for grouping activities, processes and states.",ACTI,Activities & Behaviors
+T052,Activity,B1,An operation or series of operations that an organism or machine carries out or participates in.,ACTI,Activities & Behaviors
+T053,Behavior,B1.1,Any of the psycho-social activities of humans or animals that can be observed directly by others or can be made systematically observable by the use of special strategies.,ACTI,Activities & Behaviors
+T054,Social Behavior,B1.1.1,Behavior that is a direct result or function of the interaction of humans or animals with their fellows. This includes behavior that may be considered anti-social.,ACTI,Activities & Behaviors
+T055,Individual Behavior,B1.1.2,"Behavior exhibited by a human or an animal that is not a direct result of interaction with other members of the species, but which may have an effect on others.",ACTI,Activities & Behaviors
+T056,Daily or Recreational Activity,B1.2,"An activity carried out for recreation or exercise, or as part of daily life.",ACTI,Activities & Behaviors
+T057,Occupational Activity,B1.3,An activity carried out as part of an occupation or job.,ACTI,Activities & Behaviors
+T058,Health Care Activity,B1.3.1,An activity of or relating to the practice of medicine or involving the care of patients.,PROC,Procedures
+T059,Laboratory Procedure,B1.3.1.1,"A procedure, method, or technique used to determine the composition, quantity, or concentration of a specimen, and which is carried out in a clinical laboratory. Included here are procedures which measure the times and rates of reactions.",PROC,Procedures
+T060,Diagnostic Procedure,B1.3.1.2,"A procedure, method, or technique used to determine the nature or identity of a disease or disorder. This excludes procedures which are primarily carried out on specimens in a laboratory.",PROC,Procedures
+T061,Therapeutic or Preventive Procedure,B1.3.1.3,"A procedure, method, or technique designed to prevent a disease or a disorder, or to improve physical function, or used in the process of treating a disease or injury.",PROC,Procedures
+T062,Research Activity,B1.3.2,An activity carried out as part of research or experimentation.,PROC,Procedures
+T063,Molecular Biology Research Technique,B1.3.2.1,Any of the techniques used in the study of or the directed modification of the gene complement of a living organism.,PROC,Procedures
+T064,Governmental or Regulatory Activity,B1.3.3,"An activity carried out by officially constituted governments, or an activity related to the creation or enforcement of the rules or regulations governing some field of endeavor.",ACTI,Activities & Behaviors
+T065,Educational Activity,B1.3.4,An activity related to the organization and provision of education.,PROC,Procedures
+T066,Machine Activity,B1.4,An activity carried out primarily or exclusively by machines.,ACTI,Activities & Behaviors
+T067,Phenomenon or Process,B2,A process or state which occurs naturally or as a result of an activity.,PHEN,Phenomena
+T068,Human-caused Phenomenon or Process,B2.1,A phenomenon or process that is a result of the activities of human beings.,PHEN,Phenomena
+T069,Environmental Effect of Humans,B2.1.1,A change in the natural environment that is a result of the activities of human beings.,PHEN,Phenomena
+T070,Natural Phenomenon or Process,B2.2,A phenomenon or process that occurs irrespective of the activities of human beings.,PHEN,Phenomena
+T071,Entity,A,A broad type for grouping physical and conceptual entities.,OBJC,Objects
+T072,Physical Object,A1,An object perceptible to the sense of vision or touch.,OBJC,Objects
+T073,Manufactured Object,A1.3,A physical object made by human beings.,OBJC,Objects
+T074,Medical Device,A1.3.1,"A manufactured object used primarily in the diagnosis, treatment, or prevention of physiologic or anatomic disorders.",DEVI,Devices
+T075,Research Device,A1.3.2,A manufactured object used primarily in carrying out scientific research or experimentation.,DEVI,Devices
+T077,Conceptual Entity,A2,A broad type for grouping abstract entities or concepts.,CONC,Concepts & Ideas
+T078,Idea or Concept,A2.1,"An abstract concept, such as a social, religious or philosophical concept.",CONC,Concepts & Ideas
+T079,Temporal Concept,A2.1.1,A concept which pertains to time or duration.,CONC,Concepts & Ideas
+T080,Qualitative Concept,A2.1.2,"A concept which is an assessment of some quality, rather than a direct measurement.",CONC,Concepts & Ideas
+T081,Quantitative Concept,A2.1.3,"A concept which involves the dimensions, quantity or capacity of something using some unit of measure, or which involves the quantitative comparison of entities.",CONC,Concepts & Ideas
+T082,Spatial Concept,A2.1.5,"A location, region, or space, generally having definite boundaries.",CONC,Concepts & Ideas
+T083,Geographic Area,A2.1.5.4,"A geographic location, generally having definite boundaries.",GEOG,Geographic Areas
+T085,Molecular Sequence,A2.1.5.3,"A broad type for grouping the collected sequences of amino acids, carbohydrates, and nucleotide sequences. Descriptions of these sequences are generally reported in the published literature and/or are deposited in and maintained by databanks such as GenBank, European Molecular Biology Laboratory (EM",GENE,Genes & Molecular Sequences
+T086,Nucleotide Sequence,A2.1.5.3.1,"The sequence of purines and pyrimidines in nucleic acids and polynucleotides. Included here are nucleotide-rich regions, conserved sequence, and DNA transforming region.",GENE,Genes & Molecular Sequences
+T087,Amino Acid Sequence,A2.1.5.3.2,"The sequence of amino acids as arrayed in chains, sheets, etc., within the protein molecule. It is of fundamental importance in determining protein structure.",GENE,Genes & Molecular Sequences
+T088,Carbohydrate Sequence,A2.1.5.3.3,"The sequence of carbohydrates within polysaccharides, glycoproteins, and glycolipids.",GENE,Genes & Molecular Sequences
+T089,Regulation or Law,A2.4.2,An intellectual product resulting from legislative or regulatory activity.,CONC,Concepts & Ideas
+T090,Occupation or Discipline,A2.6,"A vocation, academic discipline, or field of study, or a subpart of an occupation or discipline.",OCCU,Occupations
+T091,Biomedical Occupation or Discipline,A2.6.1,"A vocation, academic discipline, or field of study related to biomedicine.",OCCU,Occupations
+T092,Organization,A2.7,"The result of uniting for a common purpose or function. The continued existence of an organization is not dependent on any of its members, its location, or particular facility. Components or subparts of organizations are also included here. Although the names of organizations are sometimes used to r",ORGA,Organizations
+T093,Health Care Related Organization,A2.7.1,An established organization which carries out specific functions related to health care delivery or research in the life sciences.,ORGA,Organizations
+T094,Professional Society,A2.7.2,An organization uniting those who have a common vocation or who are involved with a common field of study.,ORGA,Organizations
+T095,Self-help or Relief Organization,A2.7.3,An organization whose purpose and function is to provide assistance to the needy or to offer support to those sharing similar problems.,ORGA,Organizations
+T096,Group,A2.9,A conceptual entity referring to the classification of individuals according to certain shared characteristics.,LIVB,Living Beings
+T097,Professional or Occupational Group,A2.9.1,An individual or individuals classified according to their vocation.,LIVB,Living Beings
+T098,Population Group,A2.9.2,"An indivdual or individuals classified according to their sex, racial origin, religion, common place of living, financial or social status, or some other cultural or behavioral attribute.",LIVB,Living Beings
+T099,Family Group,A2.9.3,An individual or individuals classified according to their family relationships or relative position in the family unit.,LIVB,Living Beings
+T100,Age Group,A2.9.4,An individual or individuals classified according to their age.,LIVB,Living Beings
+T101,Patient or Disabled Group,A2.9.5,"An individual or individuals classified according to a disability, disease, condition or treatment.",LIVB,Living Beings
+T102,Group Attribute,A2.8,A conceptual entity which refers to the frequency or distribution of certain characteristics or phenomena in certain groups.,CONC,Concepts & Ideas
+T103,Chemical,A1.4.1,"Compounds or substances of definite molecular composition. Chemicals are viewed from two distinct perspectives in the network, functionally and structurally. Almost every chemical concept is assigned at least two types, generally one from the structure hierarchy and at least one from the function hi",CHEM,Chemicals & Drugs
+T104,Chemical Viewed Structurally,A1.4.1.2,"A chemical or chemicals viewed from the perspective of their structural characteristics. Included here are concepts which can mean either a salt, an ion, or a compound (e.g., ""Bromates"" and ""Bromides"").",CHEM,Chemicals & Drugs
+T109,Organic Chemical,A1.4.1.2.1,"The general class of carbon-containing compounds, usually based on carbon chains or rings, and also containing hydrogen (hydrocarbons), with or without nitrogen, oxygen, or other elements in which the bonding between elements is generally covalent.",CHEM,Chemicals & Drugs
+T114,"Nucleic Acid, Nucleoside, or Nucleotide",A1.4.1.2.1.5,"A complex compound of high molecular weight occurring in living cells. These are basically of two types, ribonucleic (RNA) and deoxyribonucleic (DNA) acids. Nucleic acids are made of nucleotides (nitrogen-containing base, a 5-carbon sugar, and one or more phosphate group) linked together by a phosph",CHEM,Chemicals & Drugs
+T116,"Amino Acid, Peptide, or Protein",A1.4.1.2.1.7,Amino acids and chains of amino acids connected by peptide linkages.,CHEM,Chemicals & Drugs
+T120,Chemical Viewed Functionally,A1.4.1.1,A chemical viewed from the perspective of its functional characteristics or pharmacological activities.,CHEM,Chemicals & Drugs
+T121,Pharmacologic Substance,A1.4.1.1.1,A substance used in the treatment or prevention of pathologic disorders. This includes substances that occur naturally in the body and are administered therapeutically.,CHEM,Chemicals & Drugs
+T122,Biomedical or Dental Material,A1.4.1.1.2,"A substance used in biomedicine or dentistry predominantly for its physical, as opposed to chemical, properties. Included here are biocompatible materials, tissue adhesives, bone cements, resins, toothpastes, etc.",CHEM,Chemicals & Drugs
+T123,Biologically Active Substance,A1.4.1.1.3,"A generally endogenous substance produced or required by an organism, of primary interest because of its role in the biologic functioning of the organism that produces it.",CHEM,Chemicals & Drugs
+T125,Hormone,A1.4.1.1.3.2,"In animals, a chemical usually secreted by an endocrine gland whose products are released into the circulating fluid. Hormones act as chemical messengers and regulate various physiologic processes such as growth, reproduction, metabolism, etc. They usually fall into two broad classes, steroid hormon",CHEM,Chemicals & Drugs
+T126,Enzyme,A1.4.1.1.3.3,"A complex chemical, usually a protein, that is produced by living cells and which catalyzes specific biochemical reactions. There are six main types of enzymes: oxidoreductases, transferases, hydrolases, lyases, isomerases, and ligases.",CHEM,Chemicals & Drugs
+T127,Vitamin,A1.4.1.1.3.4,"A substance, usually an organic chemical complex, present in natural products or made synthetically, which is essential in the diet of man or other higher animals. Included here are vitamin precursors, provitamins, and vitamin supplements.",CHEM,Chemicals & Drugs
+T129,Immunologic Factor,A1.4.1.1.3.5,A biologically active substance whose activities affect or play a role in the functioning of the immune system.,CHEM,Chemicals & Drugs
+T130,"Indicator, Reagent, or Diagnostic Aid",A1.4.1.1.4,"A substance primarily of interest for its use in laboratory or diagnostic tests and procedures to detect, measure, examine, or analyze other chemicals, processes, or conditions.",CHEM,Chemicals & Drugs
+T131,Hazardous or Poisonous Substance,A1.4.1.1.5,"A substance of concern because of its potentially hazardous or toxic effects. This would include most drugs of abuse, as well as agents that require special handling because of their toxicity.",CHEM,Chemicals & Drugs
+T167,Substance,A1.4,A material with definite or fairly definite chemical composition.,OBJC,Objects
+T168,Food,A1.4.3,"Any substance generally containing nutrients, such as carbohydrates, proteins, and fats, that can be ingested by a living organism and metabolized into energy and body tissue. Some foods are naturally occurring, others are either partially or entirely made by humans.",OBJC,Objects
+T169,Functional Concept,A2.1.4,A concept which is of interest because it pertains to the carrying out of a process or activity.,CONC,Concepts & Ideas
+T170,Intellectual Product,A2.4,A conceptual entity resulting from human endeavor. Concepts assigned to this type generally refer to information created by humans for some purpose.,CONC,Concepts & Ideas
+T171,Language,A2.5,The system of communication used by a particular nation or people.,CONC,Concepts & Ideas
+T184,Sign or Symptom,A2.2.2,"An observable manifestation of a disease or condition based on clinical judgment, or a manifestation of a disease or condition which is experienced by the patient and reported as a subjective observation.",DISO,Disorders
+T185,Classification,A2.4.1,A term or system of terms denoting an arrangement by class or category.,CONC,Concepts & Ideas
+T190,Anatomical Abnormality,A1.2.2,"An abnormal structure, or one that is abnormal in size or location.",DISO,Disorders
+T191,Neoplastic Process,B2.2.1.2.1.2,A new and abnormal growth of tissue in which the growth is uncontrolled and progressive. The growths may be malignant or benign.,DISO,Disorders
+T192,Receptor,A1.4.1.1.3.6,"A specific structure or site on the cell surface or within its cytoplasm that recognizes and binds with other specific molecules. These include the proteins on the surface of an immunocompetent cell that binds with antigens, or proteins found on the surface molecules that bind with hormones or neuro",CHEM,Chemicals & Drugs
+T194,Archaeon,A1.1.1,"A member of one of the three domains of life, formerly called Archaebacteria under the taxon Bacteria, but now considered separate and distinct. Archaea are characterized by: 1) the presence of characteristic tRNAs and ribosomal RNAs; 2) the absence of peptidoglycan cell walls; 3) the presence of et",LIVB,Living Beings
+T195,Antibiotic,A1.4.1.1.1.1,A pharmacologically active compound produced by growing microorganisms which kill or inhibit growth of other microorganisms.,CHEM,Chemicals & Drugs
+T196,"Element, Ion, or Isotope",A1.4.1.2.3,"One of the 109 presently known fundamental substances that comprise all matter at and above the atomic level. This includes elemental metals, rare gases, and most abundant naturally occurring radioactive elements, as well as the ionic counterparts of elements (NA+, Cl-), and the less abundant isotop",CHEM,Chemicals & Drugs
+T197,Inorganic Chemical,A1.4.1.2.2,"Chemical elements and their compounds, excluding the hydrocarbons and their derivatives (except carbides, carbonates, cyanides, cyanates and carbon disulfide). Generally inorganic compounds contain ionic bonds. Included here are inorganic acids and salts, alloys, alkalies, and minerals.",CHEM,Chemicals & Drugs
+T200,Clinical Drug,A1.3.3,"A pharmaceutical preparation as produced by the manufacturer. The name usually includes the substance, its strength, and the form, but may include the substance and only one of the other two items.",CHEM,Chemicals & Drugs
+T201,Clinical Attribute,A2.3.1,An observable or measurable property or state of an organism of clinical interest.,PHYS,Physiology
+T203,Drug Delivery Device,A1.3.1.1,A medical device that contains a clinical drug or drugs.,DEVI,Devices
+T204,Eukaryote,A1.1.3,"One of the three domains of life (the others being Bacteria and Archaea), also called Eukarya. These are organisms whose cells are enclosed in membranes and possess a nucleus. They comprise almost all multicellular and many unicellular organisms, and are traditionally divided into groups (sometimes ",LIVB,Living Beings

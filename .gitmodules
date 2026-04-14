@@ -1,0 +1,6 @@
+[submodule "corpus/textbooks"]
+	path = corpus/textbooks
+	url = https://github.com/gzxiong/MedRAG
+[submodule "MedRAG"]
+	path = MedRAG
+	url = https://github.com/gzxiong/MedRAG
