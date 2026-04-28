@@ -8,7 +8,6 @@
 #SBATCH --time=02:00:00 
 
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
-export GEMINI_API_KEY=$(cat /vol/bitbucket/hl2622/.secrets/gemini_key)
-export GROQ_API_KEY=$(cat /vol/bitbucket/hl2622/.secrets/groq_api_key)
+export HF_TOKEN=$(cat /vol/bitbucket/hl2622/.secrets/hf_token)
 cd /vol/bitbucket/hl2622/fyp
 python scripts/evaluate_baseline_llama.py
