@@ -27,13 +27,12 @@ print("\nLoading dataset...")
 dataset = datasets.load_dataset("bigbio/med_qa", "med_qa_en_source", trust_remote_code=True)
 test_ds = list(dataset["test"])[:N_TEST]
 
-BIOMISTRAL_ID = "BioMistral/BioMistral-7B"
-bm_tokenizer = AutoTokenizer.from_pretrained(BIOMISTRAL_ID, token=HF_TOKEN)
+BIOMISTRAL_PATH = "/vol/bitbucket/hl2622/fyp/models/biomistral-7b"
+bm_tokenizer = AutoTokenizer.from_pretrained(BIOMISTRAL_PATH)
 bm_model = AutoModelForCausalLM.from_pretrained(
-    BIOMISTRAL_ID,
-    device_map="auto",
-    torch_dtype=torch.float16,
-    token=HF_TOKEN,
+    BIOMISTRAL_PATH,
+    device_map="cuda:0",
+    dtype=torch.float16,
 )
 
 def biomistral_fn(sample):
@@ -68,6 +67,7 @@ def biomistral_fn(sample):
 evaluate_model(
     biomistral_fn,
     test_ds,
-    model_name="BioMistral-7B (no RAG)",
-    save_path=f"{RESULTS_DIR}/results_biomistral.csv",
+    model_name="BioMistral-7B",
+    save_path=f"{RESULTS_DIR}/results_local_biomistral.csv",
+    summary_path=f"{RESULTS_DIR}/local_model_summary.txt"
 )

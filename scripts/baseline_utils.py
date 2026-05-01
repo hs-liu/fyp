@@ -1,4 +1,6 @@
-import re 
+import re
+
+import pandas as pd 
 
 def format_question(sample):
     """Format a MedQA sample into a plain-text prompt."""
@@ -6,7 +8,7 @@ def format_question(sample):
     [f"{opt['key']}. {opt['value']}" for opt in sample["options"]]
     )
     return (
-        "The following are multiple choice questions about medicine.\n\n"
+        "You are a medical expert. Answer each question with only the letter of the correct answer (A, B, C, D, or E). Do not explain.\n\n"
         
         "Question: A 45-year-old man presents with chest pain. "
         "Which enzyme is most specific for myocardial infarction?\n"
@@ -38,7 +40,7 @@ def parse_answer(ans):
     match = re.search(r'\b([A-E])\b', ans.strip().upper())
     return match.group(1) if match else "UNKNOWN"
 
-def evaluate_model(model_fn, questions, model_name="model", save_path=None):
+def evaluate_model(model_fn, questions, model_name="model", save_path=None, summary_path=None):
     """
     Evaluate a model function over a list of MedQA samples.
 
@@ -46,6 +48,7 @@ def evaluate_model(model_fn, questions, model_name="model", save_path=None):
     questions : list of dataset samples
     model_name : label for logging
     save_path : if provided, saves CSV of results here
+    summary_path : if provided, saves summary of results here
     """
     total = len(questions)
     correct = 0
@@ -87,6 +90,11 @@ def evaluate_model(model_fn, questions, model_name="model", save_path=None):
     if save_path:
         pd.DataFrame(results).to_csv(save_path, index=False)
         print(f" Results saved → {save_path}")
+    
+    if summary_path:
+        with open(summary_path, "a") as f:
+            f.write(f"{model_name} Accuracy: {accuracy:.2%} ({correct}/{total})\n")
+        print(f" Accuracy saved → {summary_path}")
 
     return results, accuracy
 
