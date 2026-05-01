@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --job-name=medrag_groq
+#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/baselines/medrag_groq_%j.log
+#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/baselines/medrag_groq_%j.err
+#SBATCH --partition=a30
+#SBATCH --gres=gpu:1
+#SBATCH --mem=80G
+#SBATCH --cpus-per-task=8
+#SBATCH --time=08:00:00
+
+source /vol/bitbucket/hl2622/fyp_venv/bin/activate
+export HF_TOKEN=$(cat /vol/bitbucket/hl2622/.secrets/hf_token)
+export HF_HOME=/vol/bitbucket/hl2622/.cache/huggingface
+export XET_HOME=/vol/bitbucket/hl2622/xet_cache
+export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache/datasets
+export GROQ_API_KEY=$(cat /vol/bitbucket/hl2622/.secrets/groq_api_key)
+cd /vol/bitbucket/hl2622/fyp
+python scripts/evaluate_baseline_groq_medrag.py
