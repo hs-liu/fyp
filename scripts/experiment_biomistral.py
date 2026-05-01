@@ -15,7 +15,7 @@ load_dotenv()
 N_TEST          = 200
 MAX_CHUNK_CHARS = 400
 RESULTS_DIR     = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag_v5.4.csv"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag_v5_6.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
@@ -65,7 +65,7 @@ def biomistral_rag_fn(sample):
         domain     = result["domain"]
         route      = result["source_route"]
 
-        if confidence > 0.40:
+        """ if confidence > 0.60:
             parts = []
             # top-2 textbook, no reranking
             for _, row in result["l2_chunks"].head(2).iterrows():
@@ -76,7 +76,15 @@ def biomistral_rag_fn(sample):
                 parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
             context = "\n\n".join(parts)
         else:
-            context = ""
+            context = "" """
+        parts = []
+        # top-2 textbook, no reranking
+        for _, row in result["l2_chunks"].head(2).iterrows():
+            parts.append(f"[Textbook] {row['content'][:400]}")
+        # top-1 pubmed only if score high enough
+        l3 = result["l3_chunks"]
+        parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
+        context = "\n\n".join(parts)
 
     except Exception as e:
         print(f"  [RETRIEVAL ERROR] {e}")
@@ -153,5 +161,5 @@ n_correct = sum(r["is_correct"] for r in results)
 accuracy  = n_correct / len(results) if results else 0
 print(f"\nFinal accuracy: {accuracy:.2%} ({n_correct}/{len(results)})")
 with open(SUMMARY_PATH, "a") as f:
-    f.write(f"BioMistral-7B (My RAG v5, 0.40, 0.80) Accuracy: {accuracy:.2%} ({n_correct}/{len(results)})\n")
+    f.write(f"BioMistral-7B (My RAG v5, remove confidence) Accuracy: {accuracy:.2%} ({n_correct}/{len(results)})\n")
 print(f"Results saved → {CHECKPOINT_PATH}")

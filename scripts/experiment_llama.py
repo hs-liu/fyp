@@ -12,7 +12,7 @@ import retrieval_pipeline as R
 N_TEST          = 200
 MAX_CHUNK_CHARS = 400
 RESULTS_DIR     = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_myrag_v3_no_rerank.csv"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_myrag_v4.csv"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/llama-3.1-8b"
@@ -77,18 +77,15 @@ def infer(sample) -> tuple:
         domain     = result["domain"]
         route      = result["source_route"]
 
-        if confidence > 0.55:
-            parts = []
-            # top-2 textbook, no reranking
-            for _, row in result["l2_chunks"].head(2).iterrows():
-                parts.append(f"[Textbook] {row['content'][:400]}")
-            # top-1 pubmed only if score high enough
-            l3 = result["l3_chunks"]
-            if len(l3) > 0 and l3.iloc[0]["score"] > 0.80:
-                parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
-            context = "\n\n".join(parts)
-        else:
-            context = ""
+        parts = []
+        # top-2 textbook, no reranking
+        for _, row in result["l2_chunks"].head(2).iterrows():
+            parts.append(f"[Textbook] {row['content'][:400]}")
+        # top-1 pubmed only if score high enough
+        l3 = result["l3_chunks"]
+        if len(l3) > 0 and l3.iloc[0]["score"] > 0.80:
+            parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
+        context = "\n\n".join(parts)
 
     except Exception as e:
         print(f"  [ERROR] {e}")
@@ -144,4 +141,4 @@ pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
 with open(f"{RESULTS_DIR}/local_model_summary.txt", "a") as f:
-    f.write(f"Llama-3.1-8B (My RAG v3, no reranking) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
+    f.write(f"Llama-3.1-8B (My RAG v4, no confidence) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
