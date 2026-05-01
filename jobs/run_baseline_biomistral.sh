@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=medqa_biomistral
-#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/biomistral_%j.log
-#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/biomistral_%j.err
+#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/baseline_biomistral_%j.log
+#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/baseline_biomistral_%j.err
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
@@ -10,8 +10,8 @@
 
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export HF_HOME=/vol/bitbucket/hl2622/huggingface_cache
-export TRANSFORMERS_CACHE=/vol/bitbucket/hl2622/huggingface_cache
 export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache
+export XET_HOME=/vol/bitbucket/hl2622/xet_cache
 export HF_TOKEN=$(cat /vol/bitbucket/hl2622/.secrets/hf_token)
 
 cd /vol/bitbucket/hl2622/fyp
