@@ -12,7 +12,7 @@ import retrieval_pipeline as R
 N_TEST          = 200
 MAX_CHUNK_CHARS = 400
 RESULTS_DIR     = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_myrag_v2.csv"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_myrag_v3_no_rerank.csv"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/llama-3.1-8b"
@@ -42,7 +42,7 @@ if os.path.exists(CHECKPOINT_PATH):
     checkpoint_results = done_df.to_dict("records")
     print(f"Resuming — {len(done_indices)}/{N_TEST} already done.")
 
-def rerank_chunks(chunks_df, query: str, top_k: int = 1):
+""" def rerank_chunks(chunks_df, query: str, top_k: int = 1):
     query_words = set(query.lower().split())
     scores = []
     for _, row in chunks_df.iterrows():
@@ -51,7 +51,7 @@ def rerank_chunks(chunks_df, query: str, top_k: int = 1):
         scores.append(row["score"] * 0.7 + overlap * 0.3)
     chunks_df = chunks_df.copy()
     chunks_df["rerank_score"] = scores
-    return chunks_df.nlargest(top_k, "rerank_score")
+    return chunks_df.nlargest(top_k, "rerank_score") """
 
 def call_local(prompt: str) -> str:
     messages = [{"role": "user", "content": prompt}]
@@ -78,13 +78,14 @@ def infer(sample) -> tuple:
         route      = result["source_route"]
 
         if confidence > 0.55:
-            l2 = rerank_chunks(result["l2_chunks"], sample["question"], top_k=1)
-            l3 = rerank_chunks(result["l3_chunks"], sample["question"], top_k=1)
             parts = []
-            if len(l2) > 0:
-                parts.append(l2.iloc[0]["content"][:MAX_CHUNK_CHARS])
-            if len(l3) > 0:
-                parts.append(l3.iloc[0]["content"][:MAX_CHUNK_CHARS])
+            # top-2 textbook, no reranking
+            for _, row in result["l2_chunks"].head(2).iterrows():
+                parts.append(f"[Textbook] {row['content'][:400]}")
+            # top-1 pubmed only if score high enough
+            l3 = result["l3_chunks"]
+            if len(l3) > 0 and l3.iloc[0]["score"] > 0.80:
+                parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
             context = "\n\n".join(parts)
         else:
             context = ""
@@ -143,4 +144,4 @@ pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
 with open(f"{RESULTS_DIR}/local_model_summary.txt", "a") as f:
-    f.write(f"Llama-3.1-8B (My RAG v2) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
+    f.write(f"Llama-3.1-8B (My RAG v3, no reranking) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
