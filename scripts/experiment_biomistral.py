@@ -15,7 +15,7 @@ load_dotenv()
 N_TEST          = 200
 MAX_CHUNK_CHARS = 400
 RESULTS_DIR     = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag_v3.csv"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag_v5.4.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
@@ -47,7 +47,7 @@ if os.path.exists(CHECKPOINT_PATH):
     checkpoint_results = done_df.to_dict("records")
     print(f"Resuming — {len(done_indices)}/{N_TEST} already done.")
 
-def rerank_chunks(chunks_df, query: str, top_k: int = 1):
+""" def rerank_chunks(chunks_df, query: str, top_k: int = 1):
     query_words = set(query.lower().split())
     scores = []
     for _, row in chunks_df.iterrows():
@@ -56,7 +56,7 @@ def rerank_chunks(chunks_df, query: str, top_k: int = 1):
         scores.append(row["score"] * 0.7 + overlap * 0.3)
     chunks_df = chunks_df.copy()
     chunks_df["rerank_score"] = scores
-    return chunks_df.nlargest(top_k, "rerank_score")
+    return chunks_df.nlargest(top_k, "rerank_score") """
 
 def biomistral_rag_fn(sample):
     try:
@@ -65,19 +65,15 @@ def biomistral_rag_fn(sample):
         domain     = result["domain"]
         route      = result["source_route"]
 
-        if confidence > 0.55:
-            l2 = rerank_chunks(result["l2_chunks"], sample["question"], top_k=2)
-            l3 = rerank_chunks(result["l3_chunks"], sample["question"], top_k=1)
-            
+        if confidence > 0.40:
             parts = []
-            # Always include textbook (primary)
-            for _, row in l2.iterrows():
+            # top-2 textbook, no reranking
+            for _, row in result["l2_chunks"].head(2).iterrows():
                 parts.append(f"[Textbook] {row['content'][:400]}")
-            
-            # Only include PubMed if it scores highly enough (strong relevance)
-            if len(l3) > 0 and l3.iloc[0]["rerank_score"] > 0.85:
+            # top-1 pubmed only if score high enough
+            l3 = result["l3_chunks"]
+            if len(l3) > 0 and l3.iloc[0]["score"] > 0.80:
                 parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
-            
             context = "\n\n".join(parts)
         else:
             context = ""
@@ -157,5 +153,5 @@ n_correct = sum(r["is_correct"] for r in results)
 accuracy  = n_correct / len(results) if results else 0
 print(f"\nFinal accuracy: {accuracy:.2%} ({n_correct}/{len(results)})")
 with open(SUMMARY_PATH, "a") as f:
-    f.write(f"BioMistral-7B (My RAG v3) Accuracy: {accuracy:.2%} ({n_correct}/{len(results)})\n")
+    f.write(f"BioMistral-7B (My RAG v5, 0.40, 0.80) Accuracy: {accuracy:.2%} ({n_correct}/{len(results)})\n")
 print(f"Results saved → {CHECKPOINT_PATH}")
