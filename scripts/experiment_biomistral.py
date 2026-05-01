@@ -12,10 +12,10 @@ import retrieval_pipeline as R
 
 load_dotenv()
 
-N_TEST        = 200
-MAX_CTX_CHARS = 1800
-RESULTS_DIR   = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag.csv"
+N_TEST          = 200
+MAX_CHUNK_CHARS = 400
+RESULTS_DIR     = "./results"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag_v3.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
@@ -47,12 +47,41 @@ if os.path.exists(CHECKPOINT_PATH):
     checkpoint_results = done_df.to_dict("records")
     print(f"Resuming — {len(done_indices)}/{N_TEST} already done.")
 
+def rerank_chunks(chunks_df, query: str, top_k: int = 1):
+    query_words = set(query.lower().split())
+    scores = []
+    for _, row in chunks_df.iterrows():
+        content_words = set(row["content"].lower().split())
+        overlap = len(query_words & content_words) / (len(query_words) + 1)
+        scores.append(row["score"] * 0.7 + overlap * 0.3)
+    chunks_df = chunks_df.copy()
+    chunks_df["rerank_score"] = scores
+    return chunks_df.nlargest(top_k, "rerank_score")
+
 def biomistral_rag_fn(sample):
     try:
-        result  = R.hierarchical_retrieve(sample["question"], encoder)
-        context = "\n\n".join(result["l2_chunks"].head(2)["content"].tolist())
-        domain  = result["domain"]
-        route   = result["source_route"]
+        result     = R.hierarchical_retrieve(sample["question"], encoder)
+        confidence = result["confidence"]
+        domain     = result["domain"]
+        route      = result["source_route"]
+
+        if confidence > 0.55:
+            l2 = rerank_chunks(result["l2_chunks"], sample["question"], top_k=2)
+            l3 = rerank_chunks(result["l3_chunks"], sample["question"], top_k=1)
+            
+            parts = []
+            # Always include textbook (primary)
+            for _, row in l2.iterrows():
+                parts.append(f"[Textbook] {row['content'][:400]}")
+            
+            # Only include PubMed if it scores highly enough (strong relevance)
+            if len(l3) > 0 and l3.iloc[0]["rerank_score"] > 0.85:
+                parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
+            
+            context = "\n\n".join(parts)
+        else:
+            context = ""
+
     except Exception as e:
         print(f"  [RETRIEVAL ERROR] {e}")
         context, domain, route = "", "", ""
@@ -62,7 +91,7 @@ def biomistral_rag_fn(sample):
         prompt = (
             "You are a medical expert. Use the reference passages below to answer "
             "the question. Reply with ONLY the single letter of the correct answer.\n\n"
-            f"### Reference passages\n{context[:MAX_CTX_CHARS]}\n\n"
+            f"### Reference passages\n{context}\n\n"
             f"### Question\n{base_prompt}"
         )
     else:
@@ -128,5 +157,5 @@ n_correct = sum(r["is_correct"] for r in results)
 accuracy  = n_correct / len(results) if results else 0
 print(f"\nFinal accuracy: {accuracy:.2%} ({n_correct}/{len(results)})")
 with open(SUMMARY_PATH, "a") as f:
-    f.write(f"BioMistral-7B (My RAG) Accuracy v2: {accuracy:.2%} ({n_correct}/{len(results)})\n")
+    f.write(f"BioMistral-7B (My RAG v3) Accuracy: {accuracy:.2%} ({n_correct}/{len(results)})\n")
 print(f"Results saved → {CHECKPOINT_PATH}")

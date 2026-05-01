@@ -10,9 +10,9 @@ from sentence_transformers import SentenceTransformer
 import retrieval_pipeline as R
 
 N_TEST          = 200
-MAX_CTX_CHARS   = 1800
+MAX_CHUNK_CHARS = 400
 RESULTS_DIR     = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_myrag.csv"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_myrag_v2.csv"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/llama-3.1-8b"
@@ -42,24 +42,23 @@ if os.path.exists(CHECKPOINT_PATH):
     checkpoint_results = done_df.to_dict("records")
     print(f"Resuming — {len(done_indices)}/{N_TEST} already done.")
 
-def build_prompt(sample, context: str) -> str:
-    base = format_question(sample)
-    return (
-        "You are a medical expert. Use the reference passages below to answer "
-        "the question. Reply with ONLY the single letter of the correct answer.\n\n"
-        f"### Reference passages\n{context[:MAX_CTX_CHARS]}\n\n"
-        f"### Question\n{base}"
-    )
+def rerank_chunks(chunks_df, query: str, top_k: int = 1):
+    query_words = set(query.lower().split())
+    scores = []
+    for _, row in chunks_df.iterrows():
+        content_words = set(row["content"].lower().split())
+        overlap = len(query_words & content_words) / (len(query_words) + 1)
+        scores.append(row["score"] * 0.7 + overlap * 0.3)
+    chunks_df = chunks_df.copy()
+    chunks_df["rerank_score"] = scores
+    return chunks_df.nlargest(top_k, "rerank_score")
 
 def call_local(prompt: str) -> str:
     messages = [{"role": "user", "content": prompt}]
     input_ids = tokenizer.apply_chat_template(
-        messages,
-        add_generation_prompt=True,
-        return_tensors="pt"
+        messages, add_generation_prompt=True, return_tensors="pt"
     ).to(model.device)
     attention_mask = torch.ones_like(input_ids)
-
     with torch.no_grad():
         output = model.generate(
             input_ids,
@@ -73,14 +72,43 @@ def call_local(prompt: str) -> str:
 
 def infer(sample) -> tuple:
     try:
-        result  = R.hierarchical_retrieve(sample["question"], encoder)
-        # textbook only, top 2 chunks, truncated
-        context = "\n\n".join(result["l2_chunks"].head(2)["content"].tolist())
-        prompt  = build_prompt(sample, context)
-        return call_local(prompt), result["domain"], result["source_route"]
+        result     = R.hierarchical_retrieve(sample["question"], encoder)
+        confidence = result["confidence"]
+        domain     = result["domain"]
+        route      = result["source_route"]
+
+        if confidence > 0.55:
+            l2 = rerank_chunks(result["l2_chunks"], sample["question"], top_k=1)
+            l3 = rerank_chunks(result["l3_chunks"], sample["question"], top_k=1)
+            parts = []
+            if len(l2) > 0:
+                parts.append(l2.iloc[0]["content"][:MAX_CHUNK_CHARS])
+            if len(l3) > 0:
+                parts.append(l3.iloc[0]["content"][:MAX_CHUNK_CHARS])
+            context = "\n\n".join(parts)
+        else:
+            context = ""
+
     except Exception as e:
         print(f"  [ERROR] {e}")
-        return "", "", ""
+        context, domain, route = "", "", ""
+
+    base_prompt = format_question(sample)
+    if context:
+        prompt = (
+            "You are a medical expert. Use the reference passages below to answer "
+            "the question. Reply with ONLY the single letter of the correct answer.\n\n"
+            f"### Reference passages\n{context}\n\n"
+            f"### Question\n{base_prompt}"
+        )
+    else:
+        prompt = base_prompt
+
+    try:
+        return call_local(prompt), domain, route
+    except Exception as e:
+        print(f"  [ERROR] {e}")
+        return "", domain, route
 
 # main
 remaining = [(i, s) for i, s in enumerate(test_ds) if i not in done_indices]
@@ -115,4 +143,4 @@ pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
 with open(f"{RESULTS_DIR}/local_model_summary.txt", "a") as f:
-    f.write(f"Llama-3.1-8B (My RAG) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
+    f.write(f"Llama-3.1-8B (My RAG v2) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
