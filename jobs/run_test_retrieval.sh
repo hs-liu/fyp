@@ -11,4 +11,4 @@
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export HF_HOME=/vol/bitbucket/hl2622/huggingface_cache
 cd /vol/bitbucket/hl2622/fyp
-python scripts/test_retrieval.py
+python scripts/rag/test_retrieval.py

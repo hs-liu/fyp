@@ -11,4 +11,4 @@ source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export UMLS_API_KEY=$(cat /vol/bitbucket/hl2622/.secrets/umls_api_key)
 
 cd /vol/bitbucket/hl2622/fyp
-python scripts/new_filtered_graph.py
+python scripts/knowledge_graph/new_filtered_graph.py

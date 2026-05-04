@@ -10,4 +10,4 @@
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export GROQ_API_KEY=$(cat /vol/bitbucket/hl2622/.secrets/groq_api_key)
 cd /vol/bitbucket/hl2622/fyp
-python scripts/evaluate_baseline_rag.py
+python scripts/baselines/evaluate_baseline_rag.py

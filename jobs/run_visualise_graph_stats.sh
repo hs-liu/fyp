@@ -10,4 +10,4 @@
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 
 cd /vol/bitbucket/hl2622/fyp
-python scripts/visualise_graph_stats.py
+python scripts/knowledge_graph/visualise_graph_stats.py

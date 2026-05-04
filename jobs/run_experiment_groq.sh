@@ -15,4 +15,4 @@ export XET_HOME=/vol/bitbucket/hl2622/xet_cache
 export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache/datasets
 export GROQ_API_KEY=$(cat /vol/bitbucket/hl2622/.secrets/groq_api_key)
 cd /vol/bitbucket/hl2622/fyp
-python scripts/experiment_groq.py
+python scripts/rag_experiments/experiment_groq.py

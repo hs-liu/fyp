@@ -77,12 +77,9 @@ for step, (i, sample) in enumerate(remaining, 1):
           f"parsed={parsed} gt={gt} {'✓' if ok else '✗'}")
 
     if step % 5 == 0:
-        pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
-        acc = sum(r["is_correct"] for r in results) / len(results)
-        print(f"  [checkpoint] acc: {acc:.2%}")
+       save_checkpoint(results, CHECKPOINT_PATH, step, len(remaining))
 
-pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
+save_checkpoint(results, CHECKPOINT_PATH)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
-with open(SUMMARY_PATH, "a") as f:
-    f.write(f"Qwen2.5-7B (My RAG) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
+save_summary(f"{RESULTS_DIR}/local_model_summary.txt", f"Qwen2.5-7B (My RAG) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")

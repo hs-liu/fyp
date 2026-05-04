@@ -14,4 +14,4 @@ export HF_HOME=/vol/bitbucket/hl2622/.cache/huggingface
 export XET_HOME=/vol/bitbucket/hl2622/xet_cache
 export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache/datasets
 cd /vol/bitbucket/hl2622/fyp
-python scripts/evaluate_baseline_qwen_medrag.py
+python scripts/baselines/evaluate_baseline_qwen_medrag.py
