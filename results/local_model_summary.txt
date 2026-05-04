@@ -18,3 +18,5 @@ Llama-3.1-8B (My RAG v3, no reranking) Accuracy: 57.50% (115/200)
 
 BioMistral-7B (My RAG v5, remove confidence) Accuracy: 48.50% (97/200)
 Llama-3.1-8B (My RAG v4, no confidence) Accuracy: 57.50% (115/200)
+Groq 70B (MedRAG) Accuracy: 75.00% (150/200)
+Qwen2.5-7B (No RAG) Accuracy: 58.50% (117/200)
