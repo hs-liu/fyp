@@ -1,5 +1,5 @@
 import os, re, time, datasets, pandas as pd
-from baseline_utils import format_question, parse_answer
+from scripts.baselines.baseline_utils import format_question, parse_answer
 
 # basic setup 
 N_TEST = 200

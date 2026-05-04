@@ -1,7 +1,7 @@
 # baseline_llama_local.py
 import os, re, time, datasets
 import pandas as pd
-from baseline_utils import format_question, parse_answer
+from scripts.baselines.baseline_utils import format_question, parse_answer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 

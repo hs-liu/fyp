@@ -1,6 +1,6 @@
 # scripts/test_retrieval.py
 from sentence_transformers import SentenceTransformer
-import retrieval_pipeline as R
+import scripts.rag.retrieval_pipeline as R
 
 encoder = SentenceTransformer('pritamdeka/S-PubMedBert-MS-MARCO')
 

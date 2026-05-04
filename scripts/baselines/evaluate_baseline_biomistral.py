@@ -10,7 +10,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import sys
 sys.path.insert(0, "/vol/bitbucket/hl2622/fyp")
 sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
-from baseline_utils import format_question, evaluate_model
+from scripts.baselines.baseline_utils import format_question, evaluate_model
 
 
 load_dotenv()

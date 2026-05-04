@@ -3,7 +3,7 @@ import os, json, faiss, torch, datasets
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from baseline_utils import format_question, parse_answer
+from scripts.baselines.baseline_utils import format_question, parse_answer
 
 N_TEST        = 200
 TOP_K         = 3

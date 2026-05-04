@@ -25,7 +25,7 @@ df = pd.read_csv(f"{DATA_DIR}/classifier_training_data.csv")
 val_df = df[df["split"] == "validation"].reset_index(drop=True)
 
 # Collect logits on val set
-from train_domain_classifier import MedQADataset
+from scripts.domain_classifier.train_domain_classifier import MedQADataset
 val_ds = MedQADataset(val_df, tokenizer)
 val_dl = DataLoader(val_ds, batch_size=64, shuffle=False)
 

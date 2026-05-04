@@ -5,7 +5,7 @@ import numpy as np
 import faiss
 from groq import Groq
 
-from baseline_utils import format_question, parse_answer
+from scripts.baselines.baseline_utils import format_question, parse_answer
 
 # config 
 CORPUS_BASE  = "/vol/bitbucket/hl2622/fyp/corpus/textbooks"

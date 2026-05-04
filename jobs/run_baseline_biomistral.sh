@@ -15,4 +15,4 @@ export XET_HOME=/vol/bitbucket/hl2622/xet_cache
 export HF_TOKEN=$(cat /vol/bitbucket/hl2622/.secrets/hf_token)
 
 cd /vol/bitbucket/hl2622/fyp
-python scripts/evaluate_baseline_biomistral.py
+python scripts/baselines/evaluate_baseline_biomistral.py
