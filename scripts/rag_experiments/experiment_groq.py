@@ -2,6 +2,9 @@
 import os, re, time, signal, datasets
 import pandas as pd
 from groq import Groq
+import sys
+sys.path.insert(0, "/vol/bitbucket/hl2622/fyp")
+sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
 from sentence_transformers import SentenceTransformer
 from scripts.baselines.baseline_utils import format_question, parse_answer
 from scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary

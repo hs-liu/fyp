@@ -1,4 +1,3 @@
-# uq_experiment_biomistral.py
 import os, torch, datasets
 import pandas as pd
 import sys
@@ -11,23 +10,23 @@ from scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_chec
 from uq_utils import compute_uq, print_uq_summary, plot_uq
 
 N_TEST          = 200
-N_SAMPLES       = 20
-TEMPERATURE     = 0.7
+N_SAMPLES       = 10
+TEMPERATURE     = 0.3
 RESULTS_DIR     = "./results"
 GRAPHS_DIR      = "./graphs"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag_uq_0.7_20.csv"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_myrag_uq_0_3_10.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
-BIOMISTRAL_PATH = "/vol/bitbucket/hl2622/fyp/models/biomistral-7b"
+MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/qwen2.5-7b"
 
-print("Loading BioMistral...")
-bm_tokenizer = AutoTokenizer.from_pretrained(BIOMISTRAL_PATH)
-bm_model = AutoModelForCausalLM.from_pretrained(
-    BIOMISTRAL_PATH, device_map="cuda:0", dtype=torch.float16,
+print("Loading Qwen...")
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL_PATH, dtype=torch.float16, device_map="cuda:0",
 )
-bm_model.eval()
+model.eval()
 
 print("Loading encoder...")
 encoder = SentenceTransformer('pritamdeka/S-PubMedBert-MS-MARCO')
@@ -39,26 +38,22 @@ test_ds = list(dataset["test"])[:N_TEST]
 checkpoint_results, done_indices = load_checkpoint(CHECKPOINT_PATH)
 
 def inference_fn(prompt: str, do_sample: bool = False, temperature: float = 1.0) -> str:
-    inputs = bm_tokenizer(
-        prompt, return_tensors="pt",
-        truncation=True, max_length=2048,
-    ).to(bm_model.device)
-    input_ids = inputs["input_ids"]
-    if input_ids[0, -1] == bm_tokenizer.eos_token_id:
-        input_ids = input_ids[:, :-1]
+    messages = [{"role": "user", "content": prompt}]
+    input_ids = tokenizer.apply_chat_template(
+        messages, add_generation_prompt=True, return_tensors="pt"
+    ).to(model.device)
     attention_mask = torch.ones_like(input_ids)
     with torch.no_grad():
-        output_ids = bm_model.generate(
-            input_ids=input_ids,
+        output = model.generate(
+            input_ids,
             attention_mask=attention_mask,
             max_new_tokens=5,
-            min_new_tokens=1,
             do_sample=do_sample,
             temperature=temperature if do_sample else None,
-            pad_token_id=bm_tokenizer.eos_token_id,
+            pad_token_id=tokenizer.eos_token_id,
         )
-    new_token_ids = output_ids[0][input_ids.shape[1]:]
-    return bm_tokenizer.decode(new_token_ids, skip_special_tokens=True)
+    new_tokens = output[0][input_ids.shape[-1]:]
+    return tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
 def infer_with_uq(sample) -> dict:
     try:
@@ -91,21 +86,15 @@ for step, (i, sample) in enumerate(remaining, 1):
     uq_ok     = r["uq_answer"] == gt
 
     results.append({
-        "id":             i,
-        "question":       sample["question"],
-        "ground_truth":   gt,
-        "greedy_answer":  r["greedy_answer"],
-        "greedy_raw":     r["greedy_raw"],
+        "id": i, "question": sample["question"],
+        "ground_truth": gt,
+        "greedy_answer": r["greedy_answer"], "greedy_raw": r["greedy_raw"],
         "greedy_correct": bool(greedy_ok),
-        "uq_answer":      r["uq_answer"],
-        "uq_consistency": r["uq_consistency"],
-        "uq_entropy":     r["uq_entropy"],
-        "uq_correct":     bool(uq_ok),
-        "uq_samples":     r["uq_samples"],
-        "n_valid":        r["n_valid"],
-        "domain":         r["domain"],
-        "source_route":   r["route"],
-        "is_correct":     bool(greedy_ok),
+        "uq_answer": r["uq_answer"], "uq_consistency": r["uq_consistency"],
+        "uq_entropy": r["uq_entropy"], "uq_correct": bool(uq_ok),
+        "uq_samples": r["uq_samples"], "n_valid": r["n_valid"],
+        "domain": r["domain"], "source_route": r["route"],
+        "is_correct": bool(greedy_ok),
     })
 
     print(f"  [{step:>3}/{len(remaining)}] "
@@ -118,9 +107,7 @@ for step, (i, sample) in enumerate(remaining, 1):
         u_acc = sum(r["uq_correct"] for r in results) / len(results)
         print(f"  uq_acc: {u_acc:.2%}")
 
-# save final
 pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
-
 n_greedy = sum(r["greedy_correct"] for r in results)
 n_uq     = sum(r["uq_correct"] for r in results)
 greedy_acc = n_greedy / len(results)
@@ -130,13 +117,9 @@ print(f"\nGreedy accuracy:      {greedy_acc:.2%} ({n_greedy}/{len(results)})")
 print(f"UQ majority accuracy: {uq_acc:.2%} ({n_uq}/{len(results)})")
 print(f"UQ improvement:       {uq_acc - greedy_acc:+.2%}")
 
-# save to summary
-save_summary(SUMMARY_PATH, f"BioMistral-7B (My RAG + UQ greedy, 0.7, 20):  {greedy_acc:.2%} ({n_greedy}/{len(results)})")
-save_summary(SUMMARY_PATH, f"BioMistral-7B (My RAG + UQ majority, 0.7, 20): {uq_acc:.2%} ({n_uq}/{len(results)})")
+save_summary(SUMMARY_PATH, f"Qwen2.5-7B (My RAG + UQ greedy, 0.3, 10):   {greedy_acc:.2%} ({n_greedy}/{len(results)})")
+save_summary(SUMMARY_PATH, f"Qwen2.5-7B (My RAG + UQ majority, 0.3, 10):  {uq_acc:.2%} ({n_uq}/{len(results)})")
 
-# print detailed UQ analysis
 df = pd.read_csv(CHECKPOINT_PATH)
 print_uq_summary(df)
-
-# save plots
-plot_uq(df, save_path=f"{GRAPHS_DIR}/uq_biomistral_0.7_20.png", model_name="BioMistral-7B + My RAG")
+plot_uq(df, save_path=f"{GRAPHS_DIR}/uq_qwen_0.3_10.png", model_name="Qwen2.5-7B + My RAG, 0.3, 10)")

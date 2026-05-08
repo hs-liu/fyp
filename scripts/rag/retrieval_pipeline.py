@@ -184,3 +184,133 @@ def hierarchical_retrieve(query: str, encoder, top_k: int = 5) -> dict:
         "l2_chunks":   l2,
         "l3_chunks":   l3,
     }
+
+# ── Hierarchical albation tests ─────────────────────────────
+# Add this to retrieval_pipeline.py
+
+def retrieve_ablation(
+    query: str,
+    query_embedding: np.ndarray,
+    mode: str = "both",   # "kg_only", "textbook", "pubmed", "both"
+    top_k: int = 5,
+    hops: int = 1,
+) -> pd.DataFrame:
+    """
+    Ablation retrieval — controls which corpus sources are used.
+    mode:
+        kg_only   → graph expansion only, return concept names as context (no embedding search)
+        textbook  → graph expansion + textbook embedding search
+        pubmed    → graph expansion + pubmed embedding search
+        both      → graph expansion + both sources (default full pipeline)
+    """
+    # Step 1: entity extraction + graph expansion
+    seed_cuis = extract_cuis(query)
+    if seed_cuis:
+        expanded = expand_cuis(seed_cuis, hops=hops)
+        candidate_rows = set()
+        for cui in expanded:
+            candidate_rows.update(cui_to_rows.get(cui, []))
+        candidate_rows = list(candidate_rows)
+    else:
+        candidate_rows = list(range(len(corpus_df)))
+
+    if mode == "kg_only":
+        # Just return concept names from graph — no embedding search
+        concept_names = []
+        for cui in list(expanded)[:20] if seed_cuis else []:
+            name = G.nodes[cui].get("name", "")
+            if name:
+                concept_names.append(name)
+        # Return as empty df with context stored separately
+        return pd.DataFrame(), " | ".join(concept_names[:10])
+
+    # Filter by source
+    source_filter = None
+    if mode == "textbook":
+        source_filter = "textbook"
+    elif mode == "pubmed":
+        source_filter = "pubmed"
+
+    if source_filter:
+        mask = corpus_df.iloc[candidate_rows]["source"] == source_filter
+        candidate_rows = [r for r, m in zip(candidate_rows, mask) if m]
+
+    if not candidate_rows:
+        candidate_rows = list(range(len(corpus_df)))
+
+    candidate_embs = embeddings[candidate_rows]
+    scores = candidate_embs @ query_embedding
+    top_local  = np.argsort(scores)[::-1][:top_k]
+    top_global = [candidate_rows[i] for i in top_local]
+
+    results = corpus_df.iloc[top_global].copy()
+    results["score"] = scores[top_local]
+    return results[["chunk_id", "title", "content", "source", "score"]], None
+
+
+def hierarchical_retrieve_ablation(query: str, encoder, mode: str = "both", top_k: int = 5) -> dict:
+    """
+    Ablation version of hierarchical_retrieve.
+    mode: kg_only | textbook | pubmed | both
+    """
+    q_emb = encoder.encode([query], normalize_embeddings=True)[0]
+
+    if mode == "kg_only":
+        _, kg_context = retrieve_ablation(query, q_emb, mode="kg_only")
+        return {
+            "query": query, "mode": mode,
+            "context": f"Related concepts: {kg_context}",
+            "l2_chunks": pd.DataFrame(),
+            "l3_chunks": pd.DataFrame(),
+            "domain": "", "confidence": 0.0, "source_route": "kg_only",
+        }
+
+    elif mode == "textbook":
+        chunks, _ = retrieve_ablation(query, q_emb, mode="textbook", top_k=top_k)
+        context   = "\n\n".join([f"[Textbook] {r['content'][:400]}"
+                                  for _, r in chunks.head(2).iterrows()])
+        return {
+            "query": query, "mode": mode,
+            "context": context,
+            "l2_chunks": chunks, "l3_chunks": pd.DataFrame(),
+            "domain": "", "confidence": 0.0, "source_route": "textbook",
+        }
+
+    elif mode == "pubmed":
+        chunks, _ = retrieve_ablation(query, q_emb, mode="pubmed", top_k=top_k)
+        context   = "\n\n".join([f"[Evidence] {r['content'][:300]}"
+                                  for _, r in chunks.head(2).iterrows()])
+        return {
+            "query": query, "mode": mode,
+            "context": context,
+            "l2_chunks": pd.DataFrame(), "l3_chunks": chunks,
+            "domain": "", "confidence": 0.0, "source_route": "pubmed",
+        }
+
+    else:  # both — full pipeline
+        return hierarchical_retrieve(query, encoder, top_k=top_k)
+
+def hierarchical_retrieve_no_classifier(query: str, encoder, top_k: int = 5) -> dict:
+    """
+    Full retrieval WITHOUT domain classifier routing.
+    Always retrieves from both textbook and pubmed equally.
+    Use this as ablation to measure classifier contribution.
+    """
+    q_emb = encoder.encode([query], normalize_embeddings=True)[0]
+
+    # Always retrieve both equally — no routing
+    l2 = retrieve(query, q_emb, top_k=3, source_filter="textbook", hops=1)
+    l3 = retrieve(query, q_emb, top_k=3, source_filter="pubmed",   hops=1)
+
+    combined = pd.concat([l2, l3]).drop_duplicates("chunk_id")
+    context  = "\n\n".join(combined["content"].tolist())
+
+    return {
+        "query":        query,
+        "domain":       "none",
+        "confidence":   0.0,
+        "source_route": "both_equal",
+        "context":      context,
+        "l2_chunks":    l2,
+        "l3_chunks":    l3,
+    }

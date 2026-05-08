@@ -4,7 +4,7 @@ import pandas as pd
 from collections import Counter
 
 
-def compute_uq(prompt: str, inference_fn, n_samples: int = 10, temperature: float = 0.7) -> dict:
+def compute_uq(prompt: str, inference_fn, n_samples, temperature) -> dict:
 
     from scripts.baselines.baseline_utils import parse_answer
 
