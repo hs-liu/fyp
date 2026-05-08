@@ -12,4 +12,5 @@ source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export HF_HOME=/vol/bitbucket/hl2622/huggingface_cache
 export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache
 cd /vol/bitbucket/hl2622/fyp
+export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/knowledge_graph/link_corpus_to_graph.py

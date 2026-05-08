@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=medrag_llama
-#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/baselines/medrag_llama_%j.log
-#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/baselines/medrag_llama_%j.err
+#SBATCH --job-name=uq_llama
+#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/uq_exp/llama_%j.log
+#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/uq_exp/llama_%j.err
 #SBATCH --partition=a30
 #SBATCH --gres=gpu:1
 #SBATCH --mem=80G
 #SBATCH --cpus-per-task=8
-#SBATCH --time=08:00:00
+#SBATCH --time=12:00:00
 
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export HF_TOKEN=$(cat /vol/bitbucket/hl2622/.secrets/hf_token)
@@ -15,4 +15,4 @@ export XET_HOME=/vol/bitbucket/hl2622/xet_cache
 export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache/datasets
 cd /vol/bitbucket/hl2622/fyp
 export PYTHONPATH=/vol/bitbucket/hl2622/fyp
-python scripts/baselines/evaluate_baseline_llama_medrag.py
+python scripts/uq_experiments/uq_experiment_llama.py

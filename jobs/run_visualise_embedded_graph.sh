@@ -10,4 +10,5 @@
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 
 cd /vol/bitbucket/hl2622/fyp
+export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/knowledge_graph/visualise_embedded_graph.py

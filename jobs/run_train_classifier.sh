@@ -11,6 +11,7 @@
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export HF_HOME=/vol/bitbucket/hl2622/huggingface_cache
 cd /vol/bitbucket/hl2622/fyp
+export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 
 #python scripts/domain_classifier/build_domain_classifier.py
 python scripts/domain_classifier/train_domain_classifier.py

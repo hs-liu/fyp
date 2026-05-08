@@ -16,4 +16,5 @@ export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache/datasets
 mkdir -p $XET_HOME
 
 cd /vol/bitbucket/hl2622/fyp
+export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/downloads/download_biomistral.py

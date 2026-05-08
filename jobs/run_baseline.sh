@@ -23,6 +23,7 @@ export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache
 export GEMINI_API_KEY='AIzaSyD-iEL8MCWrGf1L-yIWneDxbNxwE1rTTr0'
 # ── Run Script ───────────────────────────────
 cd /vol/bitbucket/hl2622/fyp
+export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/evaluate_baseline.py
 
 echo "========================================="

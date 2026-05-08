@@ -11,4 +11,5 @@ source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 export UMLS_API_KEY=$(cat /vol/bitbucket/hl2622/.secrets/umls_api_key)
 
 cd /vol/bitbucket/hl2622/fyp
+export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/construct_flat_graph.py
