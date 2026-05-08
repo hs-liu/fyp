@@ -1,0 +1,80 @@
+============================================================
+MEDQA DATASET OVERVIEW
+============================================================
+Full test set size:       1,273
+Train set size:           10,178
+Validation set size:      1,272
+Subset used (N_TEST):     200
+
+============================================================
+JUSTIFICATION FOR N=200
+============================================================
+Full test set: 1273 questions
+N=200 covers:  15.7% of test set
+
+Statistical justification:
+  At 95% confidence, margin of error for proportion p=0.5:
+  N=   50: ±0.139 (13.9%)
+  N=  100: ±0.098 (9.8%)
+  N=  200: ±0.069 (6.9%)
+  N=  500: ±0.044 (4.4%)
+  N= 1273: ±0.027 (2.7%)
+
+N=200 gives ±6.9% margin of error at 95% confidence.
+Practical reason: each model run takes 2-4 hrs on A30.
+Full test (1273) would take ~19x longer.
+
+============================================================
+ANSWER DISTRIBUTION (N=200 subset)
+============================================================
+  A:  41 (20.5%)
+  B:  37 (18.5%)
+  C:  40 (20.0%)
+  D:  48 (24.0%)
+  E:  34 (17.0%)
+
+ANSWER DISTRIBUTION (full test set)
+  A: 273 (21.4%)
+  B: 277 (21.8%)
+  C: 252 (19.8%)
+  D: 269 (21.1%)
+  E: 202 (15.9%)
+
+============================================================
+QUESTION LENGTH STATISTICS (N=200)
+============================================================
+  Mean question length:   115.2 words
+  Median question length: 114.5 words
+  Std question length:    41.4 words
+  Min question length:    20 words
+  Max question length:    246 words
+  Mean options per q:     5.0
+
+============================================================
+SAMPLE QUESTIONS
+============================================================
+  [0] A junior orthopaedic surgery resident is completing a carpal tunnel repair with the department chairman as the attending...
+       Answer: C
+  [50] A 65-year-old male is treated for anal carcinoma with therapy including external beam radiation. How does radiation affe...
+       Answer: E
+  [100] A 2-day-old male newborn is brought to the physician because of yellowing of the skin and sclerae for 16 hours. He had p...
+       Answer: E
+  [150] A 52-year-old man is brought to the emergency department with dry cough, shortness of breath, and low-grade fever that b...
+       Answer: A
+  [199] A 2-year-old girl with recurrent urinary tract infections is brought to the physician for a follow-up examination. Renal...
+       Answer: D
+
+============================================================
+HEURISTIC BASELINES
+============================================================
+Random (uniform):        23.50%
+Always predict 'D':   24.00%
+Weighted random:         20.00%
+Always predict 'A':      20.50%
+Theoretical random:      20.00% (1/5)
+
+Expected random baseline: ~20% for 5-choice MCQ
+Any model scoring >20% has learned something.
+Any model scoring >25% beats majority class baseline.
+
+Saved → ./results/heuristic_baselines.csv
