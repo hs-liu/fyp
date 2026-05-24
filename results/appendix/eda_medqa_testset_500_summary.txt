@@ -1,0 +1,39 @@
+============================================================
+MEDQA TEST SET EDA (500 samples)
+============================================================
+
+Total samples:     500
+Unique answers:    5
+
+Answer distribution:
+  A: 115 (23.0%)
+  B: 100 (20.0%)
+  C: 95 (19.0%)
+  D: 121 (24.2%)
+  E: 69 (13.8%)
+
+Question length (words):
+  Mean:   117.3
+  Median: 114.0
+  Std:    43.4
+  Min:    20
+  Max:    268
+
+Domain distribution (majority vote across models):
+  Unknown                             300 (60.0%)
+  Disorders                           164 (32.8%)
+  Procedures                           18 (3.6%)
+  Anatomy                              17 (3.4%)
+  Chemicals & Drugs                     1 (0.2%)
+Saved → ./graphs/appendix/medqa_testset/02_question_length.png
+Saved → ./graphs/appendix/medqa_testset/03_domain_distribution.png
+
+============================================================
+SUMMARY
+============================================================
+  Total samples:         500
+  Q length mean:         117.3 words
+  Q length range:        20–268 words
+  Mean option length:    3.5 words
+  Unique domains:        5
+  Most common domain:    Unknown (60.0%)

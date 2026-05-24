@@ -10,13 +10,13 @@ from sentence_transformers import SentenceTransformer
 from scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary
 from uq_utils import compute_uq, print_uq_summary, plot_uq
 
-N_TEST          = 200
-N_SAMPLES       = 20
+N_TEST          = 500
+N_SAMPLES       = 10
 TEMPERATURE     = 0.7
-RESULTS_DIR     = "./results"
-GRAPHS_DIR      = "./graphs"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_myrag_uq_0.7_20.csv"
-SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
+RESULTS_DIR     = "./results/appendix"
+GRAPHS_DIR      = "./graphs/appendix"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_medhireuqrag_0.7_10_500.csv"
+SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
@@ -24,7 +24,7 @@ BIOMISTRAL_PATH = "/vol/bitbucket/hl2622/fyp/models/biomistral-7b"
 
 print("Loading BioMistral...")
 bm_tokenizer = AutoTokenizer.from_pretrained(BIOMISTRAL_PATH)
-bm_model = AutoModelForCausalLM.from_pretrained(
+bm_model     = AutoModelForCausalLM.from_pretrained(
     BIOMISTRAL_PATH, device_map="cuda:0", dtype=torch.float16,
 )
 bm_model.eval()
@@ -39,7 +39,7 @@ test_ds = list(dataset["test"])[:N_TEST]
 checkpoint_results, done_indices = load_checkpoint(CHECKPOINT_PATH)
 
 def inference_fn(prompt: str, do_sample: bool = False, temperature: float = 1.0) -> str:
-    inputs = bm_tokenizer(
+    inputs    = bm_tokenizer(
         prompt, return_tensors="pt",
         truncation=True, max_length=2048,
     ).to(bm_model.device)
@@ -60,35 +60,60 @@ def inference_fn(prompt: str, do_sample: bool = False, temperature: float = 1.0)
     new_token_ids = output_ids[0][input_ids.shape[1]:]
     return bm_tokenizer.decode(new_token_ids, skip_special_tokens=True)
 
+def get_confidence_label(consistency: float) -> str:
+    if consistency >= 0.9:
+        return "Very High"
+    elif consistency >= 0.7:
+        return "High"
+    elif consistency >= 0.5:
+        return "Medium"
+    elif consistency >= 0.3:
+        return "Low"
+    else:
+        return "Very Low"
+    
 def infer_with_uq(sample) -> dict:
     try:
-        context, domain, route = get_context(sample, encoder)
-        prompt = build_rag_prompt(sample, context, format_question)
+        context = get_context(sample, encoder)
+        prompt  = build_rag_prompt(sample, context, format_question)
 
         greedy_raw    = inference_fn(prompt, do_sample=False)
         greedy_parsed = parse_answer(greedy_raw)
-        uq = compute_uq(prompt, inference_fn, n_samples=N_SAMPLES, temperature=TEMPERATURE)
+        uq = compute_uq(prompt, inference_fn,
+                        n_samples=N_SAMPLES, temperature=TEMPERATURE)
 
-        return {"domain": domain, "route": route,
-                "greedy_answer": greedy_parsed, "greedy_raw": greedy_raw, **uq}
+        confidence_label = get_confidence_label(uq["uq_consistency"])
+
+        return {
+            "greedy_answer":    greedy_parsed,
+            "greedy_raw":       greedy_raw,
+            "confidence_label": confidence_label,
+            **uq
+        }
 
     except Exception as e:
         print(f"  [ERROR] {e}")
-        return {"domain": "", "route": "",
-                "greedy_answer": "", "greedy_raw": "",
-                "uq_answer": "UNKNOWN", "uq_consistency": 0.0,
-                "uq_entropy": 1.0, "uq_samples": "[]", "n_valid": 0}
+        return {
+            "greedy_answer":    "",
+            "greedy_raw":       "",
+            "uq_answer":        "UNKNOWN",
+            "uq_consistency":   0.0,
+            "uq_entropy":       1.0,
+            "uq_samples":       "[]",
+            "n_valid":          0,
+            "confidence_label": "Very Low",
+        }
 
-# main
+# ── Main loop ──────────────────────────────────────────────
 remaining = [(i, s) for i, s in enumerate(test_ds) if i not in done_indices]
 print(f"Samples left: {len(remaining)}")
 results = list(checkpoint_results)
 
 for step, (i, sample) in enumerate(remaining, 1):
-    r  = infer_with_uq(sample)
-    gt = sample["answer_idx"]
+    r         = infer_with_uq(sample)
+    gt        = sample["answer_idx"]
     greedy_ok = r["greedy_answer"] == gt
-    uq_ok     = r["uq_answer"] == gt
+    uq_ok     = r["uq_answer"]     == gt
 
     results.append({
         "id":             i,
@@ -103,9 +128,8 @@ for step, (i, sample) in enumerate(remaining, 1):
         "uq_correct":     bool(uq_ok),
         "uq_samples":     r["uq_samples"],
         "n_valid":        r["n_valid"],
-        "domain":         r["domain"],
-        "source_route":   r["route"],
         "is_correct":     bool(greedy_ok),
+        "confidence_label": r["confidence_label"],
     })
 
     print(f"  [{step:>3}/{len(remaining)}] "
@@ -116,27 +140,29 @@ for step, (i, sample) in enumerate(remaining, 1):
     if step % 5 == 0:
         save_checkpoint(results, CHECKPOINT_PATH, step, len(remaining))
         u_acc = sum(r["uq_correct"] for r in results) / len(results)
-        print(f"  uq_acc: {u_acc:.2%}")
+        print(f"  uq_acc so far: {u_acc:.2%}")
 
-# save final
+# ── Save final ─────────────────────────────────────────────
 pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
 
-n_greedy = sum(r["greedy_correct"] for r in results)
-n_uq     = sum(r["uq_correct"] for r in results)
+n_greedy   = sum(r["greedy_correct"] for r in results)
+n_uq       = sum(r["uq_correct"]     for r in results)
 greedy_acc = n_greedy / len(results)
-uq_acc     = n_uq / len(results)
+uq_acc     = n_uq     / len(results)
 
 print(f"\nGreedy accuracy:      {greedy_acc:.2%} ({n_greedy}/{len(results)})")
 print(f"UQ majority accuracy: {uq_acc:.2%} ({n_uq}/{len(results)})")
 print(f"UQ improvement:       {uq_acc - greedy_acc:+.2%}")
 
-# save to summary
-save_summary(SUMMARY_PATH, f"BioMistral-7B (My RAG + UQ greedy, 0.7, 20):  {greedy_acc:.2%} ({n_greedy}/{len(results)})")
-save_summary(SUMMARY_PATH, f"BioMistral-7B (My RAG + UQ majority, 0.7, 20): {uq_acc:.2%} ({n_uq}/{len(results)})")
+save_summary(SUMMARY_PATH,
+    f"BioMistral-7B (MedHireUQRAG greedy, T=0.7, N=10):  "
+    f"{greedy_acc:.2%} ({n_greedy}/{len(results)})")
+save_summary(SUMMARY_PATH,
+    f"BioMistral-7B (MedHireUQRAG majority, T=0.7, N=10): "
+    f"{uq_acc:.2%} ({n_uq}/{len(results)})")
 
-# print detailed UQ analysis
 df = pd.read_csv(CHECKPOINT_PATH)
 print_uq_summary(df)
-
-# save plots
-plot_uq(df, save_path=f"{GRAPHS_DIR}/uq_biomistral_0.7_20.png", model_name="BioMistral-7B + My RAG")
+plot_uq(df,
+        save_path=f"{GRAPHS_DIR}/uq_biomistral_0.7_10.png",
+        model_name="MedHireUQRAG BioMistral-7B (T=0.7, N=10)")

@@ -5,10 +5,10 @@ from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from scripts.baselines.baseline_utils import format_question, parse_answer
 
-N_TEST        = 200
+N_TEST        = 500
 TOP_K         = 3
 MAX_CTX_CHARS = 1800
-RESULTS_DIR   = "./results"
+RESULTS_DIR   = "./results/appendix"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_medrag.csv"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
@@ -162,5 +162,5 @@ for step, (i, sample) in enumerate(remaining, 1):
 pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
-with open(f"{RESULTS_DIR}/local_model_summary.txt", "a") as f:
+with open(f"{RESULTS_DIR}/more_test_summary.txt", "a") as f:
     f.write(f"Llama-3.1-8B (MedRAG) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")

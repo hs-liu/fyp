@@ -9,10 +9,10 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from sentence_transformers import SentenceTransformer
 from scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary
 
-N_TEST          = 200
+N_TEST          = 500
 MAX_CHUNK_CHARS = 400
-RESULTS_DIR     = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_myrag_v4.csv"
+RESULTS_DIR     = "./results/appendix"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama.csv"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/llama-3.1-8b"
@@ -36,17 +36,6 @@ test_ds = list(dataset["test"])[:N_TEST]
 # checkpoint
 checkpoint_results, done_indices = load_checkpoint(CHECKPOINT_PATH)
 
-""" def rerank_chunks(chunks_df, query: str, top_k: int = 1):
-    query_words = set(query.lower().split())
-    scores = []
-    for _, row in chunks_df.iterrows():
-        content_words = set(row["content"].lower().split())
-        overlap = len(query_words & content_words) / (len(query_words) + 1)
-        scores.append(row["score"] * 0.7 + overlap * 0.3)
-    chunks_df = chunks_df.copy()
-    chunks_df["rerank_score"] = scores
-    return chunks_df.nlargest(top_k, "rerank_score") """
-
 def call_local(prompt: str) -> str:
     messages = [{"role": "user", "content": prompt}]
     input_ids = tokenizer.apply_chat_template(
@@ -64,20 +53,19 @@ def call_local(prompt: str) -> str:
     new_tokens = output[0][input_ids.shape[-1]:]
     return tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
-def infer(sample) -> tuple:
+def infer(sample) -> str:
     try:
-        context, domain, route = get_context(sample, encoder, pubmed_score_threshold=0.80)
+        context = get_context(sample, encoder)
     except Exception as e:
-        print(f"  [ERROR] {e}")
-        context, domain, route = "", "", ""
-
-    prompt = build_rag_prompt(sample, context, format_question)
+        print(f"  [RETRIEVAL ERROR] {e}")
+        context = ""
 
     try:
-        return call_local(prompt), domain, route
+        prompt = build_rag_prompt(sample, context, format_question)
+        return call_local(prompt)
     except Exception as e:
-        print(f"  [ERROR] {e}")
-        return "", domain, route
+        print(f"  [INFERENCE ERROR] {e}")
+        return ""
 
 # main
 remaining = [(i, s) for i, s in enumerate(test_ds) if i not in done_indices]
@@ -85,7 +73,7 @@ print(f"Samples left: {len(remaining)}")
 results = list(checkpoint_results)
 
 for step, (i, sample) in enumerate(remaining, 1):
-    raw, domain, route = infer(sample)
+    raw = infer(sample)
     parsed = parse_answer(raw)
     gt     = sample["answer_idx"]
     ok     = parsed == gt
@@ -97,11 +85,8 @@ for step, (i, sample) in enumerate(remaining, 1):
         "raw_answer":   raw,
         "model_answer": parsed,
         "is_correct":   bool(ok),
-        "domain":       domain,
-        "source_route": route,
     })
-    print(f"  [{step:>3}/{len(remaining)}] domain={domain} route={route} "
-          f"parsed={parsed} gt={gt} {'✓' if ok else '✗'}")
+    print(f"  [{step:>3}/{len(remaining)}] parsed={parsed} gt={gt} {'✓' if ok else '✗'}")
 
     if step % 5 == 0:
         save_checkpoint(results, CHECKPOINT_PATH, step, len(remaining))
@@ -109,4 +94,4 @@ for step, (i, sample) in enumerate(remaining, 1):
 save_checkpoint(results, CHECKPOINT_PATH)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
-save_summary(f"{RESULTS_DIR}/local_model_summary.txt", f"Llama-3.1-8B (My RAG v4, no confidence) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
+save_summary(f"{RESULTS_DIR}/more_test_summary.txt", f"Llama-3.1-8B Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")

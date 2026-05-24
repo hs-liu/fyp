@@ -37,62 +37,6 @@ for cui, attrs in G.nodes(data=True):
 
 print(f"Ready. {len(name_to_cui):,} concepts, {len(cui_to_rows):,} indexed CUIs")
 
-# ── Load domain classifier ─────────────────────────────────
-print("Loading domain classifier...")
-_clf_tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
-_clf_model     = AutoModelForSequenceClassification.from_pretrained(MODEL_DIR)
-_clf_device    = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-_clf_model     = _clf_model.to(_clf_device).eval()
-
-_label_map = json.load(open(f"{MODEL_DIR}/label_map.json"))
-_id2label  = {int(k): v for k, v in _label_map["id2label"].items()}
-
-# Load temperature if calibrated
-try:
-    _temperature = json.load(open(f"{MODEL_DIR}/temperature.json"))["temperature"]
-    print(f"  Classifier temperature: {_temperature:.4f}")
-except FileNotFoundError:
-    _temperature = 1.0
-    print("  No temperature file, using T=1.0")
-
-# Domain → source routing
-# These groups route to textbook (guidelines), rest to pubmed (evidence)
-TEXTBOOK_GROUPS = {
-    "Disorders", "Physiology", "Anatomy", "Procedures", "Chemicals & Drugs"
-}
-
-def classify_domain(query: str) -> tuple[str, str, float]:
-    """
-    Returns (domain_label, source_filter, confidence)
-    source_filter: 'textbook', 'pubmed', or None (both)
-    """
-    enc = _clf_tokenizer(
-        query,
-        max_length=256,
-        padding="max_length",
-        truncation=True,
-        return_tensors="pt",
-    ).to(_clf_device)
-
-    with torch.no_grad():
-        logits = _clf_model(**enc).logits / _temperature
-        probs  = torch.softmax(logits, dim=-1)[0]
-
-    top_idx   = probs.argmax().item()
-    top_label = _id2label[top_idx]
-    top_conf  = probs[top_idx].item()
-
-    # Route based on domain
-    if top_conf < 0.4:
-        source = None  # low confidence → search both
-    elif top_label in TEXTBOOK_GROUPS:
-        source = "textbook"
-    else:
-        source = "pubmed"
-
-    return top_label, source, top_conf
-
-
 # ── Entity extraction ──────────────────────────────────────
 def extract_cuis(text: str, max_cuis: int = 10) -> list:
     text_lower = text.lower()
@@ -117,9 +61,72 @@ def expand_cuis(seed_cuis: list, hops: int = 1) -> set:
                     expanded.update(G.neighbors(nb))
     return expanded
 
+# ── Full hierarchical pipeline ─────────────────────────────
+def hierarchical_retrieve(query: str, encoder, top_k: int = 5) -> dict:
+    """
+    Three-level hierarchical retrieval:
+    L1: UMLS Knowledge Graph traversal → candidate filtering
+    L2: Textbook retrieval within KG candidates → coarse clinical knowledge
+    L3: PubMed retrieval conditioned on L2 output → fine evidence
+    """
+    q_emb = encoder.encode([query], normalize_embeddings=True)[0]
 
-# ── Core retrieval ─────────────────────────────────────────
+    # ── L1: KG traversal ──────────────────────────────────
+    seed_cuis  = extract_cuis(query)
+    expanded   = expand_cuis(seed_cuis, hops=1) if seed_cuis else set()
+    candidate_rows = set()
+    for cui in expanded:
+        candidate_rows.update(cui_to_rows.get(cui, []))
+    candidate_rows = list(candidate_rows) if candidate_rows else list(range(len(corpus_df)))
+
+    # ── L2: Textbook retrieval within KG candidates ───────
+    candidate_sources = corpus_df.iloc[candidate_rows]["source"]
+    tb_rows = [r for r, s in zip(candidate_rows, candidate_sources)
+               if s == "textbook"]
+    if not tb_rows:
+        tb_rows = corpus_df.index[corpus_df["source"] == "textbook"].tolist()
+
+    tb_embs   = embeddings[tb_rows]
+    tb_scores = tb_embs @ q_emb
+    top_tb    = np.argsort(tb_scores)[::-1][:top_k]
+    l2_chunks = corpus_df.iloc[[tb_rows[i] for i in top_tb]].copy()
+    l2_chunks["score"] = tb_scores[top_tb]
+    l2_chunks = l2_chunks[["chunk_id","title","content","source","score","cuis"]]
+
+    # ── L3: PubMed retrieval conditioned on L2 ────────────
+    # Enrich query with L2 content — L3 is NOT independent of L2
+    if len(l2_chunks) > 0:
+        l2_context   = " ".join(l2_chunks.head(2)["content"].tolist())
+        enriched_q   = f"{query} {l2_context[:200]}"
+        enriched_emb = encoder.encode([enriched_q], normalize_embeddings=True)[0]
+    else:
+        enriched_emb = q_emb
+
+    pm_rows = [r for r, s in zip(candidate_rows, candidate_sources)
+               if s == "pubmed"]
+    if not pm_rows:
+        pm_rows = corpus_df.index[corpus_df["source"] == "pubmed"].tolist()
+
+    pm_embs   = embeddings[pm_rows]
+    pm_scores = pm_embs @ enriched_emb
+    top_pm    = np.argsort(pm_scores)[::-1][:top_k]
+    l3_chunks = corpus_df.iloc[[pm_rows[i] for i in top_pm]].copy()
+    l3_chunks["score"] = pm_scores[top_pm]
+    l3_chunks = l3_chunks[["chunk_id","title","content","source","score","cuis"]]
+
+    return {
+        "query":        query,
+        "l2_chunks":    l2_chunks,
+        "l3_chunks":    l3_chunks,
+    }
+
+# ── Hierarchical albation tests ─────────────────────────────
+# ── Flat retrieval ─────────────────────────────────────────
 def retrieve(query, query_embedding, top_k=5, source_filter=None, hops=1):
+    """
+    Flat retrieval helper — used by ablation functions only.
+    Main pipeline uses hierarchical_retrieve() directly.
+    """
     seed_cuis = extract_cuis(query)
     if seed_cuis:
         expanded = expand_cuis(seed_cuis, hops=hops)
@@ -145,48 +152,6 @@ def retrieve(query, query_embedding, top_k=5, source_filter=None, hops=1):
     results = corpus_df.iloc[top_global].copy()
     results["score"] = scores[top_local]
     return results[["chunk_id", "title", "content", "source", "score"]]
-
-
-# ── Full hierarchical pipeline ─────────────────────────────
-def hierarchical_retrieve(query: str, encoder, top_k: int = 5) -> dict:
-    """
-    L1: Domain classifier → routes query to textbook / pubmed / both
-    L2: Textbook retrieval (guideline-level knowledge)
-    L3: PubMed retrieval (evidence-level knowledge)
-    """
-    # L1 — classify domain
-    domain, source_route, confidence = classify_domain(query)
-
-    # Encode query
-    q_emb = encoder.encode([query], normalize_embeddings=True)[0]
-
-    # L2/L3 — retrieve based on routing
-    if source_route == "textbook":
-        l2 = retrieve(query, q_emb, top_k=top_k, source_filter="textbook", hops=1)
-        l3 = retrieve(query, q_emb, top_k=2,     source_filter="pubmed",   hops=1)
-    elif source_route == "pubmed":
-        l2 = retrieve(query, q_emb, top_k=2,     source_filter="textbook", hops=1)
-        l3 = retrieve(query, q_emb, top_k=top_k, source_filter="pubmed",   hops=1)
-    else:
-        # Low confidence — search both equally
-        l2 = retrieve(query, q_emb, top_k=3, source_filter="textbook", hops=1)
-        l3 = retrieve(query, q_emb, top_k=3, source_filter="pubmed",   hops=1)
-
-    combined = pd.concat([l2, l3]).drop_duplicates("chunk_id")
-    context  = "\n\n".join(combined["content"].tolist())
-
-    return {
-        "query":       query,
-        "domain":      domain,
-        "confidence":  confidence,
-        "source_route": source_route,
-        "context":     context,
-        "l2_chunks":   l2,
-        "l3_chunks":   l3,
-    }
-
-# ── Hierarchical albation tests ─────────────────────────────
-# Add this to retrieval_pipeline.py
 
 def retrieve_ablation(
     query: str,

@@ -1,0 +1,125 @@
+============================================================
+UQ CONFIGURATION ANALYSIS
+============================================================
+
+--- BioMistral-7B ---
+  T=0.7 N=10: greedy=47.0%  majority=48.0%  → best=48.0% (majority)
+  T=0.7 N=20: greedy=47.0%  majority=46.5%  → best=47.0% (greedy)
+  T=0.3 N=10: greedy=47.0%  majority=49.5%  → best=49.5% (majority)
+  T=0.3 N=20: greedy=47.0%  majority=48.5%  → best=48.5% (majority)
+
+--- Llama-3.1-8B ---
+  T=0.7 N=10: greedy=58.5%  majority=54.5%  → best=58.5% (greedy)
+  T=0.7 N=20: greedy=58.5%  majority=55.0%  → best=58.5% (greedy)
+  T=0.3 N=10: greedy=58.5%  majority=58.0%  → best=58.5% (greedy)
+  T=0.3 N=20: greedy=58.5%  majority=59.0%  → best=59.0% (majority)
+
+--- Qwen2.5-7B ---
+  T=0.7 N=10: greedy=58.5%  majority=58.5%  → best=58.5% (greedy)
+  T=0.7 N=20: greedy=58.5%  majority=58.0%  → best=58.5% (greedy)
+  T=0.3 N=10: greedy=58.5%  majority=59.0%  → best=59.0% (majority)
+  T=0.3 N=20: greedy=58.5%  majority=58.5%  → best=58.5% (greedy)
+Saved → ./graphs/analysis/uq_analysis/05_coverage_accuracy.png
+
+  BioMistral-7B | T=0.7 N=10:
+    Overall acc:          47.0%
+    Very High coverage:   30.0% of questions
+    Very High accuracy:   63.3%
+    High+ coverage:       53.5% of questions
+    High+ accuracy:       56.1%
+    Calibration gap:      +16.3%
+
+  BioMistral-7B | T=0.7 N=20:
+    Overall acc:          47.0%
+    Very High coverage:   24.0% of questions
+    Very High accuracy:   64.6%
+    High+ coverage:       53.5% of questions
+    High+ accuracy:       54.2%
+    Calibration gap:      +17.6%
+
+  BioMistral-7B | T=0.3 N=10:
+    Overall acc:          47.0%
+    Very High coverage:   66.5% of questions
+    Very High accuracy:   52.6%
+    High+ coverage:       82.0% of questions
+    High+ accuracy:       48.8%
+    Calibration gap:      +5.6%
+
+  BioMistral-7B | T=0.3 N=20:
+    Overall acc:          47.0%
+    Very High coverage:   60.0% of questions
+    Very High accuracy:   52.5%
+    High+ coverage:       81.5% of questions
+    High+ accuracy:       49.7%
+    Calibration gap:      +5.5%
+
+  Llama-3.1-8B | T=0.7 N=10:
+    Overall acc:          58.5%
+    Very High coverage:   62.0% of questions
+    Very High accuracy:   71.0%
+    High+ coverage:       77.0% of questions
+    High+ accuracy:       64.3%
+    Calibration gap:      +12.5%
+
+  Llama-3.1-8B | T=0.7 N=20:
+    Overall acc:          58.5%
+    Very High coverage:   53.5% of questions
+    Very High accuracy:   69.2%
+    High+ coverage:       74.0% of questions
+    High+ accuracy:       64.2%
+    Calibration gap:      +10.7%
+
+  Llama-3.1-8B | T=0.3 N=10:
+    Overall acc:          58.5%
+    Very High coverage:   80.0% of questions
+    Very High accuracy:   61.9%
+    High+ coverage:       87.5% of questions
+    High+ accuracy:       60.0%
+    Calibration gap:      +3.4%
+
+  Llama-3.1-8B | T=0.3 N=20:
+    Overall acc:          58.5%
+    Very High coverage:   77.0% of questions
+    Very High accuracy:   63.0%
+    High+ coverage:       88.5% of questions
+    High+ accuracy:       59.9%
+    Calibration gap:      +4.5%
+
+  Qwen2.5-7B | T=0.7 N=10:
+    Overall acc:          58.5%
+    Very High coverage:   92.5% of questions
+    Very High accuracy:   61.6%
+    High+ coverage:       98.0% of questions
+    High+ accuracy:       59.2%
+    Calibration gap:      +3.1%
+
+  Qwen2.5-7B | T=0.7 N=20:
+    Overall acc:          58.5%
+    Very High coverage:   93.0% of questions
+    Very High accuracy:   61.3%
+    High+ coverage:       94.5% of questions
+    High+ accuracy:       60.3%
+    Calibration gap:      +2.8%
+
+  Qwen2.5-7B | T=0.3 N=10:
+    Overall acc:          58.5%
+    Very High coverage:   98.5% of questions
+    Very High accuracy:   59.4%
+    High+ coverage:       99.0% of questions
+    High+ accuracy:       59.1%
+    Calibration gap:      +0.9%
+
+  Qwen2.5-7B | T=0.3 N=20:
+    Overall acc:          58.5%
+    Very High coverage:   98.0% of questions
+    Very High accuracy:   59.2%
+    High+ coverage:       99.5% of questions
+    High+ accuracy:       58.8%
+    Calibration gap:      +0.7%
+
+============================================================
+BEST CONFIG PER MODEL:
+============================================================
+  BioMistral-7B → T=0.3 N=10  (majority=49.5%)
+  Llama-3.1-8B → T=0.3 N=20  (majority=59.0%)
+  Qwen2.5-7B   → T=0.3 N=10  (majority=59.0%)

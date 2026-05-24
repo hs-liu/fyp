@@ -1,0 +1,25 @@
+============================================================
+PAIRWISE: No RAG vs MedRAG — Per Domain
+============================================================
+
+--- Llama ---
+  Overall No RAG:  60.0%
+  Overall MedRAG:  54.0%
+  Delta:           -6.0%
+  Anatomy                             No RAG=47.1%  MedRAG=52.9%  Δ=+5.9%  n=17
+  Disorders                           No RAG=60.4%  MedRAG=53.0%  Δ=-7.3%  n=164
+  Procedures                          No RAG=66.7%  MedRAG=61.1%  Δ=-5.6%  n=18
+
+--- Qwen ---
+  Overall No RAG:  58.5%
+  Overall MedRAG:  56.0%
+  Delta:           -2.5%
+  Anatomy                             No RAG=58.8%  MedRAG=58.8%  Δ=+0.0%  n=17
+  Disorders                           No RAG=58.5%  MedRAG=56.1%  Δ=-2.4%  n=164
+  Procedures                          No RAG=55.6%  MedRAG=50.0%  Δ=-5.6%  n=18
+
+Saved → ./graphs/analysis/norag_vs_medrag_llama.png
+
+Saved → ./graphs/analysis/norag_vs_medrag_qwen.png
+Saved → ./graphs/analysis/norag_vs_medrag_all_models.png
+Saved → ./graphs/analysis/norag_vs_medrag_delta_heatmap.png

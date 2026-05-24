@@ -8,12 +8,12 @@ from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from scripts.baselines.baseline_utils import format_question, parse_answer
 
-N_TEST          = 200
+N_TEST          = 500
 TOP_K           = 3
 MAX_CTX_CHARS   = 1800
-RESULTS_DIR     = "./results"
+RESULTS_DIR     = "./results/appendix"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_medrag.csv"
-SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
+SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 CORPUS_BASE = "/vol/bitbucket/hl2622/fyp/corpus/textbooks"

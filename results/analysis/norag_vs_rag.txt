@@ -1,0 +1,29 @@
+============================================================
+PAIRWISE: No RAG vs My RAG — Per Domain
+============================================================
+
+--- BioMistral ---
+  Overall No RAG: 42.0%
+  Overall My RAG: 48.5%
+  Delta:          +6.5%
+  Anatomy                             No RAG=29.4%  RAG=47.1%  Δ=+17.6%  n=17
+  Disorders                           No RAG=42.1%  RAG=48.2%  Δ=+6.1%  n=164
+  Procedures                          No RAG=50.0%  RAG=50.0%  Δ=+0.0%  n=18
+
+--- Llama ---
+  Overall No RAG: 60.0%
+  Overall My RAG: 57.5%
+  Delta:          -2.5%
+  Anatomy                             No RAG=47.1%  RAG=52.9%  Δ=+5.9%  n=17
+  Disorders                           No RAG=60.4%  RAG=57.3%  Δ=-3.0%  n=164
+  Procedures                          No RAG=66.7%  RAG=61.1%  Δ=-5.6%  n=18
+
+--- Qwen ---
+  Overall No RAG: 58.5%
+  Overall My RAG: 59.0%
+  Delta:          +0.5%
+  Anatomy                             No RAG=58.8%  RAG=52.9%  Δ=-5.9%  n=17
+  Disorders                           No RAG=58.5%  RAG=59.1%  Δ=+0.6%  n=164
+  Procedures                          No RAG=55.6%  RAG=61.1%  Δ=+5.6%  n=18
+Saved → ./graphs/analysis/norag_vs_rag_all_models.png
+Saved → ./graphs/analysis/norag_vs_rag_delta_heatmap.png

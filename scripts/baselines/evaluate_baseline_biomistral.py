@@ -16,8 +16,8 @@ from scripts.baselines.baseline_utils import format_question, evaluate_model
 load_dotenv()
 
 HF_TOKEN = os.getenv("HF_TOKEN")
-N_TEST = 200 
-RESULTS_DIR = "./results"
+N_TEST = 500 
+RESULTS_DIR = "./results/appendix"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 
@@ -68,6 +68,6 @@ evaluate_model(
     biomistral_fn,
     test_ds,
     model_name="BioMistral-7B",
-    save_path=f"{RESULTS_DIR}/results_local_biomistral.csv",
-    summary_path=f"{RESULTS_DIR}/local_model_summary.txt"
+    save_path=f"{RESULTS_DIR}/results_biomistral_raw.csv",
+    summary_path=f"{RESULTS_DIR}/more_test_summary.txt"
 )

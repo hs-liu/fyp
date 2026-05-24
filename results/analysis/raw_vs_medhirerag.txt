@@ -1,0 +1,29 @@
+============================================================
+PAIRWISE: Raw Model vs MedHireRAG — Per Domain
+============================================================
+
+--- BioMistral ---
+  Overall Raw Model: 42.0%
+  Overall MedHireRAG: 48.5%
+  Delta:              +6.5%
+  Anatomy                             Raw Model=29.4%  MedHireRAG=47.1%  Δ=+17.6%  n=17
+  Disorders                           Raw Model=42.1%  MedHireRAG=48.2%  Δ=+6.1%  n=164
+  Procedures                          Raw Model=50.0%  MedHireRAG=50.0%  Δ=+0.0%  n=18
+
+--- Llama ---
+  Overall Raw Model: 60.0%
+  Overall MedHireRAG: 57.5%
+  Delta:              -2.5%
+  Anatomy                             Raw Model=47.1%  MedHireRAG=52.9%  Δ=+5.9%  n=17
+  Disorders                           Raw Model=60.4%  MedHireRAG=57.3%  Δ=-3.0%  n=164
+  Procedures                          Raw Model=66.7%  MedHireRAG=61.1%  Δ=-5.6%  n=18
+
+--- Qwen ---
+  Overall Raw Model: 58.5%
+  Overall MedHireRAG: 59.0%
+  Delta:              +0.5%
+  Anatomy                             Raw Model=58.8%  MedHireRAG=52.9%  Δ=-5.9%  n=17
+  Disorders                           Raw Model=58.5%  MedHireRAG=59.1%  Δ=+0.6%  n=164
+  Procedures                          Raw Model=55.6%  MedHireRAG=61.1%  Δ=+5.6%  n=18
+Saved → ./graphs/analysis/no_rag_vs_myrag/raw_vs_medhirerag_all_models.png
+Saved → ./graphs/analysis/no_rag_vs_myrag/raw_vs_medhirerag_delta_heatmap.png

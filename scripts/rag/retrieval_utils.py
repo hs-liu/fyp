@@ -11,25 +11,28 @@ import scripts.rag.retrieval_pipeline as R
 
 
 # ── Context retrieval ──────────────────────────────────────
-def get_context(sample, encoder, max_chunk_chars=400, pubmed_score_threshold=0.85) -> tuple:
+# the pubmed score can be ignored 
+def get_context(sample, encoder, max_chunk_chars=400,
+                pubmed_score_threshold=0.85) -> tuple:
     """
-    Retrieve context for a sample using hierarchical RAG.
-    Returns (context, domain, route)
+    L2: top-2 textbook chunks (coarse)
+    L3: top-1 pubmed chunk if score > threshold (fine, conditioned on L2)
     """
-    result  = R.hierarchical_retrieve(sample["question"], encoder)
-    domain  = result["domain"]
-    route   = result["source_route"]
+    result = R.hierarchical_retrieve(sample["question"], encoder)
+    l2     = result["l2_chunks"]
+    l3     = result["l3_chunks"]
 
     parts = []
-    for _, row in result["l2_chunks"].head(2).iterrows():
+
+    # L2 — coarse clinical knowledge
+    for _, row in l2.head(2).iterrows():
         parts.append(f"[Textbook] {row['content'][:max_chunk_chars]}")
-    l3 = result["l3_chunks"]
-    if len(l3) > 0 and l3.iloc[0]["score"] > pubmed_score_threshold:
-        parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
-    context = "\n\n".join(parts)
 
-    return context, domain, route
+    # L3 — fine evidence, only if relevant enough
 
+    parts.append(f"[Evidence] {l3.iloc[0]['content'][:300]}")
+
+    return "\n\n".join(parts)
 
 # ── Prompt building ────────────────────────────────────────
 def build_rag_prompt(sample, context: str, format_question_fn) -> str:

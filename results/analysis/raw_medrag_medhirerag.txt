@@ -1,0 +1,26 @@
+============================================================
+METHODS COMPARISON: Raw Model vs MedRAG vs MedHireRAG
+============================================================
+
+--- BioMistral ---
+  Anatomy                        Raw Model=29.4%  MedRAG=N/A  MedHireRAG=47.1%  n=17
+  Disorders                      Raw Model=42.1%  MedRAG=N/A  MedHireRAG=48.2%  n=164
+  Procedures                     Raw Model=50.0%  MedRAG=N/A  MedHireRAG=50.0%  n=18
+
+--- Llama ---
+  Anatomy                        Raw Model=47.1%  MedRAG=52.9%  MedHireRAG=52.9%  n=17
+  Disorders                      Raw Model=60.4%  MedRAG=53.0%  MedHireRAG=57.3%  n=164
+  Procedures                     Raw Model=66.7%  MedRAG=61.1%  MedHireRAG=61.1%  n=18
+
+--- Qwen ---
+  Anatomy                        Raw Model=58.8%  MedRAG=58.8%  MedHireRAG=52.9%  n=17
+  Disorders                      Raw Model=58.5%  MedRAG=56.1%  MedHireRAG=59.1%  n=164
+  Procedures                     Raw Model=55.6%  MedRAG=50.0%  MedHireRAG=61.1%  n=18
+
+Saved → ./graphs/analysis/overall_comparison/three_methods_biomistral.png
+
+Saved → ./graphs/analysis/overall_comparison/three_methods_llama.png
+
+Saved → ./graphs/analysis/overall_comparison/three_methods_qwen.png
+Saved → ./graphs/analysis/overall_comparison/three_methods_overall.png
+Saved → ./graphs/analysis/overall_comparison/three_methods_heatmap.png

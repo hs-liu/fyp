@@ -6,10 +6,10 @@ sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
 from scripts.baselines.baseline_utils import format_question, parse_answer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-N_TEST          = 200
-RESULTS_DIR     = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_norag.csv"
-SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
+N_TEST          = 500
+RESULTS_DIR     = "./results/appendix"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_raw.csv"
+SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/qwen2.5-7b"
@@ -81,4 +81,4 @@ pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})")
 with open(SUMMARY_PATH, "a") as f:
-    f.write(f"Qwen2.5-7B (No RAG) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
+    f.write(f"Qwen2.5-7B (raw) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")

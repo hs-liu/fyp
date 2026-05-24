@@ -1,0 +1,104 @@
+============================================================
+ERROR ANALYSIS: MedHireRAG vs MedHireUQRAG
+============================================================
+
+--- BioMistral ---
+  Overall MedHireRAG: 48.5%
+  Overall MedHireUQRAG: 48.5%
+  Delta:             +0.0%
+  Helped: 4 (2.0%)
+  Hurt:   4   (2.0%)
+  Both correct: 93  Both wrong: 99
+
+  Domain breakdown — helped:
+    Disorders                           4
+
+  Domain breakdown — hurt:
+    Disorders                           4
+
+  Sample questions helped:
+    Q: A 65-year-old man is brought to the emergency department 30 minutes after the onset of acute chest p...
+    Domain: Disorders
+
+    Q: A 65-year-old woman schedules an appointment with her physician for evaluation of weight loss and we...
+    Domain: Disorders
+
+    Q: A 68-year-old woman presents with left lower quadrant pain that worsens with defecation. She describ...
+    Domain: Disorders
+
+
+  Sample questions hurt:
+    Q: A 15-year-old woman presents with fever, altered mental status and a petechial rash on her lower ext...
+    Domain: Disorders
+
+    Q: A 41-year-old man presents to the emergency room with sudden onset of blurry vision one hour ago. He...
+    Domain: Disorders
+
+    Q: A 56-year-old man is brought to the emergency department. He was found unconscious on the street. Th...
+    Domain: Disorders
+
+
+--- Llama ---
+  Overall MedHireRAG: 57.5%
+  Overall MedHireUQRAG: 59.0%
+  Delta:             +1.5%
+  Helped: 4 (2.0%)
+  Hurt:   1   (0.5%)
+  Both correct: 114  Both wrong: 81
+
+  Domain breakdown — helped:
+    Disorders                           4
+
+  Domain breakdown — hurt:
+    Anatomy                             1
+
+  Sample questions helped:
+    Q: A 28-year-old gravida 1 at 32 weeks gestation is evaluated for an abnormal ultrasound that showed fe...
+    Domain: Disorders
+
+    Q: A 41-year-old G3P1 woman presents with a sudden onset throbbing headache, tinnitus, nausea, and left...
+    Domain: Disorders
+
+    Q: A 51-year-old woman presents to her primary care physician complaining of months of dry mouth and dr...
+    Domain: Disorders
+
+
+  Sample questions hurt:
+    Q: A 3-year-old boy is brought to the pediatrician because of abdominal pain and constipation for 3 wee...
+    Domain: Anatomy
+
+
+--- Qwen ---
+  Overall MedHireRAG: 59.0%
+  Overall MedHireUQRAG: 60.0%
+  Delta:             +1.0%
+  Helped: 2 (1.0%)
+  Hurt:   0   (0.0%)
+  Both correct: 118  Both wrong: 80
+
+  Domain breakdown — helped:
+    Disorders                           2
+
+  Domain breakdown — hurt:
+
+  Sample questions helped:
+    Q: A 65-year-old man with a history of hypertension, obesity, and alcoholic cirrhosis is seen in clinic...
+    Domain: Disorders
+
+    Q: A 59-year-old man presents to his primary care provider with fatigue, a progressively worsening coug...
+    Domain: Disorders
+
+
+  Sample questions hurt:
+
+Saved per-model plot for BioMistral
+
+Saved per-model plot for Llama
+
+Saved per-model plot for Qwen
+
+Saved effect breakdown plot
+
+Saved domain helped/hurt plot
+
+Saved delta heatmap

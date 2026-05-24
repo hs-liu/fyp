@@ -1,4 +1,0 @@
-model,accuracy,n_samples
-BioMistral-7B (no RAG),0.42,200
-Groq (llama-3.3-70b-versatile),0.615,200
-Groq (llama-3.3-70b-versatile) + MedRAG,0.0,200

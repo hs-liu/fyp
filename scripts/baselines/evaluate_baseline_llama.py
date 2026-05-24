@@ -6,9 +6,9 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
 # basic setup
-N_TEST = 200
-RESULTS_DIR = "./results"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_local_no_rag.csv"
+N_TEST = 500
+RESULTS_DIR = "./results/appendix"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_raw.csv"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/llama-3.1-8b"
@@ -95,5 +95,5 @@ for step, (i, sample) in enumerate(remaining, 1):
 pd.DataFrame(results).to_csv(CHECKPOINT_PATH, index=False)
 n_correct = sum(r["is_correct"] for r in results)
 print(f"\nFinal accuracy: {n_correct/len(results):.2%}  ({n_correct}/{len(results)})")
-with open(f"{RESULTS_DIR}/local_model_summary.txt", "a") as f:
-    f.write(f"LLama-3.1-8B (no RAG) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")
+with open(f"{RESULTS_DIR}/more_test_summary.txt", "a") as f:
+    f.write(f"LLama-3.1-8B (Raw) Accuracy: {n_correct/len(results):.2%} ({n_correct}/{len(results)})\n")

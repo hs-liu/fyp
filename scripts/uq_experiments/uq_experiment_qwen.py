@@ -9,13 +9,13 @@ from sentence_transformers import SentenceTransformer
 from scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary
 from uq_utils import compute_uq, print_uq_summary, plot_uq
 
-N_TEST          = 200
-N_SAMPLES       = 10
-TEMPERATURE     = 0.3
-RESULTS_DIR     = "./results"
-GRAPHS_DIR      = "./graphs"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_myrag_uq_0_3_10.csv"
-SUMMARY_PATH    = f"{RESULTS_DIR}/local_model_summary.txt"
+N_TEST          = 500
+N_SAMPLES       = 20
+TEMPERATURE     = 0.7
+RESULTS_DIR     = "./results/appendix"
+GRAPHS_DIR      = "./graphs/appendix"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_medhireuqrag_0.7_20_500.csv"
+SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
@@ -55,24 +55,43 @@ def inference_fn(prompt: str, do_sample: bool = False, temperature: float = 1.0)
     new_tokens = output[0][input_ids.shape[-1]:]
     return tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
 
+def get_confidence_label(consistency: float) -> str:
+    if consistency >= 0.9:
+        return "Very High"
+    elif consistency >= 0.7:
+        return "High"
+    elif consistency >= 0.5:
+        return "Medium"
+    elif consistency >= 0.3:
+        return "Low"
+    else:
+        return "Very Low"
+
 def infer_with_uq(sample) -> dict:
     try:
-        context, domain, route = get_context(sample, encoder)
+        context = get_context(sample, encoder)
         prompt = build_rag_prompt(sample, context, format_question)
 
         greedy_raw    = inference_fn(prompt, do_sample=False)
         greedy_parsed = parse_answer(greedy_raw)
         uq = compute_uq(prompt, inference_fn, n_samples=N_SAMPLES, temperature=TEMPERATURE)
 
-        return {"domain": domain, "route": route,
-                "greedy_answer": greedy_parsed, "greedy_raw": greedy_raw, **uq}
+        confidence_label = get_confidence_label(uq["uq_consistency"])
+        return {
+            "greedy_answer": greedy_parsed, "greedy_raw": greedy_raw, "confidence_label": confidence_label, **uq}
 
     except Exception as e:
         print(f"  [ERROR] {e}")
-        return {"domain": "", "route": "",
-                "greedy_answer": "", "greedy_raw": "",
-                "uq_answer": "UNKNOWN", "uq_consistency": 0.0,
-                "uq_entropy": 1.0, "uq_samples": "[]", "n_valid": 0}
+        return {
+            "greedy_answer":    "",
+            "greedy_raw":       "",
+            "uq_answer":        "UNKNOWN",
+            "uq_consistency":   0.0,
+            "uq_entropy":       1.0,
+            "uq_samples":       "[]",
+            "n_valid":          0,
+            "confidence_label": "Very Low",
+        }
 
 # main
 remaining = [(i, s) for i, s in enumerate(test_ds) if i not in done_indices]
@@ -86,15 +105,20 @@ for step, (i, sample) in enumerate(remaining, 1):
     uq_ok     = r["uq_answer"] == gt
 
     results.append({
-        "id": i, "question": sample["question"],
-        "ground_truth": gt,
-        "greedy_answer": r["greedy_answer"], "greedy_raw": r["greedy_raw"],
+        "id":             i,
+        "question":       sample["question"],
+        "ground_truth":   gt,
+        "greedy_answer":  r["greedy_answer"],
+        "greedy_raw":     r["greedy_raw"],
         "greedy_correct": bool(greedy_ok),
-        "uq_answer": r["uq_answer"], "uq_consistency": r["uq_consistency"],
-        "uq_entropy": r["uq_entropy"], "uq_correct": bool(uq_ok),
-        "uq_samples": r["uq_samples"], "n_valid": r["n_valid"],
-        "domain": r["domain"], "source_route": r["route"],
-        "is_correct": bool(greedy_ok),
+        "uq_answer":      r["uq_answer"],
+        "uq_consistency": r["uq_consistency"],
+        "uq_entropy":     r["uq_entropy"],
+        "uq_correct":     bool(uq_ok),
+        "uq_samples":     r["uq_samples"],
+        "n_valid":        r["n_valid"],
+        "is_correct":     bool(greedy_ok),
+        "confidence_label": r["confidence_label"],
     })
 
     print(f"  [{step:>3}/{len(remaining)}] "
@@ -117,9 +141,9 @@ print(f"\nGreedy accuracy:      {greedy_acc:.2%} ({n_greedy}/{len(results)})")
 print(f"UQ majority accuracy: {uq_acc:.2%} ({n_uq}/{len(results)})")
 print(f"UQ improvement:       {uq_acc - greedy_acc:+.2%}")
 
-save_summary(SUMMARY_PATH, f"Qwen2.5-7B (My RAG + UQ greedy, 0.3, 10):   {greedy_acc:.2%} ({n_greedy}/{len(results)})")
-save_summary(SUMMARY_PATH, f"Qwen2.5-7B (My RAG + UQ majority, 0.3, 10):  {uq_acc:.2%} ({n_uq}/{len(results)})")
+save_summary(SUMMARY_PATH, f"Qwen2.5-7B (MedHireUQRAG greedy, 0.7, 20):   {greedy_acc:.2%} ({n_greedy}/{len(results)})")
+save_summary(SUMMARY_PATH, f"Qwen2.5-7B (MedHireUQRAG majority, 0.7, 20):  {uq_acc:.2%} ({n_uq}/{len(results)})")
 
 df = pd.read_csv(CHECKPOINT_PATH)
 print_uq_summary(df)
-plot_uq(df, save_path=f"{GRAPHS_DIR}/uq_qwen_0.3_10.png", model_name="Qwen2.5-7B + My RAG, 0.3, 10)")
+plot_uq(df, save_path=f"{GRAPHS_DIR}/uq_qwen_0.7_20.png", model_name="MedHireUQRAG Qwen2.5-7B (T=0.7, N=20)")
