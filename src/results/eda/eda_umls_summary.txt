@@ -1,0 +1,118 @@
+============================================================
+RAW UMLS EDA
+============================================================
+
+--- MRSTY.RRF (Semantic Types) ---
+Total rows:            3,834,110
+Unique CUIs:           3,488,973
+Unique TUIs:           127
+Unique semantic types: 127
+
+Top 20 semantic types:
+  Therapeutic or Preventive Procedure            335,679
+  Finding                                        334,110
+  Eukaryote                                      331,262
+  Organic Chemical                               259,614
+  Clinical Drug                                  257,012
+  Plant                                          235,760
+  Pharmacologic Substance                        194,736
+  Amino Acid, Peptide, or Protein                166,936
+  Disease or Syndrome                            125,399
+  Injury or Poisoning                            117,688
+  Clinical Attribute                             114,615
+  Body Part, Organ, or Organ Component            94,429
+  Gene or Genome                                  89,124
+  Medical Device                                  80,743
+  Biologically Active Substance                   79,079
+  Fungus                                          74,040
+  Diagnostic Procedure                            60,118
+  Laboratory Procedure                            55,785
+  Intellectual Product                            53,354
+  Neoplastic Process                              50,244
+
+CUIs per TUI stats:
+  Mean:   30189.8
+  Median: 4778.0
+  Max:    335,679
+
+--- MRCONSO.RRF (Concepts/Synonyms) ---
+Loading English rows...
+Total ENG rows:        10,653,096
+Unique CUIs:           3,488,415
+Unique source SABs:    105
+
+Top 15 source vocabularies (SAB):
+  SNOMEDCT_US     1,707,419
+  NCBI            1,100,187
+  MEDCIN          1,055,700
+  MSH             1,032,712
+  LNC              763,365
+  NCI              501,519
+  RXNORM           357,580
+  ICD10PCS         352,618
+  RCD              347,501
+  MTH              262,429
+  HGNC             237,822
+  MTHSPL           212,546
+  ICD10CM          210,274
+  OMIM             202,559
+  GO               181,490
+
+Term type (TTY) distribution (top 10):
+  PT              2,174,817
+  SY              1,538,244
+  FN               842,222
+  SCN              761,688
+  AB               352,647
+  CE               325,178
+  NM               324,067
+  PN               260,277
+  ET               214,884
+  DP               186,807
+
+Synonyms per concept:
+  Mean:   3.05
+  Median: 2.0
+  Max:    2886
+  Min:    1
+
+--- MRREL.RRF (Relations, 5M sample) ---
+Rows loaded (sample):  5,000,000
+Unique REL types:      10
+Unique RELA types:     651
+
+Top 10 relation types (REL):
+  RO                   2,195,677
+  SY                    622,358
+  CHD                   577,481
+  RQ                    459,465
+  RN                    344,760
+  PAR                   317,317
+  QB                    239,248
+  AQ                    164,489
+  RB                     72,727
+  RL                      6,478
+
+Top 10 relation attributes (RELA):
+  isa                                  301,614
+  classified_as                        271,314
+  translation_of                       244,016
+  has_translation                      244,014
+  has_associated_morphology            233,152
+  mapped_to                            209,839
+  has_finding_site                     205,738
+  has_inactive_ingredient              192,748
+  has_member                           169,712
+  classifies                           131,327
+
+Top 10 source vocabularies in relations:
+  MSH              717,850
+  SNOMEDCT_US      676,854
+  SCTSPA           629,946
+  MTHSPL           327,842
+  LNC              186,105
+  NCI              137,786
+  MTH              111,097
+  MEDCIN            82,071
+  RXNORM            68,640
+  MSHRUS            65,730

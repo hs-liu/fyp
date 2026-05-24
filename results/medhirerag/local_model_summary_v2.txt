@@ -1,3 +1,0 @@
-Llama-3.1-8B Accuracy: 58.50% (117/200)
-Qwen2.5-7B (My RAG) Accuracy: 58.50% (117/200)
-BioMistral-7B Accuracy: 47.00% (94/200)

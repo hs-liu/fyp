@@ -1,6 +1,0 @@
-method,accuracy,n
-Random uniform,0.235,200
-Always 'D',0.24,200
-Weighted random,0.2,200
-Always 'A',0.205,200
-Theoretical (1/5),0.2,200

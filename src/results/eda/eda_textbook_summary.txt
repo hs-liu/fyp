@@ -1,0 +1,47 @@
+============================================================
+RAW TEXTBOOK CORPUS EDA
+============================================================
+Number of textbooks: 18
+
+Total chunks:        125,847
+Total words:         14,152,091
+Total chars:         97,752,383
+
+Per-textbook chunk counts:
+  InternalMed_Harrison                     32,628 (25.9%)
+  Surgery_Schwartz                         14,349 (11.4%)
+  Neurology_Adams                          12,370 (9.8%)
+  Obstentrics_Williams                      9,166 (7.3%)
+  Gynecology_Novak                          7,947 (6.3%)
+  Pharmacology_Katzung                      7,356 (5.8%)
+  Cell_Biology_Alberts                      7,070 (5.6%)
+  Pathology_Robbins                         5,297 (4.2%)
+  Immunology_Janeway                        4,852 (3.9%)
+  Histology_Ross                            4,411 (3.5%)
+  Physiology_Levy                           4,370 (3.5%)
+  Pediatrics_Nelson                         4,260 (3.4%)
+  Psichiatry_DSM-5                          4,057 (3.2%)
+  Anatomy_Gray                              3,017 (2.4%)
+  Biochemistry_Lippincott                   1,973 (1.6%)
+  First_Aid_Step2                           1,369 (1.1%)
+  First_Aid_Step1                             850 (0.7%)
+  Pathoma_Husain                              505 (0.4%)
+
+Chunk length stats (words):
+  Mean:   112.5
+  Median: 124.0
+  Std:    37.0
+  Min:    1
+  Max:    270
+
+Chunk length stats (chars):
+  Mean:   776.8
+  Median: 865.0
+  Std:    238.0
+  Min:    2
+  Max:    999
+
+Sample chunks:
+  [0] Anatomy_Gray: What is anatomy? Anatomy includes those structures that can be seen grossly (without the aid of magnification) and micro...
+  [500] Anatomy_Gray: Fig. 3.106 A. Close-up view of nipple and surrounding areola of the breast. B. Lateral view of the chest wall of a woman...
+  [1000] Anatomy_Gray: Three apertures in the pelvic wall communicate with the lower limb (Fig. 5.10A): the obturator canal, the greater sciati...
