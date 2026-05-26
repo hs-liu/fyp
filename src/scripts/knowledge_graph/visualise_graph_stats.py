@@ -7,7 +7,7 @@ import sys
 import math
 
 sys.stdout.reconfigure(line_buffering=True)
-DATA_DIR = "/vol/bitbucket/hl2622/fyp/data"
+DATA_DIR = "/vol/bitbucket/hl2622/fyp/src/data"
 
 print("Loading graph...")
 G = pickle.load(open(f"{DATA_DIR}/umls_graph.pkl", "rb"))

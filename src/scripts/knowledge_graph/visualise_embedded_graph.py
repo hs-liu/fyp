@@ -7,7 +7,7 @@ import networkx as nx
 from sklearn.manifold import TSNE
 import random
 
-DATA_DIR = "/vol/bitbucket/hl2622/fyp/data"
+DATA_DIR = "/vol/bitbucket/hl2622/fyp/src/data"
 
 # Load graph
 print("Loading graph...")

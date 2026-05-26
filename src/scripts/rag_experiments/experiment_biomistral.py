@@ -1,13 +1,13 @@
 # baseline_biomistral_myrag.py
 import os, torch, datasets
 import sys
-sys.path.insert(0, "/vol/bitbucket/hl2622/fyp")
+sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/src")
 sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
-from scripts.baselines.baseline_utils import format_question, parse_answer
+from src.scripts.baselines.baseline_utils import format_question, parse_answer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
-from scripts.rag.retrieval_utils import (
+from src.scripts.rag.retrieval_utils import (
     get_context, build_rag_prompt,
     load_checkpoint, save_checkpoint, save_summary
 )
@@ -20,7 +20,7 @@ CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
-BIOMISTRAL_PATH = "/vol/bitbucket/hl2622/fyp/models/biomistral-7b"
+BIOMISTRAL_PATH = "/vol/bitbucket/hl2622/fyp/src/models/biomistral-7b"
 
 print("Loading BioMistral...")
 tokenizer = AutoTokenizer.from_pretrained(BIOMISTRAL_PATH)

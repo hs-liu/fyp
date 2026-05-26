@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=raw_vs_medrag_vs_medhirerag_vs_medhireuqrag_analysis
-#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/analysis/raw_vs_medrag_vs_medhirerag_vs_medhireuqrag_analysis_%j.log
-#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/analysis/raw_vs_medrag_vs_medhirerag_vs_medhireuqrag_analysis_%j.err
+#SBATCH --output=/vol/bitbucket/hl2622/fyp/src/logs/analysis/raw_vs_medrag_vs_medhirerag_vs_medhireuqrag_analysis_%j.log
+#SBATCH --error=/vol/bitbucket/hl2622/fyp/src/logs/analysis/raw_vs_medrag_vs_medhirerag_vs_medhireuqrag_analysis_%j.err
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --partition=a30
@@ -11,6 +11,6 @@
 
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 
-cd /vol/bitbucket/hl2622/fyp
+cd /vol/bitbucket/hl2622/fyp/src
 export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/analysis/analysis_raw_medrag_medhirerag_medhireuqrag.py

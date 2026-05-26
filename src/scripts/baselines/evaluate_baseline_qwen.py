@@ -1,9 +1,9 @@
 import os, torch, datasets
 import pandas as pd
 import sys
-sys.path.insert(0, "/vol/bitbucket/hl2622/fyp")
+sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/src")
 sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
-from scripts.baselines.baseline_utils import format_question, parse_answer
+from src.scripts.baselines.baseline_utils import format_question, parse_answer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 N_TEST          = 500
@@ -12,7 +12,7 @@ CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_raw.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
-MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/qwen2.5-7b"
+MODEL_PATH = "/vol/bitbucket/hl2622/fyp/src/models/qwen2.5-7b"
 
 print("Loading Qwen...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)

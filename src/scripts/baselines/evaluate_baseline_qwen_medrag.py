@@ -2,11 +2,11 @@
 import os, json, faiss, torch, datasets
 import pandas as pd
 import sys
-sys.path.insert(0, "/vol/bitbucket/hl2622/fyp")
+sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/src")
 sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from scripts.baselines.baseline_utils import format_question, parse_answer
+from src.scripts.baselines.baseline_utils import format_question, parse_answer
 
 N_TEST          = 500
 TOP_K           = 3
@@ -20,7 +20,7 @@ CORPUS_BASE = "/vol/bitbucket/hl2622/fyp/corpus/textbooks"
 CHUNK_DIR   = f"{CORPUS_BASE}/chunk"
 INDEX_PATH  = f"{CORPUS_BASE}/index/ncbi/MedCPT-Article-Encoder/faiss.index"
 META_PATH   = f"{CORPUS_BASE}/index/ncbi/MedCPT-Article-Encoder/metadatas.jsonl"
-MODEL_PATH  = "/vol/bitbucket/hl2622/fyp/models/qwen2.5-7b"
+MODEL_PATH  = "/vol/bitbucket/hl2622/fyp/src/models/qwen2.5-7b"
 
 # load FAISS
 print("Loading FAISS index...")

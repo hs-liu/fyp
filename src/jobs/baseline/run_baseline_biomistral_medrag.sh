@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=medrag_biomistral
-#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/baselines/medrag_biomistral_%j.log
-#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/baselines/medrag_biomistral_%j.err
+#SBATCH --output=/vol/bitbucket/hl2622/fyp/src/logs/baselines/medrag_biomistral_%j.log
+#SBATCH --error=/vol/bitbucket/hl2622/fyp/src/logs/baselines/medrag_biomistral_%j.err
 #SBATCH --partition=a30
 #SBATCH --gres=gpu:1
 #SBATCH --mem=80G
@@ -13,6 +13,6 @@ export HF_TOKEN=$(cat /vol/bitbucket/hl2622/.secrets/hf_token)
 export HF_HOME=/vol/bitbucket/hl2622/.cache/huggingface
 export XET_HOME=/vol/bitbucket/hl2622/xet_cache
 export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache/datasets
-cd /vol/bitbucket/hl2622/fyp
+cd /vol/bitbucket/hl2622/fyp/src
 export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/baselines/evaluate_baseline_biomistral_medrag.py

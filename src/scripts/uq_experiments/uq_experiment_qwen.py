@@ -1,25 +1,25 @@
 import os, torch, datasets
 import pandas as pd
 import sys
-sys.path.insert(0, "/vol/bitbucket/hl2622/fyp")
+sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/src")
 sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
-from scripts.baselines.baseline_utils import format_question, parse_answer
+from src.scripts.baselines.baseline_utils import format_question, parse_answer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sentence_transformers import SentenceTransformer
-from scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary
-from uq_utils import compute_uq, print_uq_summary, plot_uq
+from src.scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary
+from src.scripts.uq_experiments.uq_utils import compute_uq, print_uq_summary, plot_uq
 
 N_TEST          = 500
 N_SAMPLES       = 20
 TEMPERATURE     = 0.7
-RESULTS_DIR     = "./results/appendix"
-GRAPHS_DIR      = "./graphs/appendix"
+RESULTS_DIR     = "./src/results/appendix"
+GRAPHS_DIR      = "./src/graphs/appendix"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_medhireuqrag_0.7_20_500.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
-MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/qwen2.5-7b"
+MODEL_PATH = "/vol/bitbucket/hl2622/fyp/src/models/qwen2.5-7b"
 
 print("Loading Qwen...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)

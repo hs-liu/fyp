@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=albation_analysis
-#SBATCH --output=/vol/bitbucket/hl2622/fyp/logs/analysis/albation_analysis_%j.log
-#SBATCH --error=/vol/bitbucket/hl2622/fyp/logs/analysis/albation_analysis_%j.err
+#SBATCH --output=/vol/bitbucket/hl2622/fyp/src/logs/analysis/albation_analysis_%j.log
+#SBATCH --error=/vol/bitbucket/hl2622/fyp/src/logs/analysis/albation_analysis_%j.err
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --partition=a30
@@ -11,6 +11,6 @@
 
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 
-cd /vol/bitbucket/hl2622/fyp
+cd /vol/bitbucket/hl2622/fyp/src
 export PYTHONPATH=/vol/bitbucket/hl2622/fyp
 python scripts/analysis/albation_analysis.py

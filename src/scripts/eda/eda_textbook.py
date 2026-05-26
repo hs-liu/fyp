@@ -9,8 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 CORPUS_DIR   = "/vol/bitbucket/hl2622/fyp/corpus/textbooks/chunk"
-RESULTS_DIR  = "./results/eda"
-GRAPHS_DIR   = "./graphs/eda"
+RESULTS_DIR  = "./src/results/eda"
+GRAPHS_DIR   = "./src/graphs/eda/textbook"
 SUMMARY_PATH = f"{RESULTS_DIR}/eda_textbook_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -73,59 +73,130 @@ log(f"  Std:    {tb_df['n_chars'].std():.1f}")
 log(f"  Min:    {tb_df['n_chars'].min()}")
 log(f"  Max:    {tb_df['n_chars'].max()}")
 log()
-
-# Sample chunks
 log("Sample chunks:")
 for i in [0, 500, 1000]:
     row = tb_df.iloc[i]
     log(f"  [{i}] {row['title']}: {row['content'][:120]}...")
 log()
 
-# ── Plots ──────────────────────────────────────────────────
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-fig.suptitle("Raw Textbook Corpus EDA", fontsize=14, fontweight="bold")
+# ══════════════════════════════════════════════════════════
+# PLOTS — one per file
+# ══════════════════════════════════════════════════════════
 
-ax = axes[0, 0]
+# Plot 1: Chunks per textbook
+fig, ax = plt.subplots(figsize=(12, 8))
 books = list(per_book.keys())
 cnts  = [per_book[b] for b in books]
-ax.barh([b[:30] for b in books], cnts, color="steelblue")
-ax.set_xlabel("Number of chunks")
-ax.set_title("Chunks per Textbook")
-ax.tick_params(axis="y", labelsize=8)
-
-ax = axes[0, 1]
-ax.hist(tb_df["n_words"], bins=40, color="steelblue", edgecolor="white")
-ax.axvline(tb_df["n_words"].mean(), color="red", linestyle="--",
-           label=f"Mean={tb_df['n_words'].mean():.0f}")
-ax.axvline(tb_df["n_words"].median(), color="orange", linestyle="--",
-           label=f"Median={tb_df['n_words'].median():.0f}")
-ax.set_xlabel("Words per chunk")
-ax.set_ylabel("Count")
-ax.set_title("Chunk Word Length Distribution")
-ax.legend()
-
-ax = axes[1, 0]
-ax.hist(tb_df["n_chars"], bins=40, color="orange", edgecolor="white")
-ax.axvline(tb_df["n_chars"].mean(), color="red", linestyle="--",
-           label=f"Mean={tb_df['n_chars'].mean():.0f}")
-ax.set_xlabel("Characters per chunk")
-ax.set_ylabel("Count")
-ax.set_title("Chunk Character Length Distribution")
-ax.legend()
-
-ax = axes[1, 1]
-per_book_words = tb_df.groupby("title")["n_words"].sum().sort_values(ascending=False)
-ax.barh([t[:30] for t in per_book_words.index[::-1]],
-        per_book_words.values[::-1], color="steelblue")
-ax.set_xlabel("Total words")
-ax.set_title("Total Words per Textbook")
-ax.tick_params(axis="y", labelsize=8)
-
+sorted_pairs = sorted(zip(cnts, books), reverse=True)
+cnts_s, books_s = zip(*sorted_pairs)
+bars = ax.barh([b[:35] for b in books_s], cnts_s,
+               color="steelblue", edgecolor="white")
+ax.set_xlabel("Number of chunks", fontsize=12)
+ax.set_title("Chunks per Textbook", fontsize=14, fontweight="bold")
+ax.tick_params(axis="y", labelsize=10)
+for bar, val in zip(bars, cnts_s):
+    ax.text(bar.get_width() + 20, bar.get_y() + bar.get_height()/2,
+            f"{val:,}", va="center", fontsize=9)
+ax.grid(axis="x", alpha=0.3)
 plt.tight_layout()
-plt.savefig(f"{GRAPHS_DIR}/eda_raw_textbook.png", dpi=150, bbox_inches="tight")
-log(f"Saved → {GRAPHS_DIR}/eda_raw_textbook.png")
+plt.savefig(f"{GRAPHS_DIR}/01_chunks_per_textbook.png", dpi=150, bbox_inches="tight")
 plt.close()
+print(f"Saved → {GRAPHS_DIR}/01_chunks_per_textbook.png")
 
+# Plot 2: Chunk word length distribution
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.hist(tb_df["n_words"], bins=40, color="steelblue", edgecolor="white", alpha=0.85)
+ax.axvline(tb_df["n_words"].mean(), color="red", linestyle="--", linewidth=2,
+           label=f"Mean = {tb_df['n_words'].mean():.0f} words")
+ax.axvline(tb_df["n_words"].median(), color="orange", linestyle="--", linewidth=2,
+           label=f"Median = {tb_df['n_words'].median():.0f} words")
+ax.set_xlabel("Words per chunk", fontsize=12)
+ax.set_ylabel("Number of chunks", fontsize=12)
+ax.set_title("Chunk Word Length Distribution", fontsize=14, fontweight="bold")
+ax.legend(fontsize=11)
+ax.grid(axis="y", alpha=0.3)
+plt.tight_layout()
+plt.savefig(f"{GRAPHS_DIR}/02_chunk_word_length.png", dpi=150, bbox_inches="tight")
+plt.close()
+print(f"Saved → {GRAPHS_DIR}/02_chunk_word_length.png")
+
+# Plot 3: Chunk character length distribution
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.hist(tb_df["n_chars"], bins=40, color="orange", edgecolor="white", alpha=0.85)
+ax.axvline(tb_df["n_chars"].mean(), color="red", linestyle="--", linewidth=2,
+           label=f"Mean = {tb_df['n_chars'].mean():.0f} chars")
+ax.axvline(tb_df["n_chars"].median(), color="blue", linestyle="--", linewidth=2,
+           label=f"Median = {tb_df['n_chars'].median():.0f} chars")
+ax.set_xlabel("Characters per chunk", fontsize=12)
+ax.set_ylabel("Number of chunks", fontsize=12)
+ax.set_title("Chunk Character Length Distribution", fontsize=14, fontweight="bold")
+ax.legend(fontsize=11)
+ax.grid(axis="y", alpha=0.3)
+plt.tight_layout()
+plt.savefig(f"{GRAPHS_DIR}/03_chunk_char_length.png", dpi=150, bbox_inches="tight")
+plt.close()
+print(f"Saved → {GRAPHS_DIR}/03_chunk_char_length.png")
+
+# Plot 4: Total words per textbook
+fig, ax = plt.subplots(figsize=(12, 8))
+per_book_words = tb_df.groupby("title")["n_words"].sum().sort_values(ascending=True)
+bars = ax.barh([t[:35] for t in per_book_words.index],
+               per_book_words.values, color="steelblue", edgecolor="white")
+ax.set_xlabel("Total words", fontsize=12)
+ax.set_title("Total Words per Textbook", fontsize=14, fontweight="bold")
+ax.tick_params(axis="y", labelsize=10)
+ax.set_xlim(0, per_book_words.values.max() * 1.18)
+for bar, val in zip(bars, per_book_words.values):
+    ax.text(bar.get_width() + per_book_words.values.max() * 0.01,
+            bar.get_y() + bar.get_height()/2,
+            f"{val:,}", va="center", ha="left", fontsize=9)
+ax.grid(axis="x", alpha=0.3)
+plt.tight_layout()
+plt.savefig(f"{GRAPHS_DIR}/04_total_words_per_textbook.png", dpi=150, bbox_inches="tight")
+plt.close()
+print(f"Saved → {GRAPHS_DIR}/04_total_words_per_textbook.png")
+
+# Plot 5: Heatmap of chunk length stats per textbook
+fig, ax = plt.subplots(figsize=(14, 9))
+
+stats_per_book = tb_df.groupby("title")["n_words"].agg([
+    ("Mean",   "mean"),
+    ("Median", "median"),
+    ("Std",    "std"),
+    ("Min",    "min"),
+    ("Max",    "max"),
+    ("Count",  "count"),
+]).round(1)
+
+# Sort by mean descending
+stats_per_book = stats_per_book.sort_values("Mean", ascending=False)
+
+# Normalise each column to 0-1 for heatmap colouring
+stats_norm = (stats_per_book - stats_per_book.min()) / \
+             (stats_per_book.max() - stats_per_book.min())
+
+im = ax.imshow(stats_norm.values, aspect="auto", cmap="YlOrRd")
+
+ax.set_xticks(range(len(stats_per_book.columns)))
+ax.set_xticklabels(stats_per_book.columns, fontsize=12, fontweight="bold")
+ax.set_yticks(range(len(stats_per_book.index)))
+ax.set_yticklabels([t[:35] for t in stats_per_book.index], fontsize=10)
+
+# Annotate each cell with the actual value
+for i in range(len(stats_per_book.index)):
+    for j, col in enumerate(stats_per_book.columns):
+        val = stats_per_book.iloc[i, j]
+        text_color = "white" if stats_norm.iloc[i, j] > 0.6 else "black"
+        ax.text(j, i, f"{val:,.0f}", ha="center", va="center",
+                fontsize=9, color=text_color, fontweight="bold")
+
+ax.set_title("Chunk Word Length Statistics per Textbook", fontsize=14, fontweight="bold")
+plt.colorbar(im, ax=ax, label="Normalised value", shrink=0.8)
+plt.tight_layout()
+plt.savefig(f"{GRAPHS_DIR}/05_word_length_heatmap.png", dpi=150, bbox_inches="tight")
+plt.close()
+print(f"Saved → {GRAPHS_DIR}/05_word_length_heatmap.png")
+# ── Save summary ───────────────────────────────────────────
 with open(SUMMARY_PATH, "w") as f:
     f.write("\n".join(lines))
 log(f"Saved → {SUMMARY_PATH}")

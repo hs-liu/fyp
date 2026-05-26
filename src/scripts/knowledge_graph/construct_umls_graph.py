@@ -6,7 +6,7 @@ import networkx as nx
 import pickle
 
 UMLS_DIR = "/vol/bitbucket/hl2622/umls/2025AB/META"  # adjust to where your UMLS download is
-DATA_DIR  = "/vol/bitbucket/hl2622/fyp/data"
+DATA_DIR  = "/vol/bitbucket/hl2622/fyp/src/data"
 
 # ── Step 1: Load MRSTY (CUI → TUI mapping) ────────────────
 print("Loading MRSTY...")

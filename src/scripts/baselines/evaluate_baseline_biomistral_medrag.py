@@ -3,7 +3,7 @@ import os, json, faiss, torch, datasets
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from scripts.baselines.baseline_utils import format_question, parse_answer
+from src.scripts.baselines.baseline_utils import format_question, parse_answer
 
 N_TEST          = 500
 TOP_K           = 3
@@ -16,7 +16,7 @@ CORPUS_BASE  = "/vol/bitbucket/hl2622/fyp/corpus/textbooks"
 CHUNK_DIR    = f"{CORPUS_BASE}/chunk"
 INDEX_PATH   = f"{CORPUS_BASE}/index/ncbi/MedCPT-Article-Encoder/faiss.index"
 META_PATH    = f"{CORPUS_BASE}/index/ncbi/MedCPT-Article-Encoder/metadatas.jsonl"
-MODEL_PATH   = "/vol/bitbucket/hl2622/fyp/models/biomistral-7b"
+MODEL_PATH   = "/vol/bitbucket/hl2622/fyp/src/models/biomistral-7b"
 
 # ── Load FAISS ─────────────────────────────────────────────
 print("Loading FAISS index...")

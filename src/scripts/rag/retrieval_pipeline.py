@@ -6,8 +6,8 @@ import pandas as pd
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-DATA_DIR  = "/vol/bitbucket/hl2622/fyp/data"
-MODEL_DIR = "/vol/bitbucket/hl2622/fyp/models/domain_classifier"
+DATA_DIR  = "/vol/bitbucket/hl2622/fyp/src/data"
+MODEL_DIR = "/vol/bitbucket/hl2622/fyp/src/models/domain_classifier"
 
 import sys
 sys.stdout.reconfigure(line_buffering=True)

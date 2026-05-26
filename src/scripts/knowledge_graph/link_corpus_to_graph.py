@@ -11,7 +11,7 @@ from datasets import load_dataset
 
 sys.stdout.reconfigure(line_buffering=True)
 
-DATA_DIR   = "/vol/bitbucket/hl2622/fyp/data"
+DATA_DIR   = "/vol/bitbucket/hl2622/fyp/src/data"
 CORPUS_DIR = "/vol/bitbucket/hl2622/fyp/corpus/textbooks/chunk"
 HF_CACHE   = "/vol/bitbucket/hl2622/huggingface_cache"
 N_PUBMED   = 500_000

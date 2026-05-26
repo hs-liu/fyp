@@ -1,7 +1,7 @@
 # baseline_llama_local.py
 import os, re, time, datasets
 import pandas as pd
-from scripts.baselines.baseline_utils import format_question, parse_answer
+from src.scripts.baselines.baseline_utils import format_question, parse_answer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
@@ -11,7 +11,7 @@ RESULTS_DIR = "./results/appendix"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_raw.csv"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
-MODEL_PATH = "/vol/bitbucket/hl2622/fyp/models/llama-3.1-8b"
+MODEL_PATH = "/vol/bitbucket/hl2622/fyp/src/models/llama-3.1-8b"
 
 # load model
 print("Loading model...")

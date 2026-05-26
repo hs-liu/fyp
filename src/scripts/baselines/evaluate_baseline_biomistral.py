@@ -8,9 +8,9 @@ import pandas as pd
 from dotenv import load_dotenv
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import sys
-sys.path.insert(0, "/vol/bitbucket/hl2622/fyp")
+sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/src")
 sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
-from scripts.baselines.baseline_utils import format_question, evaluate_model
+from src.scripts.baselines.baseline_utils import format_question, evaluate_model
 
 
 load_dotenv()
@@ -27,7 +27,7 @@ print("\nLoading dataset...")
 dataset = datasets.load_dataset("bigbio/med_qa", "med_qa_en_source", trust_remote_code=True)
 test_ds = list(dataset["test"])[:N_TEST]
 
-BIOMISTRAL_PATH = "/vol/bitbucket/hl2622/fyp/models/biomistral-7b"
+BIOMISTRAL_PATH = "/vol/bitbucket/hl2622/fyp/src/models/biomistral-7b"
 bm_tokenizer = AutoTokenizer.from_pretrained(BIOMISTRAL_PATH)
 bm_model = AutoModelForCausalLM.from_pretrained(
     BIOMISTRAL_PATH,

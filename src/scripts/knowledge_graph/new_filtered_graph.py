@@ -5,7 +5,7 @@ import networkx as nx
 import sys
 
 sys.stdout.reconfigure(line_buffering=True)
-DATA_DIR = "/vol/bitbucket/hl2622/fyp/data"
+DATA_DIR = "/vol/bitbucket/hl2622/fyp/src/data"
 
 print("Loading original graph...")
 G = pickle.load(open(f"{DATA_DIR}/umls_graph.pkl", "rb"))

@@ -30,7 +30,7 @@ lines = []
 def log(s=""): print(s); lines.append(s)
 
 # ── File mapping ───────────────────────────────────────────
-FILES = {
+FILES = {                                   
     "BioMistral-7B": {
         "Raw Model":     ("results_local_biomistral.csv",                                    None),
         "MedRAG":     ("results_biomistral_medrag.csv",                                                        None),
