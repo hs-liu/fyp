@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=ablation_analysis
-#SBATCH --output=/vol/bitbucket/hl2622/fyp/src/logs/analysis/ablation_analysis_%j.log
-#SBATCH --error=/vol/bitbucket/hl2622/fyp/src/logs/analysis/ablation_analysis_%j.err
+#SBATCH --job-name=robustness_analysis
+#SBATCH --output=/vol/bitbucket/hl2622/fyp/src/logs/analysis/robustness_analysis_%j.log
+#SBATCH --error=/vol/bitbucket/hl2622/fyp/src/logs/analysis/robustness_analysis_%j.err
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --partition=a30
@@ -13,4 +13,4 @@ source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 
 cd /vol/bitbucket/hl2622/fyp/src
 export PYTHONPATH=/vol/bitbucket/hl2622/fyp
-python scripts/analysis/ablation_analysis.py
+python scripts/analysis/robustness_analysis.py

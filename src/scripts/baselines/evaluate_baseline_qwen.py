@@ -6,7 +6,7 @@ sys.path.insert(0, "/vol/bitbucket/hl2622/fyp/MedRAG/src")
 from src.scripts.baselines.baseline_utils import format_question, parse_answer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-N_TEST          = 500
+N_TEST          = 200
 RESULTS_DIR     = "./results/appendix"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen_raw.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"

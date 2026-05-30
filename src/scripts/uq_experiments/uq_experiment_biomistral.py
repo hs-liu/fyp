@@ -10,7 +10,7 @@ from sentence_transformers import SentenceTransformer
 from src.scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary
 from src.scripts.uq_experiments.uq_utils import compute_uq, print_uq_summary, plot_uq
 
-N_TEST          = 500
+N_TEST          = 200
 N_SAMPLES       = 10
 TEMPERATURE     = 0.7
 RESULTS_DIR     = "./src/results/appendix"

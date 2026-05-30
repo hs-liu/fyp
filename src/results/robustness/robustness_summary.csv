@@ -1,0 +1,16 @@
+model,perturbation_type,greedy_consistency,uq_consistency_rate,flip_rate,greedy_accuracy,uq_accuracy
+BioMistral-7B,paraphrase,1.0,1.0,0.0,0.0,0.0
+BioMistral-7B,shuffle,1.0,1.0,0.0,0.0,0.0
+BioMistral-7B,synonym,1.0,1.0,0.0,0.0,0.0
+BioMistral-7B,truncate,1.0,1.0,0.0,0.0,0.0
+BioMistral-7B,typo,1.0,1.0,0.0,0.0,0.0
+Llama-3.1-8B,paraphrase,1.0,1.0,0.0,0.0,0.0
+Llama-3.1-8B,shuffle,1.0,1.0,0.0,0.0,0.0
+Llama-3.1-8B,synonym,1.0,1.0,0.0,0.0,0.0
+Llama-3.1-8B,truncate,1.0,1.0,0.0,0.0,0.0
+Llama-3.1-8B,typo,1.0,1.0,0.0,0.0,0.0
+Qwen2.5-7B,paraphrase,1.0,1.0,0.0,0.0,0.0
+Qwen2.5-7B,shuffle,1.0,1.0,0.0,0.0,0.0
+Qwen2.5-7B,synonym,1.0,1.0,0.0,0.0,0.0
+Qwen2.5-7B,truncate,1.0,1.0,0.0,0.0,0.0
+Qwen2.5-7B,typo,1.0,1.0,0.0,0.0,0.0

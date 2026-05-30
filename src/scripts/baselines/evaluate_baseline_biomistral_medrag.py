@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from src.scripts.baselines.baseline_utils import format_question, parse_answer
 
-N_TEST          = 500
+N_TEST          = 200
 TOP_K           = 3
 MAX_CTX_CHARS   = 1800
 RESULTS_DIR     = "./results/appendix"

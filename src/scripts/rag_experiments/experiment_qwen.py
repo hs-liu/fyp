@@ -8,7 +8,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from sentence_transformers import SentenceTransformer
 from src.scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_checkpoint, save_checkpoint, save_summary
 
-N_TEST          = 500
+N_TEST          = 200
 MAX_CHUNK_CHARS = 400
 RESULTS_DIR     = "./src/results"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen.csv"

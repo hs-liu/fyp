@@ -120,7 +120,7 @@ def hierarchical_retrieve(query: str, encoder, top_k: int = 5) -> dict:
         "l3_chunks":    l3_chunks,
     }
 
-# ── Hierarchical albation tests ─────────────────────────────
+# ── Hierarchical ablation tests ─────────────────────────────
 # ── Flat retrieval ─────────────────────────────────────────
 def retrieve(query, query_embedding, top_k=5, source_filter=None, hops=1):
     """
