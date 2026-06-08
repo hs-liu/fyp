@@ -10,8 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter
 
-RESULTS_DIR  = "./src/results/eda"
-GRAPHS_DIR   = "./src/graphs/eda/medqa"
+RESULTS_DIR  = "./results/eda"
+GRAPHS_DIR   = "./graphs/eda/medqa"
 SUMMARY_PATH = f"{RESULTS_DIR}/eda_medqa_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -157,12 +157,11 @@ ax.bar([i - bw/2 for i in range(len(x))], subset_vals, bw,
        label=f"Subset (n={N_TEST})", color="steelblue")
 ax.bar([i + bw/2 for i in range(len(x))], full_vals, bw,
        label=f"Full test (n={len(full_test)})", color="orange")
-ax.axhline(20, color="red", linestyle="--", label="Uniform (20%)")
 ax.set_xticks(range(len(x)))
 ax.set_xticklabels(x, fontsize=12)
 ax.set_xlabel("Answer option", fontsize=12)
 ax.set_ylabel("Percentage (%)", fontsize=12)
-ax.set_title("Answer Distribution: Subset vs Full Test Set", fontsize=14, fontweight="bold")
+ax.set_title("Answer Distribution: 200 Subset vs Full Test Set", fontsize=14, fontweight="bold")
 ax.legend(fontsize=11)
 ax.grid(axis="y", alpha=0.3)
 plt.tight_layout()
@@ -193,7 +192,6 @@ methods = heuristic_df["method"].tolist()
 accs    = heuristic_df["accuracy"].tolist()
 colors  = ["#d9534f" if a < 0.25 else "#5cb85c" for a in accs]
 bars    = ax.barh(methods, [a * 100 for a in accs], color=colors, edgecolor="white")
-ax.axvline(20, color="red", linestyle="--", linewidth=2, label="Random chance (20%)")
 ax.set_xlabel("Accuracy (%)", fontsize=12)
 ax.set_title("Heuristic Baseline Accuracies", fontsize=14, fontweight="bold")
 ax.legend(fontsize=11)

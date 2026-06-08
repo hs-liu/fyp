@@ -10,7 +10,7 @@ sys.stdout.reconfigure(line_buffering=True)
 DATA_DIR = "/vol/bitbucket/hl2622/fyp/src/data"
 
 print("Loading graph...")
-G = pickle.load(open(f"{DATA_DIR}/umls_graph.pkl", "rb"))
+G = pickle.load(open(f"{DATA_DIR}/umls_graph_filtered_new.pkl", "rb"))
 print(f"  {G.number_of_nodes():,} nodes, {G.number_of_edges():,} edges")
 
 num_nodes = G.number_of_nodes()

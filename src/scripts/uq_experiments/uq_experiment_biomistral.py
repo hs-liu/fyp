@@ -13,8 +13,8 @@ from src.scripts.uq_experiments.uq_utils import compute_uq, print_uq_summary, pl
 N_TEST          = 200
 N_SAMPLES       = 10
 TEMPERATURE     = 0.7
-RESULTS_DIR     = "./src/results/appendix"
-GRAPHS_DIR      = "./src/graphs/appendix"
+RESULTS_DIR     = "./results/appendix"
+GRAPHS_DIR      = "./graphs/appendix"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral_medhireuqrag_0.7_10_500.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)

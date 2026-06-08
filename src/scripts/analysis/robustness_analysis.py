@@ -148,7 +148,22 @@ encoder = SentenceTransformer("pritamdeka/S-PubMedBert-MS-MARCO")
 # ══════════════════════════════════════════════════════════
 # Run experiment per model
 # ══════════════════════════════════════════════════════════
-all_results = []
+
+# ── Load existing results if any ───────────────────────────
+CHECKPOINT_PATH = f"{RESULTS_DIR}/robustness_results.csv"
+
+if os.path.exists(CHECKPOINT_PATH):
+    existing_df  = pd.read_csv(CHECKPOINT_PATH)
+    all_results  = existing_df.to_dict("records")
+    done_keys    = set(
+        zip(existing_df["model"],
+            existing_df["id"],
+            existing_df["perturbation_type"])
+    )
+    print(f"Resuming — {len(done_keys)} (model, id, perturbation) combinations already done.")
+else:
+    all_results = []
+    done_keys   = set()
 
 for model_name, cfg in MODEL_CONFIGS.items():
     print(f"\n{'='*60}")
@@ -230,12 +245,22 @@ for model_name, cfg in MODEL_CONFIGS.items():
         original_q = sample["question"]
         gt         = sample["answer_idx"]
 
+        # Check if all perturbation types for this sample are done
+        all_done = all(
+            (model_name, i, p) in done_keys
+            for p in PERTURBATION_FNS.keys()
+        )
+        if all_done:
+            print(f"  [SKIP] {model_name} sample {i} — all perturbations done")
+            continue
+
         # Original — MedHireUQRAG
         orig = infer_with_uq(sample)
         orig_greedy  = orig["greedy_answer"]
         orig_uq      = orig["uq_answer"]
         orig_correct = orig_greedy == gt
         orig_consist = orig["uq_consistency"]
+        orig_uq_correct = orig_uq == gt
 
         print(f"\n[{i+1}/{N_TEST}] {model_name} | GT={gt} "
               f"greedy={orig_greedy} uq={orig_uq} "
@@ -243,6 +268,11 @@ for model_name, cfg in MODEL_CONFIGS.items():
               f"{'✓' if orig_correct else '✗'}")
 
         for perturb_type, perturb_fn in PERTURBATION_FNS.items():
+            # Skip if already done
+            if (model_name, i, perturb_type) in done_keys:
+                print(f"  [SKIP] {perturb_type} — already done")
+                continue
+            
             greedy_answers  = []
             uq_answers      = []
             consistencies   = []
@@ -274,6 +304,7 @@ for model_name, cfg in MODEL_CONFIGS.items():
                 "id":                   i,
                 "ground_truth":         gt,
                 "original_greedy":      orig_greedy,
+                "original_uq_correct": orig_uq_correct, 
                 "original_uq":          orig_uq,
                 "original_correct":     orig_correct,
                 "original_consistency": orig_consist,
@@ -317,8 +348,7 @@ PERTURB_COLORS = {
 
 # ── Plot 1: Greedy consistency per perturbation — all models
 fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=True)
-fig.suptitle("Answer Consistency Under Query Perturbations — All Models\n"
-             "(MedHireUQRAG greedy, higher = more robust)",
+fig.suptitle("Answer Consistency Under Query Perturbations",
              fontsize=13, fontweight="bold")
 
 for ax, model_name in zip(axes, model_names):
@@ -330,16 +360,12 @@ for ax, model_name in zip(axes, model_names):
     colors = [PERTURB_COLORS[p] for p in perturb_types]
 
     bars = ax.bar(perturb_types, means, color=colors,
-                  edgecolor="white", linewidth=0.5, width=0.6,
-                  yerr=stds, capsize=4,
-                  error_kw={"linewidth": 1.5})
+                  edgecolor="white", linewidth=0.5, width=0.6)
     for bar, val in zip(bars, means):
         ax.text(bar.get_x() + bar.get_width()/2, val + 0.02,
                 f"{val:.2f}", ha="center", va="bottom",
                 fontsize=9, fontweight="bold")
 
-    ax.axhline(1.0, color="gray", linestyle="--",
-               linewidth=1.5, label="Perfect consistency")
     ax.set_title(model_name, fontsize=12, fontweight="bold")
     ax.set_xlabel("Perturbation type", fontsize=10)
     ax.set_ylabel("Consistency rate" if model_name == model_names[0] else "",
@@ -361,8 +387,7 @@ print(f"Saved → {GRAPHS_DIR}/01_consistency_all_models.png")
 
 # ── Plot 2: Greedy vs UQ consistency rate ─────────────────
 fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=False)
-fig.suptitle("Greedy vs UQ Majority Consistency Under Perturbations\n"
-             "UQ majority should be more stable than greedy",
+fig.suptitle("UQ Greedy vs UQ Majority Consistency Under Perturbations\n",
              fontsize=13, fontweight="bold")
 
 x     = np.arange(len(perturb_types))
@@ -375,7 +400,7 @@ for ax, model_name in zip(axes, model_names):
     uq     = [sub[sub["perturbation_type"]==p]["uq_consistency_rate"].mean()
                for p in perturb_types]
 
-    b1 = ax.bar(x - width/2, greedy, width, label="Greedy",
+    b1 = ax.bar(x - width/2, greedy, width, label="UQ Greedy",
                 color=model_colors[model_name], edgecolor="white",
                 linewidth=0.5, alpha=0.6)
     b2 = ax.bar(x + width/2, uq,     width, label="UQ majority",
@@ -406,13 +431,13 @@ print(f"Saved → {GRAPHS_DIR}/02_greedy_vs_uq_consistency.png")
 
 # ── Plot 3: Accuracy under perturbation vs original ────────
 fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=False)
-fig.suptitle("Accuracy Under Perturbations vs Original Accuracy\n"
-             "MedHireUQRAG — greedy and UQ majority",
-             fontsize=13, fontweight="bold")
+fig.suptitle("Accuracy Under Perturbations vs Original Accuracy",
+             fontsize=13, fontweight="bold", y=1.05)
 
 for ax, model_name in zip(axes, model_names):
     sub      = df[df["model"] == model_name]
     orig_acc = sub["original_correct"].mean() * 100
+    orig_uq_acc = sub["original_uq_correct"].mean() * 100
 
     greedy_accs = [sub[sub["perturbation_type"]==p]["greedy_accuracy"].mean()*100
                    for p in perturb_types]
@@ -420,49 +445,76 @@ for ax, model_name in zip(axes, model_names):
                    for p in perturb_types]
 
     ax.axhline(orig_acc, color="black", linestyle="--",
-               linewidth=2, label=f"Original ({orig_acc:.1f}%)", zorder=3)
+               linewidth=1.5, zorder=3)
+
+    # Original accuracy label — top right corner inside plot
+    ax.text(len(perturb_types) - 1, orig_acc,
+            f"  Original ({orig_acc:.1f}%)",
+            fontsize=8, color="black", va="bottom",
+            ha="right")
 
     ax.plot(perturb_types, greedy_accs, marker="o", linewidth=2,
             markersize=7, color=model_colors[model_name],
-            alpha=0.6, label="Greedy")
+            alpha=0.6, label="UQ Greedy")
     ax.plot(perturb_types, uq_accs, marker="s", linewidth=2,
             markersize=7, color=model_colors[model_name],
-            label="UQ majority")
+            label="UQ Majority")
 
     for i, (ga, ua) in enumerate(zip(greedy_accs, uq_accs)):
-        ax.annotate(f"{ga:.1f}%", (i, ga),
-                    xytext=(0, 8), textcoords="offset points",
-                    ha="center", fontsize=7,
-                    color=model_colors[model_name], alpha=0.8)
-        ax.annotate(f"{ua:.1f}%", (i, ua),
-                    xytext=(0, -14), textcoords="offset points",
-                    ha="center", fontsize=7,
-                    color=model_colors[model_name])
+        gap    = abs(ga - ua)
+        offset = 10 if gap < 3 else 7
+
+        if ga >= ua:
+            ax.annotate(f"{ga:.1f}%", (i, ga),
+                        xytext=(0, offset), textcoords="offset points",
+                        ha="center", fontsize=7,
+                        color=model_colors[model_name], alpha=0.8)
+            ax.annotate(f"{ua:.1f}%", (i, ua),
+                        xytext=(0, -offset-4), textcoords="offset points",
+                        ha="center", fontsize=7,
+                        color=model_colors[model_name])
+        else:
+            ax.annotate(f"{ua:.1f}%", (i, ua),
+                        xytext=(0, offset), textcoords="offset points",
+                        ha="center", fontsize=7,
+                        color=model_colors[model_name])
+            ax.annotate(f"{ga:.1f}%", (i, ga),
+                        xytext=(0, -offset-4), textcoords="offset points",
+                        ha="center", fontsize=7,
+                        color=model_colors[model_name], alpha=0.8)
 
     ax.set_title(model_name, fontsize=12, fontweight="bold")
     ax.set_ylabel("Accuracy (%)" if model_name == model_names[0] else "",
                   fontsize=11)
+    ax.set_xticks(range(len(perturb_types)))
     ax.set_xticklabels(perturb_types, rotation=20, ha="right", fontsize=9)
     max_val = max(max(greedy_accs), max(uq_accs), orig_acc)
-    ax.set_ylim(0, max_val * 1.2)
+    ax.set_ylim(0, max_val * 1.25)
     ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.0f%%"))
-    ax.legend(fontsize=9, framealpha=0.9)
     ax.yaxis.grid(True, linestyle="--", alpha=0.4)
     ax.set_axisbelow(True)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
+# Legend below the plots
+handles, labels = axes[0].get_legend_handles_labels()
+fig.legend(handles, labels,
+           loc="lower center",
+           bbox_to_anchor=(0.5, -0.08),
+           ncol=2,
+           fontsize=10,
+           framealpha=0.9,
+           edgecolor="#cccccc")
+
 plt.tight_layout()
 plt.savefig(f"{GRAPHS_DIR}/03_accuracy_under_perturbation.png",
             dpi=150, bbox_inches="tight")
 plt.close()
-print(f"Saved → {GRAPHS_DIR}/03_accuracy_under_perturbation.png")
 
 # ── Plot 4: UQ score under perturbation ───────────────────
 # Does UQ consistency drop when question is perturbed?
 fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=False)
-fig.suptitle("UQ Consistency Score Under Perturbations\n"
-             "Does perturbation make the model less confident?",
+fig.suptitle("UQ Consistency Score Under Perturbations\n",
              fontsize=13, fontweight="bold")
 
 for ax, model_name in zip(axes, model_names):
@@ -472,8 +524,6 @@ for ax, model_name in zip(axes, model_names):
     uq_scores = [sub[sub["perturbation_type"]==p]["mean_uq_score"].mean()
                   for p in perturb_types]
 
-    ax.axhline(orig_uq, color="black", linestyle="--",
-               linewidth=2, label=f"Original ({orig_uq:.2f})", zorder=3)
     bars = ax.bar(perturb_types, uq_scores,
                   color=[PERTURB_COLORS[p] for p in perturb_types],
                   edgecolor="white", linewidth=0.5, width=0.6)
@@ -513,8 +563,7 @@ ax.set_xticks(range(len(perturb_types)))
 ax.set_xticklabels(perturb_types, fontsize=12)
 ax.set_yticks(range(len(model_names)))
 ax.set_yticklabels(model_names, fontsize=11)
-ax.set_title("Answer Flip Rate Heatmap — All Models × Perturbations\n"
-             "Red = fragile, Green = robust",
+ax.set_title("Answer Flip Rate Heatmap — All Models × Perturbations\n",
              fontsize=13, fontweight="bold", pad=12)
 
 for i in range(len(model_names)):
@@ -530,6 +579,56 @@ plt.savefig(f"{GRAPHS_DIR}/05_flip_heatmap_all_models.png",
             dpi=150, bbox_inches="tight")
 plt.close()
 print(f"Saved → {GRAPHS_DIR}/05_flip_heatmap_all_models.png")
+
+
+# ── Robustness accuracy table ──────────────────────────────
+print("\n% LaTeX robustness accuracy table")
+print(r"\begin{table}[H]")
+print(r"\centering")
+print(r"\small")
+print(r"\begin{tabular}{llccccccc}")
+print(r"\toprule")
+print(r"\textbf{Model} & \textbf{Decoding} & \textbf{Original} & "
+      r"\textbf{Typo} & \textbf{Synonym} & \textbf{Shuffle} & "
+      r"\textbf{Truncate} & \textbf{Paraphrase} \\")
+print(r"\midrule")
+
+for model_name in model_names:
+    sub = df[df["model"] == model_name]
+
+    # Original baseline — greedy and majority separately
+    orig_greedy_acc = sub["original_correct"].mean() * 100
+    if "original_uq_correct" in sub.columns:
+        orig_uq_acc = sub["original_uq_correct"].mean() * 100
+    else:
+        orig_uq_acc = None
+
+    greedy_accs = {p: sub[sub["perturbation_type"]==p]["greedy_accuracy"].mean()*100
+                   for p in perturb_types}
+    uq_accs     = {p: sub[sub["perturbation_type"]==p]["uq_accuracy"].mean()*100
+                   for p in perturb_types}
+
+    def fmt(v):
+        return f"{v:.1f}\\%" if v is not None else "---"
+
+    # Greedy row
+    greedy_cells = " & ".join(fmt(greedy_accs[p]) for p in perturb_types)
+    print(f"    \\multirow{{2}}{{*}}{{{model_name}}} & Greedy & "
+          f"{fmt(orig_greedy_acc)} & {greedy_cells} \\\\")
+
+    # Majority row
+    uq_cells = " & ".join(fmt(uq_accs[p]) for p in perturb_types)
+    orig_uq_str = fmt(orig_uq_acc) if orig_uq_acc is not None else "---"
+    print(f"     & Majority & {orig_uq_str} & {uq_cells} \\\\")
+    print(r"    \midrule")
+
+print(r"\bottomrule")
+print(r"\end{tabular}")
+print(r"\caption{Greedy and majority vote accuracy under five "
+      r"perturbation types on the 50-question robustness subset. "
+      r"Original denotes unperturbed accuracy on the same subset.}")
+print(r"\label{tab:robustness_accuracy}")
+print(r"\end{table}")
 
 # ── Summary ────────────────────────────────────────────────
 print("\n" + "="*60)

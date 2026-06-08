@@ -29,10 +29,6 @@ PROGRESSIVE ABLATION STUDY
 ============================================================
 5.3.1: Raw Model vs MedRAG vs Graph-based RAG
 ============================================================
-Saved → ./graphs/analysis/ablation/raw_medrag_graphbasedrag_accuracy.png
-Saved → ./graphs/analysis/ablation/raw_medrag_graphbasedrag_per_model.png
-Saved → ./graphs/analysis/ablation/raw_medrag_graphbasedrag_domain.png
-Saved → ./graphs/analysis/ablation/raw_medrag_graphbasedrag_delta_heatmap.png
   BioMistral-7B: helped=12 hurt=6 net=+6
   Llama-3.1-8B: helped=9 hurt=23 net=-14
   Qwen2.5-7B: helped=4 hurt=12 net=-8
@@ -60,7 +56,7 @@ RAW MODEL vs MEDRAG
 ============================================================
 Saved → ./graphs/analysis/ablation/raw_vs_medrag_accuracy.png
 Saved → ./graphs/analysis/ablation/raw_vs_medrag_per_model.png
-Saved → ./graphs/analysis/ablation/raw_vs_medrag_domain.png
+  [SKIP] No domain data for raw_vs_medrag
 Saved → ./graphs/analysis/ablation/raw_vs_medrag_delta_heatmap.png
   BioMistral-7B: helped=6 hurt=5 net=+1
   Llama-3.1-8B: helped=6 hurt=18 net=-12

@@ -1,8 +1,12 @@
 # MedHireUQRAG
 
-**Hierarchical Graph-Guided Retrieval-Augmented Generation with Uncertainty Quantification for Medical Question Answering**
+**Boosting Local LLM
+Performance on Medical QA via
+Uncertainty-Aware Hierarchical
+Graph-based Retrieval-Augmented
+Generation.**
 
-> Imperial College London — Final Year Project (2024/25)
+> Imperial College London — Final Year Project 
 
 ---
 
@@ -39,7 +43,7 @@ Output: Answer + Confidence Label (Very Low → Very High)
 
 | Model | No RAG | MedRAG | MedHireRAG | MedHireUQRAG (T=0.7) |
 |-------|--------|--------|------------|----------------------|
-| BioMistral-7B | 41.5% | — | 47.0% | 46.5% (N=20) |
+| BioMistral-7B | 41.5% | 42.0% | 47.0% | 46.5% (N=20) |
 | Llama-3.1-8B | 60.0% | 54.0% | 58.5% | 54.5% (N=10) |
 | Qwen2.5-7B | 58.5% | 56.0% | 58.5% | 58.5% (N=10) |
 
@@ -55,8 +59,8 @@ Output: Answer + Confidence Label (Very Low → Very High)
 ## Repository Structure
 
 ```
-fyp/src
-├── scripts/
+fyp/
+├── src/scripts/
 │   ├── baselines/                 
 │   │   ├── evaluate_baseline_biomistral.py
 │   │   ├── evaluate_baseline_llama.py
@@ -102,22 +106,24 @@ fyp/src
 │       ├── analysis_sensitivity.py
 │       ├── error_analysis.py
 │       └── uq_summary_analysis.py
-├── jobs/                           
+├── src/jobs/                           
 │   ├── ablation/                 
-│   │   ├── run
-│   │   ├── evaluate_baseline_llama.py
-│   │   ├── evaluate_baseline_qwen.py
-│   │   ├── evaluate_baseline_biomistral_medrag.py
-│   │   ├── evaluate_baseline_llama_medrag.py
-│   │   ├── evaluate_baseline_qwen_medrag.py
-│   │   └── baseline_utils.py annotations
-│   └── corpus_embeddings.npy       # 625k × 768 embeddings
-├── corpus/                         # Raw textbook chunks + FAISS index
-├── results/                        # Experiment results (CSV)
-├── graphs/                         # Generated plots
-├── jobs/                           # SLURM job scripts
-├── notebooks/                      # Exploratory notebooks
-├── MedRAG/                         # MedRAG submodule
+│   ├── baseline/   
+│   ├── download/   
+│   ├── eda/   
+│   ├── experiment/ 
+│   ├── graph_construction/
+│   └── uq/     
+├── src/results/                           
+│   ├── ablation/                 
+│   ├── analysis/   
+│   ├── appendix/   
+│   ├── baseline/   
+│   ├── eda/ 
+│   ├── medhirerag/
+│   └── UQ/      
+├── corpus/                         
+├── MedRAG/                        k
 └── requirements.txt
 ```
 
@@ -145,49 +151,21 @@ cd fyp
 ```bash
 python3 -m venv fyp_venv
 source fyp_venv/bin/activate
-pip install --upgrade pip
 pip install -r requirements.txt
-
-# Additional packages not in requirements.txt
-pip install sentence-transformers faiss-cpu networkx scipy scikit-learn \
-            matplotlib python-dotenv pyarrow
 ```
 
 ### 3. Environment Variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root with your HF_TOKEN, HF_HOME, XET_HOME, HF_DATASET_CACHE and PYTHONPATH
 
-```bash
-cat > .env << 'EOF'
-HF_TOKEN=your_huggingface_token_here
-EOF
-```
+Replace all the paths stored in ./src/jobs bash scripts with your own path
 
 ### 4. Download Models
 
 Download all three models using the provided script:
 
 ```bash
-bash scripts/setup/download_models.sh
-```
-
-Or download individually:
-
-```bash
-# BioMistral-7B (no gate — public)
-huggingface-cli download BioMistral/BioMistral-7B \
-    --local-dir models/biomistral-7b \
-    --token $HF_TOKEN
-
-# Llama-3.1-8B (requires HF access request)
-huggingface-cli download meta-llama/Llama-3.1-8B-Instruct \
-    --local-dir models/llama-3.1-8b \
-    --token $HF_TOKEN
-
-# Qwen2.5-7B (no gate — public)
-huggingface-cli download Qwen/Qwen2.5-7B-Instruct \
-    --local-dir models/qwen2.5-7b \
-    --token $HF_TOKEN
+sbatch src/jobs/download/run_download_models.sh
 ```
 
 > **Note:** Llama-3.1-8B requires you to accept the licence on HuggingFace before downloading. Visit [https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) and request access.
@@ -197,8 +175,8 @@ Expected model sizes:
 | Model | Size |
 |-------|------|
 | BioMistral-7B | ~14GB |
-| Llama-3.1-8B-Instruct | ~16GB |
-| Qwen2.5-7B-Instruct | ~15GB |
+| Llama-3.1-8B | ~16GB |
+| Qwen2.5-7B | ~15GB |
 
 ### 5. Build Retrieval Index
 
@@ -208,22 +186,22 @@ The retrieval index (UMLS graph, corpus, embeddings) must be built before runnin
 # Step 1: Build UMLS knowledge graph
 # Requires UMLS 2025AB download from https://www.nlm.nih.gov/research/umls/
 # Place MRCONSO.RRF, MRREL.RRF, MRSTY.RRF in data/umls/
-python3 scripts/data/build_umls_graph.py
+sabtch src/jobs/graph_construction/run_construct_flat_graph.sh
 
-# Step 2: Link corpus chunks to CUIs
-python3 scripts/data/link_corpus.py
+# Step 2: Filter the current graph to be more clinical focused 
+sabtch src/jobs/graph_construction/run_filter_graph_new.sh
 
-# Step 3: Generate corpus embeddings (GPU required, ~2 hours)
-python3 scripts/data/generate_embeddings.py
+# Step 3: Link corpus chunks to the graph
+sabtch src/jobs/graph_construction/run_link_corpus_to_graph.py
 ```
 
 Expected files after setup:
 
 ```
-data/
-├── umls_graph_filtered_new.pkl   # ~2GB  — 2.6M nodes, 22M edges
-├── corpus_linked.parquet          # ~633MB — 625k chunks with CUI annotations
-└── corpus_embeddings.npy          # ~1.8GB — 625k × 768 float32 embeddings
+src/data/
+├── umls_graph_filtered_new.pkl   
+├── corpus_linked.parquet        
+└── corpus_embeddings.npy          
 ```
 
 ---
@@ -232,44 +210,44 @@ data/
 
 All scripts support checkpointing — if interrupted, re-running will resume from where it stopped.
 
-### Baseline: No RAG
+### Baseline: Raw Model
 
 ```bash
-python3 scripts/baselines/baseline_biomistral.py
-python3 scripts/baselines/baseline_llama.py
-python3 scripts/baselines/baseline_qwen.py
+sabtch src/jobs/baseline/run_baseline_biomistral.sh
+sabtch src/jobs/baseline/run_baseline_llama.sh
+sabtch src/jobs/baseline/run_baseline_qwen.sh
 ```
 
 ### Baseline: MedRAG
 
 ```bash
-python3 scripts/baselines/baseline_biomistral_medrag.py
-python3 scripts/baselines/baseline_llama_medrag.py
-python3 scripts/baselines/baseline_qwen_medrag.py
+sabtch src/jobs/baseline/run_baseline_biomistral_medrag.sh
+sabtch src/jobs/baseline/run_baseline_llama_medrag.sh
+sabtch src/jobs/baseline/run_baseline_qwen_medrag.sh
 ```
 
-### MedHireRAG
+### MedHireUQRAG component 1: MedHireRAG
 
 ```bash
-python3 scripts/rag/baseline_biomistral_myrag.py
-python3 scripts/rag/baseline_llama_myrag.py
-python3 scripts/rag/baseline_qwen_myrag.py
+sabtch src/jobs/baseline/run_baseline_biomistral_medrag.sh
+sabtch src/jobs/baseline/run_baseline_llama_medrag.sh
+sabtch src/jobs/baseline/run_baseline_qwen_medrag.sh
 ```
 
-### MedHireUQRAG
+### MedHireUQRAG component 2: UQ
 
 Temperature and sample size are configured at the top of each script (`TEMPERATURE`, `N_SAMPLES`):
 
 ```bash
 # Best calibration config (recommended for deployment)
 # BioMistral: T=0.7, N=20
-python3 scripts/uq/uq_biomistral_myrag.py
+sabtch src/jobs/uq/run_uq_biomistral.sh
 
 # Llama: T=0.7, N=10
-python3 scripts/uq/uq_llama_myrag.py
+sabtch src/jobs/uq/run_uq_llama.sh
 
 # Qwen: T=0.7, N=10
-python3 scripts/uq/uq_qwen_myrag.py
+sabtch src/jobs/uq/run_uq_qwen.sh
 ```
 
 ### Ablation Study
@@ -278,61 +256,39 @@ python3 scripts/uq/uq_qwen_myrag.py
 # --model: biomistral | llama | qwen
 # --mode:  kg_only | textbook | pubmed | both
 
-python3 scripts/ablation/ablation_experiment.py --model biomistral --mode kg_only
-python3 scripts/ablation/ablation_experiment.py --model llama --mode textbook
-python3 scripts/ablation/ablation_experiment.py --model qwen --mode pubmed
-python3 scripts/ablation/ablation_experiment.py --model llama --mode both
+sabtch src/jobs/ablation/run_ablation_biomistral.sh
+sabtch src/jobs/ablation/run_ablation_llama.sh
+sabtch src/jobs/ablation/run_ablation_qwen.sh
 ```
+Run other ablation scripts for pairwise comparisons.
 
-### SLURM (Cluster)
-
-```bash
-# Submit individual jobs
-sbatch jobs/job_biomistral_myrag.sh
-sbatch jobs/job_llama_myrag.sh
-sbatch jobs/job_qwen_myrag.sh
-
-# Submit all ablation jobs
-for model in biomistral llama qwen; do
-    for mode in kg_only textbook pubmed both; do
-        sbatch jobs/job_ablation.sh $model $mode
-    done
-done
-```
-
----
 
 ## Analysis
 
 Run all analysis scripts after experiments are complete:
 
 ```bash
-# Ablation progression plots (Section 5.3)
-python3 scripts/analysis/analysis_ablation_progressive.py
+# Ablation analysis
+sabtch src/jobs/ablation/run_ablation_analysis.sh
 
-# UQ configuration analysis + calibration curves (Section 5.5)
-python3 scripts/analysis/analysis_uq_configs.py
+# UQ configuration analysis + calibration curves 
+sabtch src/jobs/uq/run_uq_analysis.sh
 
-# Reliability metrics: ECE, AUC (Section 5.5)
-python3 scripts/analysis/analysis_reliability.py
+# Reliability metrics: ECE, AUC 
+sabtch src/jobs/uq/run_reliability.sh
 
-# All four methods comparison (Section 5.6)
-python3 scripts/analysis/analysis_all_four.py
+# Robustness
+sabtch src/jobs/ablation/run_robustness_analysis.sh
 
-# Error analysis — all pairwise comparisons
-for f in scripts/analysis/error_analysis/error_*.py; do
-    python3 "$f"
-done
 
-# EDA plots (Chapter 3)
-python3 scripts/eda/eda_medqa.py
-python3 scripts/eda/eda_test_set.py
-python3 scripts/eda/eda_umls.py
-python3 scripts/eda/eda_textbook.py
-python3 scripts/eda/eda_pubmed.py
+# EDA plots 
+sabtch src/jobs/eda/run_eda_umls.sh
+sabtch src/jobs/eda/run_eda_textbook.sh
+sabtch src/jobs/eda/run_eda_pubmed.sh
+sabtch src/jobs/eda/run_eda_medqa.sh
 ```
 
-Output plots are saved to `graphs/` and results to `results/analysis/`.
+Output plots are saved to `graphs/` and results to `results/`.
 
 ---
 
@@ -358,17 +314,19 @@ All experiment results are saved as CSV to `results/`:
 
 ```
 results/
-├── results_biomistral.csv                    # No RAG
-├── results_llama_local_no_rag.csv
-├── results_qwen_norag.csv
-├── results_llama_medrag.csv                  # MedRAG
-├── results_qwen_medrag.csv
+├── baselines/
+│   ├── results_local_biomistral.csv                    
+│   ├── results_llama_local_no_rag.csv
+│   ├── results_qwen_norag.csv
+│   ├── results_biomistral_medrag.csv
+│   ├── results_llama_medrag.csv                  
+│   └── results_qwen_medrag.csv
 ├── medhirerag/
-│   ├── results_biomistral.csv                # MedHireRAG
+│   ├── results_biomistral.csv                
 │   ├── results_llama.csv
 │   └── results_qwen.csv
 ├── UQ/
-│   ├── results_biomistral_medhireuqrag_*.csv # MedHireUQRAG
+│   ├── results_biomistral_medhireuqrag_*.csv 
 │   ├── results_llama_medhireuqrag_*.csv
 │   └── results_qwen_medhireuqrag_*.csv
 └── ablation/
@@ -376,82 +334,3 @@ results/
     ├── ablation_biomistral_textbook.csv
     └── ...
 ```
-
-UQ result CSVs contain the following columns:
-
-| Column | Description |
-|--------|-------------|
-| `id` | Question index (0–199) |
-| `question` | Question text |
-| `ground_truth` | Correct answer (A–E) |
-| `greedy_answer` | Deterministic answer |
-| `greedy_correct` | Whether greedy answer is correct |
-| `uq_answer` | Majority vote answer |
-| `uq_correct` | Whether majority vote is correct |
-| `uq_consistency` | Fraction of samples agreeing with majority |
-| `uq_entropy` | Predictive entropy across answer options |
-| `confidence_label` | Very Low / Low / Medium / High / Very High |
-| `n_valid` | Number of valid samples |
-
----
-
-## Dependencies
-
-```
-pandas==2.2.2
-datasets==2.20.0
-transformers==4.44.2
-openai==1.57.0
-accelerate==0.33.0
-torch==2.4.0
-ipykernel
-httpx==0.27.2
-sentence-transformers
-faiss-cpu
-networkx
-scipy
-scikit-learn
-matplotlib
-python-dotenv
-pyarrow
-```
-
----
-
-## Hardware Requirements
-
-| Task | GPU | VRAM | Time (est.) |
-|------|-----|------|-------------|
-| Embedding generation | A30 | 24GB | ~2 hours |
-| BioMistral inference (200 samples) | A30 | 24GB | ~30 min |
-| Llama-3.1-8B inference | A30 | 24GB | ~45 min |
-| Qwen2.5-7B inference | A30 | 24GB | ~45 min |
-| UQ (N=20, T=0.7) | A30 | 24GB | ~6 hours |
-
----
-
-## Citation
-
-If you use this work, please cite:
-
-```bibtex
-@misc{liu2025medhireuqrag,
-  author = {Liu, Hao Sheng},
-  title  = {MedHireUQRAG: Hierarchical Graph-Guided Retrieval-Augmented
-             Generation with Uncertainty Quantification for Medical QA},
-  year   = {2025},
-  school = {Imperial College London},
-  note   = {BEng Computing Final Year Project}
-}
-```
-
----
-
-## Acknowledgements
-
-- [MedRAG](https://github.com/gzxiong/MedRAG) — flat RAG baseline (included as submodule)
-- [UMLS](https://www.nlm.nih.gov/research/umls/) — knowledge graph (requires free licence)
-- [MedQA](https://github.com/jind11/MedQA) — evaluation benchmark
-- [BioMistral](https://huggingface.co/BioMistral/BioMistral-7B) — domain-specific medical LLM
-- [MedCPT](https://huggingface.co/ncbi/MedCPT-Query-Encoder) — medical query encoder
-- Imperial College London — GPU cluster infrastructure (SLURM, NVIDIA A30)

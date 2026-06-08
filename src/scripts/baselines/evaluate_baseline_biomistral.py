@@ -16,8 +16,8 @@ from src.scripts.baselines.baseline_utils import format_question, evaluate_model
 load_dotenv()
 
 HF_TOKEN = os.getenv("HF_TOKEN")
-N_TEST = 500 
-RESULTS_DIR = "./results/appendix"
+N_TEST = 200
+RESULTS_DIR = "./results/baseline"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 

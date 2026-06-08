@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 from datasets import load_dataset
 
 HF_CACHE     = "/vol/bitbucket/hl2622/huggingface_cache"
-RESULTS_DIR  = "./src/results/eda"
-GRAPHS_DIR   = "./src/graphs/eda/pubmed"
+RESULTS_DIR  = "./results/eda"
+GRAPHS_DIR   = "./graphs/eda/pubmed"
 SUMMARY_PATH = f"{RESULTS_DIR}/eda_pubmed_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)

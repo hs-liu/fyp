@@ -9,8 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 CORPUS_DIR   = "/vol/bitbucket/hl2622/fyp/corpus/textbooks/chunk"
-RESULTS_DIR  = "./src/results/eda"
-GRAPHS_DIR   = "./src/graphs/eda/textbook"
+RESULTS_DIR  = "./results/eda"
+GRAPHS_DIR   = "./graphs/eda/textbook"
 SUMMARY_PATH = f"{RESULTS_DIR}/eda_textbook_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -156,46 +156,50 @@ plt.savefig(f"{GRAPHS_DIR}/04_total_words_per_textbook.png", dpi=150, bbox_inche
 plt.close()
 print(f"Saved → {GRAPHS_DIR}/04_total_words_per_textbook.png")
 
-# Plot 5: Heatmap of chunk length stats per textbook
-fig, ax = plt.subplots(figsize=(14, 9))
+# Plot 5: Mean chunk length per textbook with std error bars
+fig, ax = plt.subplots(figsize=(12, 9))
 
-stats_per_book = tb_df.groupby("title")["n_words"].agg([
-    ("Mean",   "mean"),
-    ("Median", "median"),
-    ("Std",    "std"),
-    ("Min",    "min"),
-    ("Max",    "max"),
-    ("Count",  "count"),
-]).round(1)
+stats_per_book = tb_df.groupby("title")["n_words"].agg(
+    mean="mean", std="std"
+).round(1).sort_values("mean", ascending=True)
 
-# Sort by mean descending
-stats_per_book = stats_per_book.sort_values("Mean", ascending=False)
+# Shorten long textbook names
+short_names = [t[:35] + "..." if len(t) > 35 else t
+               for t in stats_per_book.index]
 
-# Normalise each column to 0-1 for heatmap colouring
-stats_norm = (stats_per_book - stats_per_book.min()) / \
-             (stats_per_book.max() - stats_per_book.min())
+bars = ax.barh(range(len(stats_per_book)), stats_per_book["mean"], capsize=4,
+               color="#2E86C1", edgecolor="white",)
 
-im = ax.imshow(stats_norm.values, aspect="auto", cmap="YlOrRd")
+# Annotate mean value
+# Get the max x value for consistent label placement
+max_x = (stats_per_book["mean"] + stats_per_book["std"]).max()
 
-ax.set_xticks(range(len(stats_per_book.columns)))
-ax.set_xticklabels(stats_per_book.columns, fontsize=12, fontweight="bold")
-ax.set_yticks(range(len(stats_per_book.index)))
-ax.set_yticklabels([t[:35] for t in stats_per_book.index], fontsize=10)
+for i, (mean, std) in enumerate(zip(stats_per_book["mean"],
+                                     stats_per_book["std"])):
+    ax.text(max_x + 3, i, f"{mean:.0f}",
+            va="center", fontsize=8, color="#333")
 
-# Annotate each cell with the actual value
-for i in range(len(stats_per_book.index)):
-    for j, col in enumerate(stats_per_book.columns):
-        val = stats_per_book.iloc[i, j]
-        text_color = "white" if stats_norm.iloc[i, j] > 0.6 else "black"
-        ax.text(j, i, f"{val:,.0f}", ha="center", va="center",
-                fontsize=9, color=text_color, fontweight="bold")
+# Extend x limit to fit labels
+ax.set_xlim(0, max_x + 30)
 
-ax.set_title("Chunk Word Length Statistics per Textbook", fontsize=14, fontweight="bold")
-plt.colorbar(im, ax=ax, label="Normalised value", shrink=0.8)
+ax.set_yticks(range(len(stats_per_book)))
+ax.set_yticklabels(short_names, fontsize=9)
+ax.set_xlabel("Mean chunk length (words)", fontsize=11)
+ax.set_title("Mean Chunk Word Length per Textbook",
+             fontsize=13, fontweight="bold", pad=12)
+ax.axvline(tb_df["n_words"].mean(), color="red", linestyle="--",
+           linewidth=1.5, label=f"Corpus mean ({tb_df['n_words'].mean():.0f})")
+ax.legend(fontsize=10)
+ax.xaxis.grid(True, linestyle="--", alpha=0.4)
+ax.set_axisbelow(True)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
 plt.tight_layout()
-plt.savefig(f"{GRAPHS_DIR}/05_word_length_heatmap.png", dpi=150, bbox_inches="tight")
+plt.savefig(f"{GRAPHS_DIR}/05_mean_chunk_length_per_textbook.png",
+            dpi=150, bbox_inches="tight")
 plt.close()
-print(f"Saved → {GRAPHS_DIR}/05_word_length_heatmap.png")
+print(f"Saved → {GRAPHS_DIR}/05_mean_chunk_length_per_textbook.png")
 # ── Save summary ───────────────────────────────────────────
 with open(SUMMARY_PATH, "w") as f:
     f.write("\n".join(lines))

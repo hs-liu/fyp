@@ -411,6 +411,62 @@ for model_name in UQ_CONFIGS:
         log(f"    Calibration gap:      "
             f"{vh['correct'].mean()*100 - df['correct'].mean()*100:+.1f}%")
 
+# Generate LaTeX table
+print("\n% LaTeX confidence distribution table")
+print(r"\begin{table}[H]")
+print(r"\centering\small")
+print(r"\begin{tabular}{llccccc c}")
+print(r"\toprule")
+print(r"\textbf{Model} & \textbf{Config} & \textbf{VL} & \textbf{L} & \textbf{M} & \textbf{H} & \textbf{VH} & \textbf{Total} \\")
+print(r"\midrule")
+
+for model_name in UQ_CONFIGS:
+    first = True
+    n_configs = len(UQ_CONFIGS[model_name])
+    for config_label, (fname, gcol, mcol) in UQ_CONFIGS[model_name].items():
+        df = all_data[model_name][config_label]
+        if df is None:
+            continue
+        df = df.copy()
+        df["confidence_label"] = df["uq_consistency"].apply(get_confidence_label)
+        counts = {l: (df["confidence_label"]==l).sum() for l in CONFIDENCE_LABELS}
+        
+        model_cell = f"\\multirow{{{n_configs}}}{{*}}{{{model_name}}}" \
+                     if first else ""
+        first = False
+        
+        vl = counts["Very Low"]
+        l  = counts["Low"]
+        m  = counts["Medium"]
+        h  = counts["High"]
+        vh = counts["Very High"]
+        
+        # Replace 0 with ---
+        def fmt(v): return "---" if v == 0 else str(v)
+        
+        print(f"    {model_cell} & ${config_label}$ & "
+              f"{fmt(vl)} & {fmt(l)} & {fmt(m)} & {fmt(h)} & {fmt(vh)} & 200 \\\\")
+    print(r"    \midrule")
+
+print(r"\bottomrule")
+print(r"\end{tabular}")
+print(r"\caption{Confidence label distribution across UQ configurations.}")
+print(r"\label{tab:conf_dist}")
+print(r"\end{table}")
+
+for model_name in UQ_CONFIGS:
+    for config_label, (fname, gcol, mcol) in UQ_CONFIGS[model_name].items():
+        df = all_data[model_name][config_label]
+        if df is None: continue
+        df["confidence_label"] = df["uq_consistency"].apply(get_confidence_label)
+        for label in ["Low", "Medium", "High", "Very High"]:
+            subset = df[df["confidence_label"]==label]
+            if len(subset) >= 3:
+                acc = subset[mcol].mean() * 100
+                print(f"{model_name} {config_label} {label}: {acc:.1f}%")
+            else:
+                print(f"{model_name} {config_label} {label}: ---")
+
 # ══════════════════════════════════════════════════════════
 # SUMMARY: best config per model
 # ══════════════════════════════════════════════════════════

@@ -32,24 +32,24 @@ def log(s=""): print(s); lines.append(s)
 # ── File mapping ───────────────────────────────────────────
 FILES = {                                   
     "BioMistral-7B": {
-        "Raw Model":     ("results_local_biomistral.csv",                                    None),
-        "MedRAG":     ("results_biomistral_medrag.csv",                                                        None),
+        "Raw Model":     ("baseline/results_local_biomistral.csv",                                    None),
+        "MedRAG":     ("baseline/results_biomistral_medrag.csv",                                                        None),
         "Graph-based RAG":    ("ablation/ablation_biomistral_kg_only.csv",          None),
         "Graph-based RAG (Textbook)":("ablation/ablation_biomistral_textbook.csv",         None),
         "Graph-based RAG (PubMed)":  ("ablation/ablation_biomistral_pubmed.csv",           None),
         "MedHireRAG": ("medhirerag/results_biomistral.csv",                         None),
     },
     "Llama-3.1-8B": {
-        "Raw Model":     ("results_llama_local_no_rag.csv",                            None),
-        "MedRAG":     ("results_llama_medrag.csv",                                  None),
+        "Raw Model":     ("baseline/results_llama_local_no_rag.csv",                            None),
+        "MedRAG":     ("baseline/results_llama_medrag.csv",                                  None),
         "Graph-based RAG":    ("ablation/ablation_llama_kg_only.csv",               None),
         "Graph-based RAG (Textbook)":("ablation/ablation_llama_textbook.csv",              None),
         "Graph-based RAG (PubMed)":  ("ablation/ablation_llama_pubmed.csv",                None),
         "MedHireRAG": ("medhirerag/results_llama.csv",                                None),
     },
     "Qwen2.5-7B": {
-        "Raw Model":     ("results_qwen_norag.csv",                                    None),
-        "MedRAG":     ("results_qwen_medrag.csv",                                   None),
+        "Raw Model":     ("baseline/results_qwen_norag.csv",                                    None),
+        "MedRAG":     ("baseline/results_qwen_medrag.csv",                                   None),
         "Graph-based RAG":    ("ablation/ablation_qwen_kg_only.csv",                None),
         "Graph-based RAG (Textbook)":("ablation/ablation_qwen_textbook.csv",               None),
         "Graph-based RAG (PubMed)":  ("ablation/ablation_qwen_pubmed.csv",                 None),
@@ -497,14 +497,14 @@ log("="*60)
 methods = ["Raw Model", "MedRAG", "Graph-based RAG"]
 tag     = "raw_medrag_graphbasedrag"
 
-plot_accuracy_all_models(methods, "Raw Model vs MedRAG vs Graph-based RAG",
+""" plot_accuracy_all_models(methods, "Raw Model vs MedRAG vs Graph-based RAG",
                          tag, all_dfs, all_accs)
 plot_accuracy_per_model(methods, "Raw Model vs MedRAG vs Graph-based RAG — Per Model",
                         tag, all_dfs, all_accs)
 plot_domain(methods, "Per-Domain Accuracy: Raw Model vs MedRAG vs Graph-based RAG",
             tag, all_dfs, domain_maps)
 plot_delta_heatmap(methods, "Raw Model vs MedRAG vs Graph-based RAG",
-                   tag, all_accs, baseline_method="Raw Model")
+                   tag, all_accs, baseline_method="Raw Model") """
 # Helped/hurt: Raw Model → Graph-based RAG
 plot_helped_hurt("Raw Model", "Graph-based RAG",
                  "Question Outcome: Raw Model vs Graph-based RAG", tag+"_raw_vs_graphbasedrag", all_dfs)

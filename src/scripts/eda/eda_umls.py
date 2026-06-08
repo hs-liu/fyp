@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 UMLS_DIR     = "/vol/bitbucket/hl2622/umls/2025AB/META"
-RESULTS_DIR  = "./src/results/eda"
-GRAPHS_DIR   = "./src/graphs/eda/umls"
+RESULTS_DIR  = "./results/eda"
+GRAPHS_DIR   = "./graphs/eda/umls"
 SUMMARY_PATH = f"{RESULTS_DIR}/eda_umls_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -215,7 +215,7 @@ sty_counts = mrsty["sty"].value_counts()
 ax = axes[0]
 ax.bar(range(len(sty_counts)), sty_counts.values, color="steelblue", edgecolor="none", width=1.0)
 ax.set_yscale("log")
-ax.set_xlabel("Semantic types (ranked by frequency)", fontsize=12)
+ax.set_xlabel("Semantic type rank (by frequency)", fontsize=12)
 ax.set_ylabel("Number of concepts (log scale)", fontsize=12)
 ax.set_title("Full Distribution (log scale)", fontsize=12)
 ax.axvline(len(sty_counts) * 0.1, color="red", linestyle="--", linewidth=1.5,
@@ -232,12 +232,12 @@ ax.axhline(50, color="orange", linestyle="--", linewidth=1.5, label="50% of conc
 # Mark where 80% and 50% are reached
 idx_80 = next(i for i, v in enumerate(cumulative) if v >= 80)
 idx_50 = next(i for i, v in enumerate(cumulative) if v >= 50)
-ax.axvline(idx_80+1, color="red", linestyle=":", alpha=0.7,
+ax.axvline(idx_80+1, color="red", linestyle=":", linewidth=2, alpha=1.0,
            label=f"Reached at type #{idx_80+1}")
-ax.axvline(idx_50+1, color="orange", linestyle=":", alpha=0.7,
+ax.axvline(idx_50+1, color="orange", linestyle=":", linewidth=2, alpha=1.0,
            label=f"Reached at type #{idx_50+1}")
-ax.set_xlabel("Number of semantic types (ranked)", fontsize=12)
-ax.set_ylabel("Cumulative % of all concepts", fontsize=12)
+ax.set_xlabel("Semantic type rank (by frequency)", fontsize=12)
+ax.set_ylabel("Cumulative proportion of concepts (%)", fontsize=12)
 ax.set_title("Cumulative Distribution (CDF)", fontsize=12)
 ax.legend(fontsize=9)
 ax.grid(True, alpha=0.3)
