@@ -15,8 +15,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
 RESULTS_DIR  = "./results"
-GRAPHS_DIR   = "./graphs/analysis/ablation"
-SUMMARY_PATH = "./results/analysis/ablation_progressive.txt"
+GRAPHS_DIR   = "./graphs/analysis/rerun/ablation"
+SUMMARY_PATH = "./results/analysis/rerun/ablation_progressive.txt"
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(SUMMARY_PATH), exist_ok=True)
 
@@ -42,10 +42,10 @@ FILES = {
     "Llama-3.1-8B": {
         "Raw Model":     ("baseline/results_llama_local_no_rag.csv",                            None),
         "MedRAG":     ("baseline/results_llama_medrag.csv",                                  None),
-        "Graph-based RAG":    ("ablation/ablation_llama_kg_only.csv",               None),
-        "Graph-based RAG (Textbook)":("ablation/ablation_llama_textbook.csv",              None),
-        "Graph-based RAG (PubMed)":  ("ablation/ablation_llama_pubmed.csv",                None),
-        "MedHireRAG": ("medhirerag/results_llama.csv",                                None),
+        "Graph-based RAG":    ("rerun/ablation/results_llama_kg_only.csv",               None),
+        "Graph-based RAG (Textbook)":("rerun/ablation/results_llama_textbook.csv",              None),
+        "Graph-based RAG (PubMed)":  ("rerun/ablation/results_llama_pubmed.csv",                None),
+        "MedHireRAG": ("rerun/results_llama.csv",                                None),
     },
     "Qwen2.5-7B": {
         "Raw Model":     ("baseline/results_qwen_norag.csv",                                    None),
@@ -491,28 +491,28 @@ for model_name, methods in FILES.items():
 # 5.3.1: KG Only vs No RAG vs MedHireRAG
 # ══════════════════════════════════════════════════════════
 log("\n" + "="*60)
-log("5.3.1: Raw Model vs MedRAG vs Graph-based RAG")
+log("5.3.1: Raw Model vs MedRAG")
 log("="*60)
 
-methods = ["Raw Model", "MedRAG", "Graph-based RAG"]
+methods = ["Raw Model", "MedRAG"]
 tag     = "raw_medrag_graphbasedrag"
 
-""" plot_accuracy_all_models(methods, "Raw Model vs MedRAG vs Graph-based RAG",
+plot_accuracy_all_models(methods, "Raw Model vs MedRAG",
                          tag, all_dfs, all_accs)
-plot_accuracy_per_model(methods, "Raw Model vs MedRAG vs Graph-based RAG — Per Model",
+plot_accuracy_per_model(methods, "Raw Model vs MedRAG ",
                         tag, all_dfs, all_accs)
 plot_domain(methods, "Per-Domain Accuracy: Raw Model vs MedRAG vs Graph-based RAG",
             tag, all_dfs, domain_maps)
 plot_delta_heatmap(methods, "Raw Model vs MedRAG vs Graph-based RAG",
-                   tag, all_accs, baseline_method="Raw Model") """
+                   tag, all_accs, baseline_method="Raw Model") 
 # Helped/hurt: Raw Model → Graph-based RAG
-plot_helped_hurt("Raw Model", "Graph-based RAG",
-                 "Question Outcome: Raw Model vs Graph-based RAG", tag+"_raw_vs_graphbasedrag", all_dfs)
+plot_helped_hurt("Raw Model", "MedRAG",
+                 "Question Outcome: Raw Model vs MedRAG", tag+"_raw_vs_medrag", all_dfs)
 # Helped/hurt: MedRAG Model → Graph-based RAG
 plot_helped_hurt("MedRAG", "Graph-based RAG",
                  "Question Outcome: MedRAG vs Graph-based RAG", tag+"_medrag_vs_graphbasedrag", all_dfs)
 
-""" # ══════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════
 # 5.3.2: KG Only vs KG+Textbook
 # ══════════════════════════════════════════
 log("\n" + "="*60)
@@ -579,7 +579,7 @@ plot_helped_hurt("Graph-based RAG (Textbook)", "MedHireRAG",
                  "Question Outcome: Graph-based RAG (Textbook) vs MedHireRAG", tag+"_kg_vs_medhirerag", all_dfs)
 plot_helped_hurt("Graph-based RAG (PubMed)", "MedHireRAG",
                  "Question Outcome: Graph-based RAG (PubMed) vs MedHireRAG", tag+"_kg_vs_medhirerag", all_dfs)
- """
+
 # ══════════════════════════════════════════════════════════
 # OVERALL PROGRESSION
 # ══════════════════════════════════════════════════════════

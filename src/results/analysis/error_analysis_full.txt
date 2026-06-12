@@ -1,0 +1,408 @@
+======================================================================
+ERROR ANALYSIS — Llama-3.1-8B
+======================================================================
+
+MedHireRAG vs Raw Model:
+  Helped: 10
+  Hurt:   17
+  Net:    -7
+
+MedHireRAG vs MedRAG:
+  Helped: 15
+  Hurt:   10
+  Net:    +5
+
+──────────────────────────────────────────────────────────────────────
+HURT CASES — MedHireRAG vs Raw Model
+(answered correctly without RAG, wrong with MedHireRAG)
+──────────────────────────────────────────────────────────────────────
+
+[HURT 1]
+Q:  A 23-year-old woman comes to the physician because she is embarrassed about the appearance of her nails. She has no history of serious illness and takes no medications. She appears well. A photograph of the nails is shown. Which of the following additional findings is most likely in this patient?
+GT: A
+Raw answer:      A
+MedHireRAG:      E
+MedRAG:          B
+--------------------------------------------------
+
+[HURT 2]
+Q:  A 3-month-old infant is brought to her pediatrician because she coughs and seems to have difficulty breathing while feeding. In addition, she seems to have less energy compared to other babies and appears listless throughout the day. She was born by cesarean section to a G1P1 woman with no prior medical history and had a normal APGAR score at birth. Her parents say that she has never been observed to turn blue. Physical exam reveals a high-pitched holosystolic murmur that is best heard at the lo
+GT: A
+Raw answer:      A
+MedHireRAG:      E
+MedRAG:          C
+--------------------------------------------------
+
+[HURT 3]
+Q:  A 3-month-old boy presents to his pediatrician with persistent diarrhea, oral candidiasis, and signs and symptoms suggestive of respiratory syncytial virus (RSV) pneumonia. His weight is in the 10th percentile. He is being evaluated for an immunodeficiency disease. Laboratory results for the HIV are negative by PCR. Which of the following is the most likely cause of these findings in this patient?
+GT: A
+Raw answer:      A
+MedHireRAG:      E
+MedRAG:          E
+--------------------------------------------------
+
+[HURT 4]
+Q:  An 80-year-old man is transferred from a step-down unit to a med-surg floor in the hospital. He had undergone a successful hernia surgery 14 hours ago. Before the surgery, he was pre-treated with atropine, scopolamine, and morphine and recovered well in the PACU after the surgery. There were no complications in the step-down unit and the patient continued to recover. On the med-surg floor, his temperature is 36.8°C (98.2°F), the heart rate is 98/min, the respiratory rate is 15/min, the blood pre
+GT: A
+Raw answer:      A
+MedHireRAG:      E
+MedRAG:          E
+--------------------------------------------------
+
+[HURT 5]
+Q:  A 21-year-old man comes to the physician because of pruritus and a hypopigmented rash on his upper body for 5 days. He first noticed the symptoms after returning from a business trip last week in the Bahamas. While he was there, he visited a couple of beaches and went hiking with some coworkers. The rash initially started as a single lesion on his upper back but since then has extended to his shoulders. He has a history of type 1 diabetes mellitus controlled with an insulin pump. He works as an 
+GT: C
+Raw answer:      C
+MedHireRAG:      D
+MedRAG:          C
+--------------------------------------------------
+
+[HURT 6]
+Q:  A 65-year old man presents with gradually worsening rigidity of his arms and legs and slowness in performing tasks. He says he has also noticed hand tremors, which increase at rest and decrease with focused movements. On examination, the patient does not swing his arms while walking and has a shortened, shuffling gait. An antiviral drug is prescribed which alleviates the patient’s symptoms. Which of the following drugs was most likely prescribed to this patient?
+GT: A
+Raw answer:      A
+MedHireRAG:      D
+MedRAG:          A
+--------------------------------------------------
+
+[HURT 7]
+Q:  A 29-year-old man comes in for evaluation of infertility. He has been trying to conceive for over 2 years with his wife and previous evaluation of his wife's fertility revealed no abnormalities. Physical exam reveals a tall man with long extremities, sparse body hair, gynecomastia, and small testes. Laboratory studies reveal increased serum follicle-stimulating hormone concentration and an increased estradiol:testosterone ratio. Genetic studies reveal a cytogenetic abnormality. If this abnormali
+GT: A
+Raw answer:      A
+MedHireRAG:      D
+MedRAG:          A
+--------------------------------------------------
+
+[HURT 8]
+Q:  A 28-year-old gravida 1 at 32 weeks gestation is evaluated for an abnormal ultrasound that showed fetal microcephaly. Early in the 1st trimester, she had fevers and headaches for 1 week. She also experienced myalgias, arthralgias, and a pruritic maculopapular rash. The symptoms resolved without any medications. A week prior to her symptoms, she had traveled to Brazil where she spent most of the evenings hiking. She did not use any mosquito repellents. There is no personal or family history of ch
+GT: E
+Raw answer:      E
+MedHireRAG:      D
+MedRAG:          E
+--------------------------------------------------
+
+[HURT 9]
+Q:  A 41-year-old G3P1 woman presents with a sudden onset throbbing headache, tinnitus, nausea, and left-sided weakness. Patient has no significant past medical history and takes no medications.  Her last two pregnancies ended with spontaneous abortions before the 10th week of gestation. No significant family history. Her vital signs include: blood pressure 130/90 mm Hg, pulse 58/min, respiratory rate 11/min, and temperature 36.8℃ (98.2℉). GCS is 14/15. Physical examination shows 3+ deep tendon refl
+GT: A
+Raw answer:      A
+MedHireRAG:      E
+MedRAG:          E
+--------------------------------------------------
+
+[HURT 10]
+Q:  A 41-year-old man presents to the emergency room with sudden onset of blurry vision one hour ago. He states that he was resting at home when he noticed he had difficulty reading. Currently, he is also starting to see double, and is seeing two images on top of each other. Earlier today, he felt ill with nausea, vomiting, and watery diarrhea, which he attributed to food he had eaten at a picnic the day before. When asked which foods he ate, he lists potato salad, a hamburger, deviled eggs, and pic
+GT: A
+Raw answer:      A
+MedHireRAG:      B
+MedRAG:          C
+--------------------------------------------------
+
+[HURT 11]
+Q:  A 43-year-old man comes to the emergency department with nausea, abdominal discomfort, diarrhea, and progressive perioral numbness for the past 24 hours. 3 days ago, he underwent a total thyroidectomy for treatment of papillary thyroid cancer. His only medication is a multivitamin supplement. He appears fatigued. While measuring the patient's blood pressure, the nurse observes a spasm in the patient's hand. Physical examination shows a well-healing surgical wound on the neck. Which of the follow
+GT: B
+Raw answer:      B
+MedHireRAG:      C
+MedRAG:          B
+--------------------------------------------------
+
+[HURT 12]
+Q:  A 68-year-old woman presents with left lower quadrant pain that worsens with defecation. She describes the pain as 'crampy'. She also says she has suffered from mild constipation for the past few years. The patient denies any recent weight change or urinary symptoms. Her last menstrual period was 16 years ago. Her body temperature is 37.8°C (100.0°F), pulse is 102/min, respiratory rate is 16/min, and blood pressure is 133/87 mm Hg. On physical examination, tenderness to palpation in the left low
+GT: A
+Raw answer:      A
+MedHireRAG:      E
+MedRAG:          A
+--------------------------------------------------
+
+[HURT 13]
+Q:  A 36-year-old woman comes to the clinic because of tearing and a foreign body sensation in her eyes bilaterally, which has gradually worsened over the last several weeks. She also notes having occasional palpitations, nervousness, sweating, and heat intolerance. Her past medical history is unremarkable. She reports a 20-pack-year smoking history and is currently a daily smoker. Physical examination shows an anxious, trembling woman. She has eyelid retraction bilaterally, with an inability to ful
+GT: E
+Raw answer:      E
+MedHireRAG:      D
+MedRAG:          E
+--------------------------------------------------
+
+[HURT 14]
+Q:  A 13-month-old boy is brought to the physician for a well-child examination. Physical examination shows hepatosplenomegaly. A venous blood sample obtained for routine screening tests is milky. After refrigeration, a creamy supernatant layer appears on top of the sample. Genetic analysis shows a mutation in the apolipoprotein C-II gene (APOC2) on chromosome 19. This patient is at greatest risk for developing which of the following complications?
+GT: A
+Raw answer:      A
+MedHireRAG:      C
+MedRAG:          C
+--------------------------------------------------
+
+[HURT 15]
+Q:  A 26-year-old woman comes to the physician because of fatigue, weight loss, and muscle aches during the past 2 months. There is no personal or family history of serious illness. Her only medication is a multivitamin. A metyrapone stimulation test is performed and the results rule out a diagnosis of adrenal insufficiency. Which of the following changes in laboratory findings are most likely to have been observed in this patient following the administration of the drug?
+GT: A
+Raw answer:      A
+MedHireRAG:      D
+MedRAG:          A
+--------------------------------------------------
+
+[HURT 16]
+Q:  A 23-year-old college student presents to the clinic with a history of intermittent chest discomfort. He reports that, about once per month for the past 8 or 9 months, he's had episodes of "feeling like my chest is going to explode." During these episodes, he also feels shortness of breath, feels shakiness throughout his arms and legs, and sweats so heavily that he needs to change his shirt. He is unsure of any clear precipitating factors but thinks they may occur more often around important exa
+GT: A
+Raw answer:      A
+MedHireRAG:      D
+MedRAG:          D
+--------------------------------------------------
+
+[HURT 17]
+Q:  A 28-year-old woman comes to the obstetrics and gynecology clinic because she has been unsuccessfully trying to conceive with her husband for the last 2 years. He has had 2 children from a previous marriage and has been tested for causes of male infertility. She has had prior abdominal surgery as well as a family history of endocrine abnormalities. Based on this history, a panel of tests are obtained and treatment is started. This treatment will be administered intermittently one week before her
+GT: E
+Raw answer:      E
+MedHireRAG:      C
+MedRAG:          E
+--------------------------------------------------
+
+──────────────────────────────────────────────────────────────────────
+HELPED CASES — MedHireRAG vs Raw Model
+(answered incorrectly without RAG, correct with MedHireRAG)
+──────────────────────────────────────────────────────────────────────
+
+[HELPED 1]
+Q:  A 67-year-old man with transitional cell carcinoma of the bladder comes to the physician because of a 2-day history of ringing sensation in his ear. He received this first course of neoadjuvant chemotherapy 1 week ago. Pure tone audiometry shows a sensorineural hearing loss of 45 dB. The expected beneficial effect of the drug that caused this patient's symptoms is most likely due to which of the following actions?
+GT: E
+Raw answer:      B
+MedHireRAG:      E
+MedRAG:          E
+--------------------------------------------------
+
+[HELPED 2]
+Q:  A 3-week-old male newborn is brought to the physician because of an inward turning of his left forefoot. He was born at 38 weeks' gestation by cesarean section because of breech presentation. The pregnancy was complicated by oligohydramnios. Examination shows concavity of the medial border of the left foot with a skin crease just below the ball of the great toe. The lateral border of the left foot is convex. The heel is in neutral position. Tickling the lateral border of the foot leads to correc
+GT: D
+Raw answer:      E
+MedHireRAG:      D
+MedRAG:          E
+--------------------------------------------------
+
+[HELPED 3]
+Q:  A 72-year-old woman is admitted to the intensive care unit for shortness of breath and palpitations. A cardiac catheterization is performed and measurements of the left ventricular volume and pressure at different points in the cardiac cycle are obtained. The patient's pressure-volume loop (gray) is shown with a normal pressure-volume loop (black) for comparison. Which of the following is the most likely underlying cause of this patient's symptoms?
+GT: C
+Raw answer:      B
+MedHireRAG:      C
+MedRAG:          C
+--------------------------------------------------
+
+[HELPED 4]
+Q:  A 67-year-old male is seen by neurology after he was noticed to be speaking strangely by his family. After acute treatment with tissue plasminogen activator (tPA), the patient is able to recover most of his speech. Subsequent neurologic exam finds that the patient is fluent while speaking and is able to comprehend both one and two step instructions. Noticeably the patient remains unable to complete tasks involving verbal repetition. Residual damage to which of the following structures is most li
+GT: A
+Raw answer:      E
+MedHireRAG:      A
+MedRAG:          E
+--------------------------------------------------
+
+[HELPED 5]
+Q:  A 65-year-old man comes to the physician because of a 1-week history of yellowish discoloration of his skin and generalized pruritus. Examination shows jaundice of the skin and scleral icterus. Urinalysis shows an elevated concentration of bilirubin and a low concentration of urobilinogen. Which of the following is the most likely underlying cause of these findings?
+GT: D
+Raw answer:      A
+MedHireRAG:      D
+MedRAG:          D
+--------------------------------------------------
+
+[HELPED 6]
+Q:  A newborn is found to be extremely cyanotic immediately after birth. He then develops progressive respiratory failure and is admitted to the neonatal ICU. A single loud S2 heart sound is appreciated as well as a machine-like murmur at the left upper sternal border. Radiography shows an enlarged "egg-shaped" heart. The newborn is then taken for a atrial septostomy to alleviate the condition pending definitive surgical correction. Which of the following is the most likely cause of this newborn's c
+GT: D
+Raw answer:      E
+MedHireRAG:      D
+MedRAG:          D
+--------------------------------------------------
+
+[HELPED 7]
+Q:  A 30-year-old woman comes to the physician because she has been unable to conceive for 3 years. Analysis of her husband's semen has shown normal sperm counts during this time. The patient also reports episodic pelvic and back pain accompanied by painful diarrhea for 5 years. She has about one such episode on average per month for 4–6 days. She has taken ibuprofen for the pain, which has provided some relief. Menses have occurred at regular 29-day intervals since menarche at the age of 14 years a
+GT: D
+Raw answer:      E
+MedHireRAG:      D
+MedRAG:          E
+--------------------------------------------------
+
+[HELPED 8]
+Q:  A 50-year-old man presents to his primary care doctor following an inguinal hernia repair. The patient reports no pain in his lower abdomen or groin, no constipation, and states that he enjoys his usual diet. He denies any use of alcohol, tobacco, or illicit drugs. He has returned to work as a cruise ship attendant. Preoperative workup included chest radiography which demonstrated an opacification in his right middle lobe. The patient agrees to undergo computed tomography (CT) of his chest witho
+GT: C
+Raw answer:      B
+MedHireRAG:      C
+MedRAG:          C
+--------------------------------------------------
+
+[HELPED 9]
+Q:  A 25-year-old man presents to the emergency department with altered mental status. He was found down in the middle of the street. His past medical history is unknown. His temperature is 99.0°F (37.2°C), blood pressure is 104/64 mmHg, pulse is 70/min, respirations are 5/min, and oxygen saturation is 91% on room air. The patient is being resuscitated in the trauma bay. Which of the following was most likely to be found on exam?
+GT: C
+Raw answer:      UNKNOWN
+MedHireRAG:      C
+MedRAG:          E
+--------------------------------------------------
+
+[HELPED 10]
+Q:  A 13-year-old boy is brought to his pediatrician due to a left breast lump under his nipple. He noticed it last month and felt that it has increased slightly in size. It is tender to touch but has no overlying skin changes. There is no breast discharge. The patient has cryptorchidism as an infant and underwent a successful orchiopexy. In addition, he was recently diagnosed with ADHD and is currently on methylphenidate with improvement in his symptoms. He has a family history of type I diabetes i
+GT: B
+Raw answer:      E
+MedHireRAG:      B
+MedRAG:          C
+--------------------------------------------------
+
+──────────────────────────────────────────────────────────────────────
+MedHireRAG SUCCEEDED, MedRAG FAILED
+(key cases showing KG-guided retrieval advantage)
+──────────────────────────────────────────────────────────────────────
+
+[KG ADVANTAGE 1]
+Q:  A 39-year-old man presents to the emergency department because of progressively worsening chest pain and nausea that started at a local bar 30 minutes prior. The pain radiates to the epigastric area. He has a 5-year history of untreated hypertension. He has smoked 1 pack of cigarettes daily for the past 5 years and started abusing cocaine 2 weeks before his emergency room visit. The patient is diaphoretic and in marked distress. What should be the first step in management?
+GT: E
+Raw answer:      E
+MedRAG:          C
+MedHireRAG:      E
+--------------------------------------------------
+
+[KG ADVANTAGE 2]
+Q:  A 30-year-old African American woman comes to the physician for the evaluation of a dry cough and chest discomfort for the past 3 days. During this period, the patient has had headaches, muscle aches, joint pain, fever, and chills. Ten days ago, she was hiking with her family in Mississippi. The patient has asthma that is treated with an albuterol inhaler. Her mother has a lung disease treated with methotrexate. The patient has smoked one pack of cigarettes daily for the past 10 years. Her tempe
+GT: D
+Raw answer:      D
+MedRAG:          E
+MedHireRAG:      D
+--------------------------------------------------
+
+[KG ADVANTAGE 3]
+Q:  A 3-week-old male newborn is brought to the physician because of an inward turning of his left forefoot. He was born at 38 weeks' gestation by cesarean section because of breech presentation. The pregnancy was complicated by oligohydramnios. Examination shows concavity of the medial border of the left foot with a skin crease just below the ball of the great toe. The lateral border of the left foot is convex. The heel is in neutral position. Tickling the lateral border of the foot leads to correc
+GT: D
+Raw answer:      E
+MedRAG:          E
+MedHireRAG:      D
+--------------------------------------------------
+
+[KG ADVANTAGE 4]
+Q:  A 67-year-old man who was diagnosed with arthritis 16 years ago presents with right knee swelling and pain. His left knee was swollen a few weeks ago, but now with both joints affected, he has difficulty walking and feels frustrated. He also has back pain which makes it extremely difficult to move around and be active during the day. He says his pain significantly improves with rest. He also suffers from dandruff for which he uses special shampoos. Physical examination is notable for pitting of 
+GT: A
+Raw answer:      A
+MedRAG:          C
+MedHireRAG:      A
+--------------------------------------------------
+
+[KG ADVANTAGE 5]
+Q:  A 67-year-old male is seen by neurology after he was noticed to be speaking strangely by his family. After acute treatment with tissue plasminogen activator (tPA), the patient is able to recover most of his speech. Subsequent neurologic exam finds that the patient is fluent while speaking and is able to comprehend both one and two step instructions. Noticeably the patient remains unable to complete tasks involving verbal repetition. Residual damage to which of the following structures is most li
+GT: A
+Raw answer:      E
+MedRAG:          E
+MedHireRAG:      A
+--------------------------------------------------
+
+[KG ADVANTAGE 6]
+Q:  A 56-year-old man with a history of hypertension presents to his physician with progressive fatigue and new onset muscle cramps. He has had no recent changes to his medication regimen, which includes hydrochlorothiazide, lisinopril, and amlodipine. His temperature is 98.0°F (36.7°C), blood pressure is 174/111 mmHg, pulse is 70/min, respirations are 12/min, and oxygen saturation is 98% on room air. The patient's cardiopulmonary and abdominal exams are unremarkable. Laboratory values are ordered a
+GT: A
+Raw answer:      A
+MedRAG:          E
+MedHireRAG:      A
+--------------------------------------------------
+
+[KG ADVANTAGE 7]
+Q:  A 27-year-old man presents to the emergency department after a motor vehicle collision. The patient was the front seat unrestrained driver in a head on collision. The patient’s echocardiogram (ECG) is notable only for sinus tachycardia. His temperature is 99.5°F (37.5°C), blood pressure is 107/58 mmHg, pulse is 120/min, respirations are 17/min, and oxygen saturation is 98% on room air. The patient is given 2 liters of Ringer lactate solution and morphine. Initial workup demonstrates that the pat
+GT: A
+Raw answer:      A
+MedRAG:          C
+MedHireRAG:      A
+--------------------------------------------------
+
+[KG ADVANTAGE 8]
+Q:  A 30-year-old woman comes to the physician because she has been unable to conceive for 3 years. Analysis of her husband's semen has shown normal sperm counts during this time. The patient also reports episodic pelvic and back pain accompanied by painful diarrhea for 5 years. She has about one such episode on average per month for 4–6 days. She has taken ibuprofen for the pain, which has provided some relief. Menses have occurred at regular 29-day intervals since menarche at the age of 14 years a
+GT: D
+Raw answer:      E
+MedRAG:          E
+MedHireRAG:      D
+--------------------------------------------------
+
+[KG ADVANTAGE 9]
+Q:  A previously healthy 30-year-old woman comes to the physician for the evaluation of pain during sexual intercourse for 6 months. She also reports frequent episodes of crampy pelvic pain that starts one day before menses and lasts for 7 days. Her symptoms are not relieved with pain medication. Menses occur at regular 28-day intervals and last 5 days. Her last menstrual period was 2 weeks ago. She is sexually active with her husband. She uses a combined oral contraceptive pill. Her vital signs are
+GT: C
+Raw answer:      C
+MedRAG:          D
+MedHireRAG:      C
+--------------------------------------------------
+
+[KG ADVANTAGE 10]
+Q:  A 43-year-old man with a history of schizophrenia, currently controlled with medication, comes in for an appointment with his internist. He is concerned about abnormal discharge from both nipples over the past 3 months. The fluid is white, and he wonders if it could be milk. On further review of systems, he endorses a diminished sexual drive. The physician suspects that one of the patient's medications may be the culprit for these symptoms. Which of the following medications is NOT likely to be 
+GT: C
+Raw answer:      C
+MedRAG:          E
+MedHireRAG:      C
+--------------------------------------------------
+
+[KG ADVANTAGE 11]
+Q:  A obstetrician is working in a developing country to help promote maternal health and fetal well being. While there, he delivers a baby who he suspects has congenital hypothyroidism, most likely caused by inadequate maternal iodine intake. Which of the following signs and symptoms would NOT be expected to be observed in this child?
+GT: B
+Raw answer:      B
+MedRAG:          E
+MedHireRAG:      B
+--------------------------------------------------
+
+[KG ADVANTAGE 12]
+Q:  An 81-year-old woman is brought to the emergency room by her son after witnessing the patient fall and hit her head. The son reports that the patient was in her usual state of health until she complained of chest palpitations. This startled her while she was climbing down the stairs and lead to a fall. Past medical history is significant for hypertension and atrial fibrillation. Medications are lisinopril, metoprolol, and warfarin. Temperature is 99°F (37.2°C), blood pressure is 152/96 mmHg, pul
+GT: A
+Raw answer:      A
+MedRAG:          C
+MedHireRAG:      A
+--------------------------------------------------
+
+[KG ADVANTAGE 13]
+Q:  A 67-year-woman with non-Hodgkin lymphoma comes to the physician because of progressively increasing numbness and tingling in her fingers and toes. Her last cycle of chemotherapy with vincristine was 1 week ago. Physical examination shows decreased sensation to light touch in all distal extremities. Knee and ankle deep tendon reflexes are decreased. Which of the following is the most likely underlying mechanism of this patient’s peripheral neuropathy?
+GT: A
+Raw answer:      A
+MedRAG:          E
+MedHireRAG:      A
+--------------------------------------------------
+
+[KG ADVANTAGE 14]
+Q:  A 25-year-old man presents to the emergency department with altered mental status. He was found down in the middle of the street. His past medical history is unknown. His temperature is 99.0°F (37.2°C), blood pressure is 104/64 mmHg, pulse is 70/min, respirations are 5/min, and oxygen saturation is 91% on room air. The patient is being resuscitated in the trauma bay. Which of the following was most likely to be found on exam?
+GT: C
+Raw answer:      UNKNOWN
+MedRAG:          E
+MedHireRAG:      C
+--------------------------------------------------
+
+[KG ADVANTAGE 15]
+Q:  A 13-year-old boy is brought to his pediatrician due to a left breast lump under his nipple. He noticed it last month and felt that it has increased slightly in size. It is tender to touch but has no overlying skin changes. There is no breast discharge. The patient has cryptorchidism as an infant and underwent a successful orchiopexy. In addition, he was recently diagnosed with ADHD and is currently on methylphenidate with improvement in his symptoms. He has a family history of type I diabetes i
+GT: B
+Raw answer:      E
+MedRAG:          C
+MedHireRAG:      B
+--------------------------------------------------
+
+======================================================================
+BioMistral-7B — KG advantage cases only
+======================================================================
+
+[BM KG ADVANTAGE 1]
+Q:  A 20-year-old man comes to the physician because of worsening gait unsteadiness and bilateral hearing loss for 1 month. He has had intermittent tingling sensations on both cheeks over this time period. He has no history of serious medical illness and takes no medications. Audiometry shows bilateral sensorineural hearing loss. Genetic evaluation shows a mutation of a tumor suppressor gene on chromosome 22 that encodes merlin. This patient is at increased risk for which of the following conditions
+GT: B
+Raw:       D
+MedRAG:    D
+MedHireRAG:B
+--------------------------------------------------
+
+[BM KG ADVANTAGE 2]
+Q:  A man is brought into the emergency department by the police department. The officer state that the man has been arrested multiple times for public alcohol intoxication, but recently became homeless. On exam, the man is behaving erratically. His vitals are all within normal limits. He appears confused and has a slurred speech. On gait exam, the patient is ataxic and cannot stand without support for more than a few seconds. Labs return with the following values: Na 140, K 4, Cl 106, BUN 8, Cr 2. 
+GT: E
+Raw:       C
+MedRAG:    C
+MedHireRAG:E
+--------------------------------------------------
+
+[BM KG ADVANTAGE 3]
+Q:  A 29-year-old primigravid woman at 35 weeks' gestation is admitted to the hospital in labor. She has no history of serious medical illness. She has had an uncomplicated pregnancy. Her last ultrasound at 22 weeks' gestation was normal. On admission, fetal heartbeats cannot be detected by fetal doppler monitor. Ultrasound shows decreased amniotic fluid levels and no evidence of fetal movement, respiration, or heart activity. The patient gives birth to a 2296 g (5 lb 1 oz) male infant. Physical exa
+GT: B
+Raw:       E
+MedRAG:    E
+MedHireRAG:B
+--------------------------------------------------
+
+[BM KG ADVANTAGE 4]
+Q:  A 15-year-old woman presents with fever, altered mental status and a petechial rash on her lower extremities and back since yesterday evening. She also says she has been nauseous for the past 3 hours and has vomited twice. The patient mentions she has had heavy menstrual bleeding for the past few days. Her blood pressure is 95/80 mm Hg and her temperature is 40.0°C (104.0°F). On physical examination, the patient appears diaphoretic. A pelvic examination reveals a tampon in her vagina. Binding an
+GT: B
+Raw:       B
+MedRAG:    A
+MedHireRAG:B
+--------------------------------------------------
+
+[BM KG ADVANTAGE 5]
+Q:  A 14-year-old girl is brought to the physician by her father because of fever, chills, abdominal pain, and profuse non-bloody diarrhea. Her symptoms began one week ago, when she had several days of low-grade fever and constipation. She returned from Indonesia 2 weeks ago, where she spent the summer with her grandparents. Her temperature is 39.3°C (102.8°F). Examination shows diffuse abdominal tenderness and mild hepatosplenomegaly. There is a faint salmon-colored maculopapular rash on her trunk 
+GT: D
+Raw:       C
+MedRAG:    C
+MedHireRAG:D
+--------------------------------------------------

@@ -11,10 +11,10 @@ from src.scripts.uq_experiments.uq_utils import compute_uq, print_uq_summary, pl
 
 N_TEST          = 200
 N_SAMPLES       = 10
-TEMPERATURE     = 0.7
-RESULTS_DIR     = "./results/appendix"
-GRAPHS_DIR      = "./graphs/appendix"
-CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_medhireuqrag_0.7_10_500.csv"
+TEMPERATURE     = 0.3
+RESULTS_DIR     = "./results/rerun"
+GRAPHS_DIR      = "./graphs/rerun"
+CHECKPOINT_PATH = f"{RESULTS_DIR}/results_llama_medhireuqrag_0.3_10.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -147,9 +147,9 @@ print(f"\nGreedy accuracy:      {greedy_acc:.2%} ({n_greedy}/{len(results)})")
 print(f"UQ majority accuracy: {uq_acc:.2%} ({n_uq}/{len(results)})")
 print(f"UQ improvement:       {uq_acc - greedy_acc:+.2%}")
 
-save_summary(SUMMARY_PATH, f"Llama-3.1-8B (MedHireUQRAG greedy, T=0.7, N=10):   {greedy_acc:.2%} ({n_greedy}/{len(results)})")
-save_summary(SUMMARY_PATH, f"Llama-3.1-8B (MedHireUQRAG majority, T=0.7, N=10):  {uq_acc:.2%} ({n_uq}/{len(results)})")
+save_summary(SUMMARY_PATH, f"Llama-3.1-8B (MedHireUQRAG greedy, T=0.3, N=10):   {greedy_acc:.2%} ({n_greedy}/{len(results)})")
+save_summary(SUMMARY_PATH, f"Llama-3.1-8B (MedHireUQRAG majority, T=0.3, N=10):  {uq_acc:.2%} ({n_uq}/{len(results)})")
 
 df = pd.read_csv(CHECKPOINT_PATH)
 print_uq_summary(df)
-plot_uq(df, save_path=f"{GRAPHS_DIR}/uq_llama_0.7_20.png", model_name="MedHireUQRAG Llama-3.1-8B (T=0.7, N=10)")
+plot_uq(df, save_path=f"{GRAPHS_DIR}/uq_llama_0.3_10.png", model_name="MedHireUQRAG Llama-3.1-8B (T=0.3, N=10)")

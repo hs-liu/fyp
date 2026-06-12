@@ -15,7 +15,7 @@ from src.scripts.rag.retrieval_utils import (
 load_dotenv()
 
 N_TEST          = 200
-RESULTS_DIR     = "./results/appendix"
+RESULTS_DIR     = "./results/rerun"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_biomistral.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)

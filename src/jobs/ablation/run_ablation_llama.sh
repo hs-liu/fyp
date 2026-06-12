@@ -11,11 +11,8 @@
 export HF_HOME=/vol/bitbucket/hl2622/huggingface_cache
 export XET_HOME=/vol/bitbucket/hl2622/xet_cache
 export HF_DATASETS_CACHE=/vol/bitbucket/hl2622/huggingface_cache/datasets
-
+mkdir -p results/rerun/ablation
 cd /vol/bitbucket/hl2622/fyp/src
 source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 
-python3 scripts/ablation_experiments/ablation_exp.py --model llama --mode kg_only
-python3 scripts/ablation_experiments/ablation_exp.py --model llama --mode textbook
-python3 scripts/ablation_experiments/ablation_exp.py --model llama --mode pubmed
-python3 scripts/ablation_experiments/ablation_exp.py --model llama --mode no_classifier
+python scripts/ablation/ablation_script.py

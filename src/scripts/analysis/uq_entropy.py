@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from scipy import stats
 
-RESULTS_DIR = "./results/UQ/"
+RESULTS_DIR = "./results"
 GRAPHS_DIR  = "./graphs/analysis/uq_analysis"
 os.makedirs(GRAPHS_DIR, exist_ok=True)
 
@@ -17,9 +17,9 @@ plt.rcParams.update({
 })
 
 CONFIGS = {
-    "BioMistral-7B": "results_biomistral_medhireuqrag_0.7_20.csv",
-    "Llama-3.1-8B":  "results_llama_medhireuqrag_0.7_10.csv",
-    "Qwen2.5-7B":    "results_qwen_medhireuqrag_0.7_10.csv",
+    "BioMistral-7B": "UQ/results_biomistral_medhireuqrag_0.7_20.csv",
+    "Llama-3.1-8B":  "rerun/results_llama_medhireuqrag_0.7_20.csv",
+    "Qwen2.5-7B":    "UQ/results_qwen_medhireuqrag_0.7_10.csv",
 }
 
 MODEL_COLORS = {
@@ -45,6 +45,7 @@ def load(fname):
         return None
     df = pd.read_csv(path)
     df["greedy_correct"]   = df["greedy_correct"].fillna(False).astype(bool)
+    df["uq_correct"]       = df["uq_correct"].fillna(False).astype(bool)
     df["confidence_label"] = df["uq_consistency"].apply(get_confidence_label)
     return df
 
@@ -73,8 +74,8 @@ for ax, model_name in zip(axes, all_data.keys()):
     if df is None:
         continue
 
-    correct   = df[df["greedy_correct"]==True]["uq_entropy"]
-    incorrect = df[df["greedy_correct"]==False]["uq_entropy"]
+    correct   = df[df["uq_correct"]==True]["uq_entropy"]
+    incorrect = df[df["uq_correct"]==False]["uq_entropy"]
 
     t_stat, p_val = stats.ttest_ind(correct, incorrect)
     p_str = "p<0.001" if p_val < 0.001 else f"p={p_val:.3f}"
@@ -161,8 +162,8 @@ for ax, model_name in zip(axes, all_data.keys()):
     if df is None:
         continue
 
-    correct   = df[df["greedy_correct"]==True]
-    incorrect = df[df["greedy_correct"]==False]
+    correct   = df[df["uq_correct"]==True]
+    incorrect = df[df["uq_correct"]==False]
 
     # Scatter — correct vs incorrect
     ax.scatter(correct["uq_consistency"], correct["uq_entropy"],

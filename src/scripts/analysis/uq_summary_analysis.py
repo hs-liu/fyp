@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-RESULTS_DIR  = "./results/UQ"
+RESULTS_DIR  = "./results"
 GRAPHS_DIR   = "./graphs/analysis/uq_analysis"
 SUMMARY_PATH = "./results/analysis/uq_analysis_summary.txt"
 os.makedirs(GRAPHS_DIR, exist_ok=True)
@@ -33,22 +33,22 @@ def log(s=""): print(s); lines.append(s)
 # Each entry: (fname, greedy_col, majority_col)
 UQ_CONFIGS = {
     "BioMistral-7B": {
-        "T=0.7 N=10": ("results_biomistral_medhireuqrag_0.7_10.csv", "greedy_correct", "uq_correct"),
-        "T=0.7 N=20": ("results_biomistral_medhireuqrag_0.7_20.csv", "greedy_correct", "uq_correct"),
-        "T=0.3 N=10": ("results_biomistral_medhireuqrag_0.3_10.csv", "greedy_correct", "uq_correct"),
-        "T=0.3 N=20": ("results_biomistral_medhireuqrag_0.3_20.csv", "greedy_correct", "uq_correct"),
+        "T=0.7 N=10": ("UQ/results_biomistral_medhireuqrag_0.7_10.csv", "greedy_correct", "uq_correct"),
+        "T=0.7 N=20": ("UQ/results_biomistral_medhireuqrag_0.7_20.csv", "greedy_correct", "uq_correct"),
+        "T=0.3 N=10": ("UQ/results_biomistral_medhireuqrag_0.3_10.csv", "greedy_correct", "uq_correct"),
+        "T=0.3 N=20": ("UQ/results_biomistral_medhireuqrag_0.3_20.csv", "greedy_correct", "uq_correct"),
     },
     "Llama-3.1-8B": {
-        "T=0.7 N=10": ("results_llama_medhireuqrag_0.7_10.csv", "greedy_correct", "uq_correct"),
-        "T=0.7 N=20": ("results_llama_medhireuqrag_0.7_20.csv", "greedy_correct", "uq_correct"),
-        "T=0.3 N=10": ("results_llama_medhireuqrag_0.3_10.csv", "greedy_correct", "uq_correct"),
-        "T=0.3 N=20": ("results_llama_medhireuqrag_0.3_20.csv", "greedy_correct", "uq_correct"),
+        "T=0.7 N=10": ("rerun/results_llama_medhireuqrag_0.7_10.csv", "greedy_correct", "uq_correct"),
+        "T=0.7 N=20": ("rerun/results_llama_medhireuqrag_0.7_20.csv", "greedy_correct", "uq_correct"),
+        "T=0.3 N=10": ("rerun/results_llama_medhireuqrag_0.3_10.csv", "greedy_correct", "uq_correct"),
+        "T=0.3 N=20": ("rerun/results_llama_medhireuqrag_0.3_20.csv", "greedy_correct", "uq_correct"),
     },
     "Qwen2.5-7B": {
-        "T=0.7 N=10": ("results_qwen_medhireuqrag_0.7_10.csv", "greedy_correct", "uq_correct"),
-        "T=0.7 N=20": ("results_qwen_medhireuqrag_0.7_20.csv", "greedy_correct", "uq_correct"),
-        "T=0.3 N=10": ("results_qwen_medhireuqrag_0.3_10.csv", "greedy_correct", "uq_correct"),
-        "T=0.3 N=20": ("results_qwen_medhireuqrag_0.3_20.csv", "greedy_correct", "uq_correct"),
+        "T=0.7 N=10": ("UQ/results_qwen_medhireuqrag_0.7_10.csv", "greedy_correct", "uq_correct"),
+        "T=0.7 N=20": ("UQ/results_qwen_medhireuqrag_0.7_20.csv", "greedy_correct", "uq_correct"),
+        "T=0.3 N=10": ("UQ/results_qwen_medhireuqrag_0.3_10.csv", "greedy_correct", "uq_correct"),
+        "T=0.3 N=20": ("UQ/results_qwen_medhireuqrag_0.3_20.csv", "greedy_correct", "uq_correct"),
     },
 }
 
@@ -109,7 +109,7 @@ for model_name, configs in UQ_CONFIGS.items():
 # ══════════════════════════════════════════════════════════
 # PLOT 1: Greedy vs Majority — per model, all configs
 # ══════════════════════════════════════════════════════════
-""" fig, axes = plt.subplots(1, 3, figsize=(18, 7), sharey=False)
+fig, axes = plt.subplots(1, 3, figsize=(18, 7), sharey=False)
 fig.suptitle("Greedy vs Majority Vote Accuracy",
              fontsize=14, fontweight="bold")
 
@@ -145,12 +145,12 @@ for ax, model_name in zip(axes, UQ_CONFIGS.keys()):
 plt.tight_layout()
 plt.savefig(f"{GRAPHS_DIR}/01_greedy_vs_majority.png", dpi=150, bbox_inches="tight")
 plt.close()
-log(f"\nSaved → {GRAPHS_DIR}/01_greedy_vs_majority.png") """
+log(f"\nSaved → {GRAPHS_DIR}/01_greedy_vs_majority.png")
 
 # ══════════════════════════════════════════════════════════
 # PLOT 2: Best accuracy per config — cross model comparison
 # ══════════════════════════════════════════════════════════
-""" fig, ax = plt.subplots(figsize=(14, 7))
+fig, ax = plt.subplots(figsize=(14, 7))
 
 config_labels = list(list(UQ_CONFIGS.values())[0].keys())
 model_names   = list(UQ_CONFIGS.keys())
@@ -188,7 +188,7 @@ plt.tight_layout()
 plt.savefig(f"{GRAPHS_DIR}/02_cross_model_best_config.png", dpi=150, bbox_inches="tight")
 plt.close()
 log(f"Saved → {GRAPHS_DIR}/02_cross_model_best_config.png")
- """
+
 # ══════════════════════════════════════════════════════════
 # PLOT 3: Heatmap — all configs x all models (greedy / majority / best)
 # ══════════════════════════════════════════════════════════
@@ -239,7 +239,7 @@ log(f"Saved → {GRAPHS_DIR}/02_cross_model_best_config.png")
 # X-axis: confidence label (Very Low → Very High)
 # ══════════════════════════════════════════════════════════
 
-""" def get_confidence_label(score):
+def get_confidence_label(score):
     if score >= 0.9:   return "Very High"
     elif score >= 0.7: return "High"
     elif score >= 0.5: return "Medium"
@@ -306,7 +306,7 @@ plt.tight_layout()
 plt.savefig(f"{GRAPHS_DIR}/04_calibration_curves_majority.png", dpi=150, bbox_inches="tight")
 plt.close()
 log(f"Saved → {GRAPHS_DIR}/04_calibration_curves_majority.png")
- """
+
 
 # ══════════════════════════════════════════════════════════
 # PLOT 5: Coverage vs Accuracy — all configs per model

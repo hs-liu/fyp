@@ -18,4 +18,3 @@ source /vol/bitbucket/hl2622/fyp_venv/bin/activate
 python3 scripts/ablation_experiments/ablation_exp.py --model qwen --mode kg_only
 python3 scripts/ablation_experiments/ablation_exp.py --model qwen --mode textbook
 python3 scripts/ablation_experiments/ablation_exp.py --model qwen --mode pubmed
-python3 scripts/ablation_experiments/ablation_exp.py --model qwen --mode no_classifier

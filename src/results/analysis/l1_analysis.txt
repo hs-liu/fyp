@@ -1,0 +1,50 @@
+======================================================================
+L1 ENTITY LINKING ANALYSIS — Llama-3.1-8B
+======================================================================
+
+Running L1 for all 200 questions...
+
+L1 fired (non-empty pool):  200 / 200 (100.0%)
+L1 fallback (empty pool):   0 / 200 (0.0%)
+
+──────────────────────────────────────────────────────────────────────
+ACCURACY SPLIT BY L1 OUTCOME
+──────────────────────────────────────────────────────────────────────
+
+Where L1 FIRED (n=200):
+  Raw Model accuracy:   60.0%
+  MedRAG accuracy:      54.0%
+  MedHireRAG accuracy:  58.5%
+  MedHireRAG vs Raw:    -1.5pp
+  MedHireRAG vs MedRAG: +4.5pp
+
+Where L1 FELL BACK (n=0):
+  No questions in this subset
+
+──────────────────────────────────────────────────────────────────────
+McNEMAR ON L1-FIRED SUBSET
+──────────────────────────────────────────────────────────────────────
+
+L1 fired (n=200):
+  vs Raw:    helped=11, hurt=14, p=0.689
+  vs MedRAG: helped=18, hurt=9, p=0.124
+
+L1 fallback: empty subset, skipping
+
+──────────────────────────────────────────────────────────────────────
+CANDIDATE POOL SIZE DISTRIBUTION
+──────────────────────────────────────────────────────────────────────
+Mean candidate pool size:   202503 chunks
+Median candidate pool size: 204266 chunks
+Min pool size:              38663
+Max pool size:              445826
+Questions with pool=0:      0
+Questions with pool>0:      200
+
+──────────────────────────────────────────────────────────────────────
+CUI EXTRACTION STATISTICS
+──────────────────────────────────────────────────────────────────────
+Mean CUIs extracted:        9.9
+Median CUIs extracted:      10
+Questions with 0 CUIs:      0
+Mean clinical CUI fraction: 93.5%

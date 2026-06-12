@@ -28,26 +28,83 @@ for i, cuis_str in enumerate(corpus_df["cuis"]):
         if cui:
             cui_to_rows.setdefault(cui, []).append(i)
 
+EXCLUDED_STYS = {
+    "Temporal Concept",
+    "Quantitative Concept",
+    "Qualitative Concept",
+    "Functional Concept",
+    "Spatial Concept",
+    "Conceptual Entity",
+    "Natural Phenomenon or Process",
+    "Element, Ion, or Isotope",
+    "Occupation or Discipline",
+    "Geographic Area",
+    "Language",
+    "Biomedical Occupation or Discipline",
+    "Intellectual Product",
+    "Daily or Recreational Activity",
+    "Health Care Activity",        # removes "Prescribed", "Present"
+    "Body Location or Region",
+}
+
+CLINICAL_PRIORITY_STYS = {
+    "Disease or Syndrome",
+    "Pharmacologic Substance",
+    "Clinical Drug",
+    "Sign or Symptom",
+    "Finding",
+    "Therapeutic or Preventive Procedure",
+    "Diagnostic Procedure",
+    "Body Part, Organ, or Organ Component",
+    "Pathologic Function",
+    "Neoplastic Process",
+    "Injury or Poisoning",
+    "Biologically Active Substance",
+    "Congenital Abnormality",
+    "Mental or Behavioral Dysfunction",
+    "Organism Function",
+}
+
 print("Building name lookup...")
-name_to_cui = {}
-for cui, attrs in G.nodes(data=True):
-    name = attrs.get("name", "")
-    if name and len(name) > 3:
-        name_to_cui[name.lower()] = cui
+name_to_cui = {
+    G.nodes[n].get("name", "").lower(): n
+    for n in G.nodes()
+    if G.nodes[n].get("name", "")
+    and len(G.nodes[n].get("name", "")) > 3
+    and G.nodes[n].get("sty_name", "") not in EXCLUDED_STYS
+}
 
 print(f"Ready. {len(name_to_cui):,} concepts, {len(cui_to_rows):,} indexed CUIs")
 
 # ── Entity extraction ──────────────────────────────────────
+# In retrieval_pipeline.py
+
 def extract_cuis(text: str, max_cuis: int = 10) -> list:
     text_lower = text.lower()
-    found = []
+    clinical = {}
+    other    = {}
+
     for name, cui in name_to_cui.items():
         if name in text_lower:
-            found.append(cui)
-        if len(found) >= max_cuis:
+            sty = G.nodes[cui].get("sty_name", "") if cui in G else ""
+            if sty in EXCLUDED_STYS:
+                continue  # skip generic concepts entirely
+            if sty in CLINICAL_PRIORITY_STYS:
+                clinical[cui] = name
+            else:
+                other[cui] = name
+        if len(clinical) >= max_cuis:
             break
-    return found
 
+    # Fill remaining slots with non-excluded other CUIs
+    combined = list(clinical.keys())
+    for cui in other:
+        if len(combined) >= max_cuis:
+            break
+        if cui not in clinical:
+            combined.append(cui)
+
+    return combined[:max_cuis]
 
 # ── Graph expansion ────────────────────────────────────────
 def expand_cuis(seed_cuis: list, hops: int = 1) -> set:

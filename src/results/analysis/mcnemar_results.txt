@@ -1,0 +1,62 @@
+======================================================================
+McNEMAR'S TEST — PAIRED SIGNIFICANCE
+======================================================================
+
+Comparison                                        b     c     Δpp      χ²        p   sig
+----------------------------------------------------------------------
+BioMistral: MedHireRAG vs Raw                    16     5    +5.5    4.76    0.029     *
+Llama: MedHireRAG vs Raw                         10    17    -3.5    1.33    0.248  n.s.
+Qwen: MedHireRAG vs Raw                          12    12    +0.0    0.04    0.838  n.s.
+BioMistral: MedHireRAG vs MedRAG                 16     6    +5.0    3.68    0.055  n.s.
+Llama: MedHireRAG vs MedRAG                      15    10    +2.5    0.64    0.424  n.s.
+Qwen: MedHireRAG vs MedRAG                       13     8    +2.5    0.76    0.383  n.s.
+BioMistral: Textbook vs Graph                    16     9    +3.5    1.44    0.230  n.s.
+Llama: Textbook vs Graph                         18     9    +4.5    2.37    0.124  n.s.
+Qwen: Textbook vs Graph                          14     9    +2.5    0.70    0.404  n.s.
+BioMistral: PubMed vs Graph                      11    11    +0.0    0.05    0.831  n.s.
+Llama: PubMed vs Graph                           16    13    +1.5    0.14    0.710  n.s.
+Qwen: PubMed vs Graph                            11     7    +2.0    0.50    0.480  n.s.
+BioMistral: MedHireRAG vs Graph                  14     9    +2.5    0.70    0.404  n.s.
+Llama: MedHireRAG vs Graph                       17    10    +3.5    1.33    0.248  n.s.
+Qwen: MedHireRAG vs Graph                        13     5    +4.0    2.72    0.099  n.s.
+BioMistral: MedHireRAG vs Textbook                4     6    -1.0    0.10    0.752  n.s.
+Llama: MedHireRAG vs Textbook                     3     5    -1.0    0.12    0.724  n.s.
+Qwen: MedHireRAG vs Textbook                      5     2    +1.5    0.57    0.450  n.s.
+BioMistral: MedHireRAG vs PubMed                 12     7    +2.5    0.84    0.359  n.s.
+Llama: MedHireRAG vs PubMed                      11     7    +2.0    0.50    0.480  n.s.
+Qwen: MedHireRAG vs PubMed                        9     5    +2.0    0.64    0.423  n.s.
+BioMistral: MedRAG vs Raw                         6     5    +0.5    0.00    1.000  n.s.
+Llama: MedRAG vs Raw                              6    18    -6.0    5.04    0.025     *
+Qwen: MedRAG vs Raw                               4     9    -2.5    1.23    0.267  n.s.
+
+======================================================================
+SIGNIFICANCE SUMMARY
+======================================================================
+
+Significant (p<0.05): 2
+  BioMistral: MedHireRAG vs Raw: Δ=+5.5pp, p=0.029 *
+  Llama: MedRAG vs Raw: Δ=-6.0pp, p=0.025 *
+
+Not significant (p≥0.05): 22
+  Llama: MedHireRAG vs Raw: Δ=-3.5pp, p=0.248
+  Qwen: MedHireRAG vs Raw: Δ=+0.0pp, p=0.838
+  BioMistral: MedHireRAG vs MedRAG: Δ=+5.0pp, p=0.055
+  Llama: MedHireRAG vs MedRAG: Δ=+2.5pp, p=0.424
+  Qwen: MedHireRAG vs MedRAG: Δ=+2.5pp, p=0.383
+  BioMistral: Textbook vs Graph: Δ=+3.5pp, p=0.230
+  Llama: Textbook vs Graph: Δ=+4.5pp, p=0.124
+  Qwen: Textbook vs Graph: Δ=+2.5pp, p=0.404
+  BioMistral: PubMed vs Graph: Δ=+0.0pp, p=0.831
+  Llama: PubMed vs Graph: Δ=+1.5pp, p=0.710
+  Qwen: PubMed vs Graph: Δ=+2.0pp, p=0.480
+  BioMistral: MedHireRAG vs Graph: Δ=+2.5pp, p=0.404
+  Llama: MedHireRAG vs Graph: Δ=+3.5pp, p=0.248
+  Qwen: MedHireRAG vs Graph: Δ=+4.0pp, p=0.099
+  BioMistral: MedHireRAG vs Textbook: Δ=-1.0pp, p=0.752
+  Llama: MedHireRAG vs Textbook: Δ=-1.0pp, p=0.724
+  Qwen: MedHireRAG vs Textbook: Δ=+1.5pp, p=0.450
+  BioMistral: MedHireRAG vs PubMed: Δ=+2.5pp, p=0.359
+  Llama: MedHireRAG vs PubMed: Δ=+2.0pp, p=0.480
+  Qwen: MedHireRAG vs PubMed: Δ=+2.0pp, p=0.423
+  BioMistral: MedRAG vs Raw: Δ=+0.5pp, p=1.000
+  Qwen: MedRAG vs Raw: Δ=-2.5pp, p=0.267

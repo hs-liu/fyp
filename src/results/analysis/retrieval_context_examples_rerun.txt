@@ -1,0 +1,213 @@
+======================================================================
+RETRIEVAL CONTEXT ANALYSIS — updated pipeline
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+CASE: HELPED_4_conduction_aphasia
+NOTE: HELPED vs Raw + KG ADV 5 vs MedRAG
+GT: A | Raw: E | MedHireRAG: A | MedRAG: E
+──────────────────────────────────────────────────────────────────────
+
+[L1] Extracted seed CUIs (10):
+  C0032140: plasminogen [Biologically Active Substance]
+  C0037817: Speech [Organism Function]
+  C0043189: Wing [Body Part, Organ, or Organ Component]
+  C0392185: Verbal repetition [Finding]
+  C0643227: KS I [Pharmacologic Substance]
+  C1299582: Unable [Finding]
+  C3842772: Unable to complete [Finding]
+  C3854651: TIVA [Therapeutic or Preventive Procedure]
+  C4743777: Activator [Biologically Active Substance]
+  C0016016: plasmin [Enzyme]
+
+[L1] Candidate pool size: 52342 chunks
+
+[L2] Top-2 textbook chunks:
+
+  Chunk 1 (score=0.952):
+  Source: Neurology_Adams
+  Content: Whether contemporary methods of speech therapy accomplish more than can be accounted for by spontaneous recovery is still uncertain. Most aphasic disorders are caused by vascular disease and trauma, and they are nearly always accompanied by some degree of spontaneous improvement in the days, weeks, 
+
+  Chunk 2 (score=0.945):
+  Source: Biochemistry_Lippinco
+  Content: 5.8. Current guidelines for the treatment of patients with acute ischemic stroke (a stroke caused by a blood clot obstructing a vessel that supplies blood to the brain) include the recommendation that tissue plasminogen activator (TPA) be used shortly after the onset of symptoms. The basis of the re
+
+[L3] Top-1 PubMed chunk:
+  Score: 0.966
+  Source: [Speech therapy in aphasia].
+  Content: The speech therapy in fifteen aphasic patients was studied. The group consisted of 8 male and 7 female patients and their ages ranged from less than ten to more than fifty years. In eleven cases the aphasia was due to cerebrovascular disease and in the remaining four cases to traumatic injury to the
+
+[ASSEMBLED CONTEXT]:
+[Textbook] Whether contemporary methods of speech therapy accomplish more than can be accounted for by spontaneous recovery is still uncertain. Most aphasic disorders are caused by vascular disease and trauma, and they are nearly always accompanied by some degree of spontaneous improvement in the days, weeks, and months that follow the stroke or accident. A Veterans Administration Cooperative Study (Wertz et
+
+[Textbook] 5.8. Current guidelines for the treatment of patients with acute ischemic stroke (a stroke caused by a blood clot obstructing a vessel that supplies blood to the brain) include the recommendation that tissue plasminogen activator (TPA) be used shortly after the onset of symptoms. The basis of the recommendation for TPA is that it activates: A. antithrombin III. B. the activ
+
+──────────────────────────────────────────────────────────────────────
+
+──────────────────────────────────────────────────────────────────────
+CASE: HELPED_10_gynecomastia
+NOTE: HELPED vs Raw + KG ADV 15 vs MedRAG
+GT: B | Raw: E | MedHireRAG: B | MedRAG: C
+──────────────────────────────────────────────────────────────────────
+
+[L1] Extracted seed CUIs (10):
+  C0006141: Breast [Body Part, Organ, or Organ Component]
+  C0010417: Cryptorchidism [Congenital Abnormality]
+  C0011847: Diabetes [Disease or Syndrome]
+  C0011900: Diagnosis [Diagnostic Procedure]
+  C0025810: methylphenidate [Pharmacologic Substance]
+  C0028429: Nose [Body Part, Organ, or Organ Component]
+  C0043189: Wing [Body Part, Organ, or Organ Component]
+  C0222601: Left breast [Body Part, Organ, or Organ Component]
+  C0719857: Diab [Pharmacologic Substance]
+  C1457887: Symptoms [Sign or Symptom]
+
+[L1] Candidate pool size: 202792 chunks
+
+[L2] Top-2 textbook chunks:
+
+  Chunk 1 (score=0.952):
+  Source: Pediatrics_Nelson
+  Content: Available @ StudentConsult.com A history of maternal drug use (steroids) and family history are important in the evaluation of a child for apparent cryptorchidism. Whether the testis was ever noted in the scrotum should be asked. The true undescended testis is found along the normal embryologic path
+
+  Chunk 2 (score=0.950):
+  Source: Pediatrics_Nelson
+  Content: Available @ StudentConsult.com Breast enlargement in boys is usually a benign, self-limited condition. Gynecomastia is noted in 50% to 60% of boys during early adolescence. It is often idiopathic, but it may be noted in various conditions (Table 68-3). Typical findings include the appearance of a 1t
+
+[L3] Top-1 PubMed chunk:
+  Score: 0.958
+  Source: Cryptorchidism in the subfertile male.
+  Content: Certain conclusions may be drawn from the present review and presentation of new data concerning the unilaterally cryptorchid patient and possible subfertility: 1. The truly undescended testis--not the retractile testis of infancy--will not descend spontaneously after 1 year of age. 2. The seminal q
+
+[ASSEMBLED CONTEXT]:
+[Textbook] Available @ StudentConsult.com A history of maternal drug use (steroids) and family history are important in the evaluation of a child for apparent cryptorchidism. Whether the testis was ever noted in the scrotum should be asked. The true undescended testis is found along the normal embryologic path of descent, usually in the presence of a patent processus vaginalis. An undescended testis is often
+
+[Textbook] Available @ StudentConsult.com Breast enlargement in boys is usually a benign, self-limited condition. Gynecomastia is noted in 50% to 60% of boys during early adolescence. It is often idiopathic, but it may be noted in various conditions (Table 68-3). Typical findings include the appearance of a 1to 3-cm, round, freely mobile, often tender, and firm mass immediately beneat
+
+──────────────────────────────────────────────────────────────────────
+
+──────────────────────────────────────────────────────────────────────
+CASE: HURT_6_parkinsons_amantadine
+NOTE: HURT vs Raw — symptom CUIs only
+GT: A | Raw: A | MedHireRAG: D | MedRAG: A
+──────────────────────────────────────────────────────────────────────
+
+[L1] Extracted seed CUIs (10):
+  C0016928: Gait [Finding]
+  C0018563: Hand [Body Part, Organ, or Organ Component]
+  C0026649: Movement [Organism Function]
+  C0040822: Tremor [Sign or Symptom]
+  C0043189: Wing [Body Part, Organ, or Organ Component]
+  C0150312: Present [Finding]
+  C1457868: Worse [Finding]
+  C1457887: Symptoms [Sign or Symptom]
+  C2947996: Perform [Pharmacologic Substance]
+  C0750501: most likely [Idea or Concept]
+
+[L1] Candidate pool size: 222710 chunks
+
+[L2] Top-2 textbook chunks:
+
+  Chunk 1 (score=0.957):
+  Source: Neurology_Adams
+  Content: Wenning and colleagues (1994) described a series of such patients in whom the diagnosis was confirmed at postmortem examination. The most common early symptom was an asymmetrical clumsiness of the limbs in half of the patients, with rigidity and, in one-fifth, with tremor; these features are now con
+
+  Chunk 2 (score=0.955):
+  Source: Neurology_Adams
+  Content: of the spinal aspect (posterior columns) of the disease. Attempts to correct the imbalance may result in abrupt, wild movements. Often there is a rhythmic tremor of the head. Eventually, the arms are grossly ataxic, and both action and intention tremors are manifest. Speech is slow, slurred, explosi
+
+[L3] Top-1 PubMed chunk:
+  Score: 0.953
+  Source: [Abnormal involuntary movements in the elderly and their treatment (author's tra
+  Content: In the elderly, there are two main types of abnormal involuntary movements: tremors on one hand and dyskinesias on the other. Among tremors, senile and parkinsonian types have to be separated because they have different semeiologic signs and distinct therapeutics. Senile tremor is present during mov
+
+[ASSEMBLED CONTEXT]:
+[Textbook] Wenning and colleagues (1994) described a series of such patients in whom the diagnosis was confirmed at postmortem examination. The most common early symptom was an asymmetrical clumsiness of the limbs in half of the patients, with rigidity and, in one-fifth, with tremor; these features are now considered to be the most characteristic early features of the process. As the illness progressed, almo
+
+[Textbook] of the spinal aspect (posterior columns) of the disease. Attempts to correct the imbalance may result in abrupt, wild movements. Often there is a rhythmic tremor of the head. Eventually, the arms are grossly ataxic, and both action and intention tremors are manifest. Speech is slow, slurred, explosive, and, finally, almost incomprehensible. Breathing, speaking, swallowing, 
+
+──────────────────────────────────────────────────────────────────────
+
+──────────────────────────────────────────────────────────────────────
+CASE: HURT_11_post_thyroidectomy
+NOTE: HURT vs Raw — L2→L3 conditioning failure
+GT: B | Raw: B | MedHireRAG: C | MedRAG: B
+──────────────────────────────────────────────────────────────────────
+
+[L1] Extracted seed CUIs (10):
+  C0005823: Blood Pressure [Organism Function]
+  C0011991: Diarrhea [Sign or Symptom]
+  C0015672: Fatigue [Sign or Symptom]
+  C0018563: Hand [Body Part, Organ, or Organ Component]
+  C0027497: Nausea [Sign or Symptom]
+  C0028643: Numbness [Sign or Symptom]
+  C0037763: Spasm [Sign or Symptom]
+  C0040145: Thyroidectomy [Therapeutic or Preventive Procedure]
+  C0043189: Wing [Body Part, Organ, or Organ Component]
+  C0221730: Perioral numbness [Sign or Symptom]
+
+[L1] Candidate pool size: 164794 chunks
+
+[L2] Top-2 textbook chunks:
+
+  Chunk 1 (score=0.957):
+  Source: First_Aid_Step2
+  Content: Presents with abdominal muscle cramps, dyspnea, tetany, perioral and acral paresthesias, and convulsions. Facial spasm elicited from tapping of the facial nerve (Chvostek’s sign) and carpal spasm after arterial occlusion by a BP cuff (Trousseau’s sign) are classic findings that are most commonly see
+
+  Chunk 2 (score=0.953):
+  Source: Anatomy_Gray
+  Content: The hormone thyroxine controls the basal metabolic rate; therefore, low levels of thyroxine affect the resting pulse rate and may produce other changes, including weight gain, and in some cases depression. The patient was insistent upon surgery. After discussion about the risks and complications, a 
+
+[L3] Top-1 PubMed chunk:
+  Score: 0.958
+  Source: Hyperparathyroid crisis: clinical and pathologic studies of 14 patients.
+  Content: A study is presented of 14 patients with hyperparathyroid crisis treated at the Massachusetts General Hospital between 1964 and 1978. These patients showed diverse clinical manifestations that were indistinguishable from those in patients with pseudohyperparathyroidism. Their symptoms varied from pr
+
+[ASSEMBLED CONTEXT]:
+[Textbook] Presents with abdominal muscle cramps, dyspnea, tetany, perioral and acral paresthesias, and convulsions. Facial spasm elicited from tapping of the facial nerve (Chvostek’s sign) and carpal spasm after arterial occlusion by a BP cuff (Trousseau’s sign) are classic findings that are most commonly seen in severe hypocalcemia. Order an ionized Ca2+, Mg+, PTH, albumin, and possibly calcitonin. If the 
+
+[Textbook] The hormone thyroxine controls the basal metabolic rate; therefore, low levels of thyroxine affect the resting pulse rate and may produce other changes, including weight gain, and in some cases depression. The patient was insistent upon surgery. After discussion about the risks and complications, a subtotal thyroidectomy was performed. After the procedure the patient compla
+
+──────────────────────────────────────────────────────────────────────
+
+──────────────────────────────────────────────────────────────────────
+CASE: BM_KG_ADV_5_typhoid
+NOTE: BioMistral cross-model KG advantage
+GT: D | Raw: C | MedHireRAG: D | MedRAG: C
+──────────────────────────────────────────────────────────────────────
+
+[L1] Extracted seed CUIs (10):
+  C0000737: Abdominal Pain [Sign or Symptom]
+  C0009806: Constipation [Sign or Symptom]
+  C0011991: Diarrhea [Sign or Symptom]
+  C0015967: Fever [Sign or Symptom]
+  C0019214: Hepatosplenomegaly [Sign or Symptom]
+  C0030193: Pain [Sign or Symptom]
+  C0038002: Splenomegaly [Finding]
+  C0085593: Chills [Sign or Symptom]
+  C0232498: Abdominal tenderness [Sign or Symptom]
+  C1457887: Symptoms [Sign or Symptom]
+
+[L1] Candidate pool size: 261279 chunks
+
+[L2] Top-2 textbook chunks:
+
+  Chunk 1 (score=0.956):
+  Source: Pharmacology_Katzung
+  Content: Philip J. Rosenthal, MD A 5-year-old American girl presents with a 1-week history of intermittent chills, fever, and sweats. She had returned home 2 weeks earlier after leaving the USA for the first time to spend 3 weeks with her grandparents in Nigeria. She received all standard childhood immunizat
+
+  Chunk 2 (score=0.956):
+  Source: Anatomy_Gray
+  Content: This patient had no symptoms attributable to the pelvic kidney and she was discharged. A 19-year-old woman presented to the emergency department with a 36-hour history of lower abdominal pain that was sharp and initially intermittent, later becoming constant and severe. The patient also reported fee
+
+[L3] Top-1 PubMed chunk:
+  Score: 0.950
+  Source: Prolonged fever in children: review of 100 cases.
+  Content: One hundred children admitted to a hospital over a six-year period with temperatures over 38.5 C for longer than two weeks and of undetermined etiology are reviewed. Fifty-two were infectious (21 presumed viral), 20 collagen-inflammatory, 6 malignancy, 10 miscellaneous, and 12 discharged undiagnosed
+
+[ASSEMBLED CONTEXT]:
+[Textbook] Philip J. Rosenthal, MD A 5-year-old American girl presents with a 1-week history of intermittent chills, fever, and sweats. She had returned home 2 weeks earlier after leaving the USA for the first time to spend 3 weeks with her grandparents in Nigeria. She received all standard childhood immunizations, but no additional treat-ment before travel, since her parents have returned to their native Ni
+
+[Textbook] This patient had no symptoms attributable to the pelvic kidney and she was discharged. A 19-year-old woman presented to the emergency department with a 36-hour history of lower abdominal pain that was sharp and initially intermittent, later becoming constant and severe. The patient also reported feeling nauseated and vomited once in the ER. She did not have diarrhea and had
+
+──────────────────────────────────────────────────────────────────────

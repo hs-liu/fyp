@@ -1,8 +1,4 @@
 # scripts/analysis/analysis_reliability.py
-"""
-Reliability analysis — ECE, AUC, selective accuracy
-comparing MedHireRAG vs MedHireUQRAG across all three models.
-"""
 import os
 import numpy as np
 import pandas as pd
@@ -24,21 +20,18 @@ plt.rcParams.update({
 lines = []
 def log(s=""): print(s); lines.append(s)
 
-# ── File mapping ───────────────────────────────────────────
 MEDHIRERAG_FILES = {
     "BioMistral-7B": "medhirerag/results_biomistral.csv",
-    "Llama-3.1-8B":  "medhirerag/results_llama.csv",
+    "Llama-3.1-8B":  "rerun/results_llama.csv",
     "Qwen2.5-7B":    "medhirerag/results_qwen.csv",
 }
 
-# Best UQ config per model (calibration-optimised T=0.7)
 UQ_BEST_FILES = {
     "BioMistral-7B": "UQ/results_biomistral_medhireuqrag_0.7_20.csv",
-    "Llama-3.1-8B":  "UQ/results_llama_medhireuqrag_0.7_10.csv",
+    "Llama-3.1-8B":  "rerun/results_llama_medhireuqrag_0.7_20.csv",
     "Qwen2.5-7B":    "UQ/results_qwen_medhireuqrag_0.7_10.csv",
 }
 
-# All UQ configs for ECE/AUC comparison
 UQ_ALL_CONFIGS = {
     "BioMistral-7B": {
         "T=0.7 N=10": "UQ/results_biomistral_medhireuqrag_0.7_10.csv",
@@ -47,10 +40,10 @@ UQ_ALL_CONFIGS = {
         "T=0.3 N=20": "UQ/results_biomistral_medhireuqrag_0.3_20.csv",
     },
     "Llama-3.1-8B": {
-        "T=0.7 N=10": "UQ/results_llama_medhireuqrag_0.7_10.csv",
-        "T=0.7 N=20": "UQ/results_llama_medhireuqrag_0.7_20.csv",
-        "T=0.3 N=10": "UQ/results_llama_medhireuqrag_0.3_10.csv",
-        "T=0.3 N=20": "UQ/results_llama_medhireuqrag_0.3_20.csv",
+        "T=0.7 N=10": "rerun/results_llama_medhireuqrag_0.7_10.csv",
+        "T=0.7 N=20": "rerun/results_llama_medhireuqrag_0.7_20.csv",
+        "T=0.3 N=10": "rerun/results_llama_medhireuqrag_0.3_10.csv",
+        "T=0.3 N=20": "rerun/results_llama_medhireuqrag_0.3_20.csv",
     },
     "Qwen2.5-7B": {
         "T=0.7 N=10": "UQ/results_qwen_medhireuqrag_0.7_10.csv",
@@ -73,7 +66,6 @@ CONFIG_COLORS = {
     "T=0.3 N=20": "#7B241C",
 }
 
-# ── Utilities ──────────────────────────────────────────────
 def load_df(fpath, correct_col="is_correct"):
     path = os.path.join(RESULTS_DIR, fpath)
     if not os.path.exists(path):
@@ -81,6 +73,10 @@ def load_df(fpath, correct_col="is_correct"):
         return None
     df = pd.read_csv(path)
     df[correct_col] = df[correct_col].fillna(False).astype(bool)
+    # Also load uq_correct if present
+    if "uq_correct" in pd.read_csv(path).columns:
+        df["uq_correct"] = pd.read_csv(path)["uq_correct"]\
+            .fillna(False).astype(bool)
     return df
 
 def compute_ece(df, confidence_col, correct_col, n_bins=5):
@@ -97,11 +93,24 @@ def compute_ece(df, confidence_col, correct_col, n_bins=5):
         ece     += (mask.sum() / n) * abs(bin_acc - bin_conf)
     return ece
 
+# ── Load UQ files with both correct cols ──────────────────
+def load_uq_df(fpath):
+    """Load UQ results with both greedy_correct and uq_correct."""
+    path = os.path.join(RESULTS_DIR, fpath)
+    if not os.path.exists(path):
+        log(f"  [MISSING] {path}")
+        return None
+    df = pd.read_csv(path)
+    df["greedy_correct"] = df["greedy_correct"].fillna(False).astype(bool)
+    df["uq_correct"]     = df["uq_correct"].fillna(False).astype(bool)
+    return df
+
 # ══════════════════════════════════════════════════════════
-# Compute + log metrics
+# Compute + log metrics — using uq_correct for MedHireUQRAG
 # ══════════════════════════════════════════════════════════
 log("=" * 60)
 log("RELIABILITY METRICS — MedHireRAG vs MedHireUQRAG")
+log("(MedHireUQRAG evaluated on majority-vote predictions)")
 log("=" * 60)
 
 model_names   = list(MODEL_COLORS.keys())
@@ -112,29 +121,34 @@ summary_rows = []
 for model_name in model_names:
     log(f"\n--- {model_name} ---")
 
-    # MedHireRAG baseline
-    df_rag = load_df(MEDHIRERAG_FILES[model_name])
-    rag_acc = df_rag["is_correct"].mean() * 100 if df_rag is not None else np.nan
-    log(f"  MedHireRAG:  {rag_acc:.1f}%")
+    # MedHireRAG baseline — greedy
+    df_rag  = load_df(MEDHIRERAG_FILES[model_name])
+    rag_acc = df_rag["is_correct"].mean() * 100 \
+              if df_rag is not None else np.nan
+    log(f"  MedHireRAG (greedy): {rag_acc:.1f}%")
 
-    # Best UQ config
-    df_uq = load_df(UQ_BEST_FILES[model_name], correct_col="greedy_correct")
+    # Best UQ config — majority vote (uq_correct)
+    df_uq = load_uq_df(UQ_BEST_FILES[model_name])
     if df_uq is not None:
-        ece = compute_ece(df_uq, "uq_consistency", "greedy_correct")
+        # ECE and AUC use uq_correct (majority vote)
+        ece = compute_ece(df_uq, "uq_consistency", "uq_correct")
         try:
-            auc = roc_auc_score(df_uq["greedy_correct"], df_uq["uq_consistency"])
+            auc = roc_auc_score(
+                df_uq["uq_correct"], df_uq["uq_consistency"])
         except Exception:
             auc = np.nan
 
-        full_acc = df_uq["greedy_correct"].mean() * 100
+        full_acc = df_uq["uq_correct"].mean() * 100
         vh       = df_uq[df_uq["uq_consistency"] >= 0.9]
-        vh_acc   = vh["greedy_correct"].mean() * 100 if len(vh) >= 3 else np.nan
+        vh_acc   = vh["uq_correct"].mean() * 100 \
+                   if len(vh) >= 3 else np.nan
         vh_cov   = len(vh) / len(df_uq) * 100
         h_plus   = df_uq[df_uq["uq_consistency"] >= 0.7]
-        hp_acc   = h_plus["greedy_correct"].mean() * 100 if len(h_plus) >= 3 else np.nan
+        hp_acc   = h_plus["uq_correct"].mean() * 100 \
+                   if len(h_plus) >= 3 else np.nan
         hp_cov   = len(h_plus) / len(df_uq) * 100
 
-        log(f"  MedHireUQRAG (best T=0.7):")
+        log(f"  MedHireUQRAG (majority, best T=0.7):")
         log(f"    ECE:            {ece:.4f}")
         log(f"    AUC:            {auc:.4f}")
         log(f"    Full acc:       {full_acc:.1f}%")
@@ -142,25 +156,26 @@ for model_name in model_names:
         log(f"    High+ accuracy: {hp_acc:.1f}% ({hp_cov:.1f}% coverage)")
 
         summary_rows.append({
-            "model":     model_name,
-            "rag_acc":   rag_acc,
-            "ece":       ece,
-            "auc":       auc,
-            "full_acc":  full_acc,
-            "vh_acc":    vh_acc,
-            "vh_cov":    vh_cov,
-            "hp_acc":    hp_acc,
-            "hp_cov":    hp_cov,
+            "model":    model_name,
+            "rag_acc":  rag_acc,
+            "ece":      ece,
+            "auc":      auc,
+            "full_acc": full_acc,
+            "vh_acc":   vh_acc,
+            "vh_cov":   vh_cov,
+            "hp_acc":   hp_acc,
+            "hp_cov":   hp_cov,
         })
 
 df_summary = pd.DataFrame(summary_rows)
-df_summary.to_csv(f"{RESULTS_DIR}/analysis/reliability_summary.csv", index=False)
+df_summary.to_csv(
+    f"{RESULTS_DIR}/analysis/reliability_summary.csv", index=False)
 
 # ══════════════════════════════════════════════════════════
-# PLOT 1: ECE across all UQ configs
+# PLOT 1: ECE across all UQ configs — using uq_correct
 # ══════════════════════════════════════════════════════════
 fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=False)
-fig.suptitle("Expected Calibration Error (ECE)",
+fig.suptitle("Expected Calibration Error (ECE) — Majority Vote",
              fontsize=13, fontweight="bold")
 
 x     = np.arange(len(config_labels))
@@ -170,49 +185,54 @@ for ax, model_name in zip(axes, model_names):
     eces   = []
     colors = []
     for config_label, fname in UQ_ALL_CONFIGS[model_name].items():
-        df_c = load_df(fname, correct_col="greedy_correct")
-        ece  = compute_ece(df_c, "uq_consistency", "greedy_correct") \
+        df_c = load_uq_df(fname)
+        ece  = compute_ece(
+            df_c, "uq_consistency", "uq_correct") \
                if df_c is not None else np.nan
         eces.append(ece)
         colors.append(CONFIG_COLORS[config_label])
 
-    bars = ax.bar(x, [v if not np.isnan(v) else 0 for v in eces],
-                  width, color=colors, edgecolor="white", linewidth=0.5)
+    bars = ax.bar(
+        x, [v if not np.isnan(v) else 0 for v in eces],
+        width, color=colors, edgecolor="white", linewidth=0.5)
     for bar, val in zip(bars, eces):
         if not np.isnan(val):
-            ax.text(bar.get_x() + bar.get_width()/2, val + 0.002,
-                    f"{val:.3f}", ha="center", va="bottom",
+            ax.text(bar.get_x() + bar.get_width()/2,
+                    val + 0.002, f"{val:.3f}",
+                    ha="center", va="bottom",
                     fontsize=9, fontweight="bold")
 
     ax.set_xticks(x)
-    ax.set_xticklabels(config_labels, rotation=20, ha="right", fontsize=9)
+    ax.set_xticklabels(
+        config_labels, rotation=20, ha="right", fontsize=9)
     ax.set_title(model_name, fontsize=12, fontweight="bold")
-    ax.set_ylabel("ECE" if model_name == model_names[0] else "", fontsize=11)
+    ax.set_ylabel(
+        "ECE" if model_name == model_names[0] else "", fontsize=11)
     ax.yaxis.grid(True, linestyle="--", alpha=0.4)
     ax.set_axisbelow(True)
 
 plt.tight_layout()
-plt.savefig(f"{GRAPHS_DIR}/10_ece_comparison.png", dpi=150, bbox_inches="tight")
+plt.savefig(f"{GRAPHS_DIR}/10_ece_comparison.png",
+            dpi=150, bbox_inches="tight")
 plt.close()
-log(f"Saved → {GRAPHS_DIR}/10_ece_comparison.png")
 
 # ══════════════════════════════════════════════════════════
-# PLOT 2: AUC across all UQ configs
+# PLOT 2: AUC across all UQ configs — using uq_correct
 # ══════════════════════════════════════════════════════════
 fig, axes = plt.subplots(1, 3, figsize=(18, 6), sharey=False)
-fig.suptitle("AUC — Consistency Score as Correctness Predictor\n",
+fig.suptitle("AUC — Consistency Score as Correctness Predictor "
+             "(Majority Vote)\n",
              fontsize=13, fontweight="bold")
 
 for ax, model_name in zip(axes, model_names):
     aucs   = []
     colors = []
     for config_label, fname in UQ_ALL_CONFIGS[model_name].items():
-        df_c = load_df(fname, correct_col="greedy_correct")
+        df_c = load_uq_df(fname)
         if df_c is not None:
             try:
                 auc = roc_auc_score(
-                    df_c["greedy_correct"], df_c["uq_consistency"]
-                )
+                    df_c["uq_correct"], df_c["uq_consistency"])
             except Exception:
                 auc = np.nan
         else:
@@ -220,27 +240,30 @@ for ax, model_name in zip(axes, model_names):
         aucs.append(auc)
         colors.append(CONFIG_COLORS[config_label])
 
-    bars = ax.bar(x, [v if not np.isnan(v) else 0 for v in aucs],
-                  width, color=colors, edgecolor="white", linewidth=0.5)
+    bars = ax.bar(
+        x, [v if not np.isnan(v) else 0 for v in aucs],
+        width, color=colors, edgecolor="white", linewidth=0.5)
     for bar, val in zip(bars, aucs):
         if not np.isnan(val):
-            ax.text(bar.get_x() + bar.get_width()/2, val + 0.005,
-                    f"{val:.3f}", ha="center", va="bottom",
+            ax.text(bar.get_x() + bar.get_width()/2,
+                    val + 0.005, f"{val:.3f}",
+                    ha="center", va="bottom",
                     fontsize=9, fontweight="bold")
 
     ax.set_xticks(x)
-    ax.set_xticklabels(config_labels, rotation=20, ha="right", fontsize=9)
+    ax.set_xticklabels(
+        config_labels, rotation=20, ha="right", fontsize=9)
     ax.set_title(model_name, fontsize=12, fontweight="bold")
-    ax.set_ylabel("AUC" if model_name == model_names[0] else "", fontsize=11)
+    ax.set_ylabel(
+        "AUC" if model_name == model_names[0] else "", fontsize=11)
     ax.set_ylim(0, 1.0)
-    ax.legend(fontsize=9)
     ax.yaxis.grid(True, linestyle="--", alpha=0.4)
     ax.set_axisbelow(True)
 
 plt.tight_layout()
-plt.savefig(f"{GRAPHS_DIR}/11_auc_comparison.png", dpi=150, bbox_inches="tight")
+plt.savefig(f"{GRAPHS_DIR}/11_auc_comparison.png",
+            dpi=150, bbox_inches="tight")
 plt.close()
-log(f"Saved → {GRAPHS_DIR}/11_auc_comparison.png")
 
 # ══════════════════════════════════════════════════════════
 # PLOT 3: MedHireRAG vs MedHireUQRAG selective accuracy
@@ -253,13 +276,12 @@ fig.suptitle(
 )
 
 for ax, model_name in zip(axes, model_names):
-    labels = []
-    accs   = []
-    colors = []
-    hatches= []
-    covs   = []
+    labels  = []
+    accs    = []
+    colors  = []
+    hatches = []
 
-    # MedHireRAG — full coverage
+    # MedHireRAG — full coverage (greedy)
     df_rag = load_df(MEDHIRERAG_FILES[model_name])
     if df_rag is not None:
         rag_acc = df_rag["is_correct"].mean() * 100
@@ -267,32 +289,30 @@ for ax, model_name in zip(axes, model_names):
         accs.append(rag_acc)
         colors.append(MODEL_COLORS[model_name])
         hatches.append("//")
-        covs.append(100.0)
 
-    # MedHireUQRAG — full coverage (greedy)
-    df_uq = load_df(UQ_BEST_FILES[model_name], correct_col="greedy_correct")
+    # MedHireUQRAG — full coverage (greedy, for fair comparison)
+    df_uq = load_uq_df(UQ_BEST_FILES[model_name])
     if df_uq is not None:
-        full_acc = df_uq["greedy_correct"].mean() * 100
+        full_acc = df_uq["uq_correct"].mean() * 100
         labels.append("MedHireUQRAG\n(100%)")
         accs.append(full_acc)
         colors.append("#8E44AD")
         hatches.append("//")
-        covs.append(100.0)
 
-        # MedHireUQRAG — VH only
+        # MedHireUQRAG — VH only (majority vote)
         vh = df_uq[df_uq["uq_consistency"] >= 0.9]
         if len(vh) >= 3:
-            vh_acc = vh["greedy_correct"].mean() * 100
+            vh_acc = vh["uq_correct"].mean() * 100
             vh_cov = len(vh) / len(df_uq) * 100
-            labels.append(f"MedHireUQRAG\n(VH: {vh_cov:.0f}%)")
+            labels.append(
+                f"MedHireUQRAG\n(VH: {vh_cov:.0f}%)")
             accs.append(vh_acc)
             colors.append("#8E44AD")
             hatches.append("")
-            covs.append(vh_cov)
 
-    # Plot bars
     x_pos = np.arange(len(labels))
-    for i, (acc, color, hatch) in enumerate(zip(accs, colors, hatches)):
+    for i, (acc, color, hatch) in enumerate(
+            zip(accs, colors, hatches)):
         ax.bar(i, acc, width=0.55, color=color,
                edgecolor="white", linewidth=0.5,
                hatch=hatch, alpha=0.85)
@@ -303,11 +323,13 @@ for ax, model_name in zip(axes, model_names):
     ax.set_xticks(x_pos)
     ax.set_xticklabels(labels, fontsize=9, ha="center")
     ax.set_title(model_name, fontsize=12, fontweight="bold")
-    ax.set_ylabel("Accuracy (%)" if model_name == model_names[0] else "",
-                  fontsize=11)
+    ax.set_ylabel(
+        "Accuracy (%)" if model_name == model_names[0] else "",
+        fontsize=11)
     max_val = max(accs) if accs else 100
     ax.set_ylim(0, max_val * 1.2)
-    ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.0f%%"))
+    ax.yaxis.set_major_formatter(
+        mticker.FormatStrFormatter("%.0f%%"))
     ax.yaxis.grid(True, linestyle="--", alpha=0.4)
     ax.set_axisbelow(True)
 
@@ -315,7 +337,6 @@ plt.subplots_adjust(bottom=0.18)
 plt.savefig(f"{GRAPHS_DIR}/12_reliability_medhire_vs_uq.png",
             dpi=150, bbox_inches="tight")
 plt.close()
-log(f"Saved → {GRAPHS_DIR}/12_reliability_medhire_vs_uq.png")
 
 # ── Save summary ───────────────────────────────────────────
 with open(f"{RESULTS_DIR}/analysis/reliability_summary.txt", "w") as f:

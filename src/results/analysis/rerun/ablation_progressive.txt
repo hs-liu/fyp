@@ -1,0 +1,121 @@
+============================================================
+PROGRESSIVE ABLATION STUDY
+============================================================
+
+--- BioMistral-7B ---
+  Raw Model                      41.5%
+  MedRAG                         42.0%
+  Graph-based RAG                44.5%
+  Graph-based RAG (Textbook)     48.0%
+  Graph-based RAG (PubMed)       44.5%
+  MedHireRAG                     47.0%
+
+--- Llama-3.1-8B ---
+  Raw Model                      60.0%
+  MedRAG                         54.0%
+  Graph-based RAG                53.0%
+  Graph-based RAG (Textbook)     57.5%
+  Graph-based RAG (PubMed)       54.5%
+  MedHireRAG                     56.5%
+
+--- Qwen2.5-7B ---
+  Raw Model                      58.5%
+  MedRAG                         56.0%
+  Graph-based RAG                54.5%
+  Graph-based RAG (Textbook)     57.0%
+  Graph-based RAG (PubMed)       56.5%
+  MedHireRAG                     58.5%
+
+============================================================
+5.3.1: Raw Model vs MedRAG
+============================================================
+Saved → ./graphs/analysis/rerun/ablation/raw_medrag_graphbasedrag_accuracy.png
+Saved → ./graphs/analysis/rerun/ablation/raw_medrag_graphbasedrag_per_model.png
+  [SKIP] No domain data for raw_medrag_graphbasedrag
+Saved → ./graphs/analysis/rerun/ablation/raw_medrag_graphbasedrag_delta_heatmap.png
+  BioMistral-7B: helped=6 hurt=5 net=+1
+  Llama-3.1-8B: helped=6 hurt=18 net=-12
+  Qwen2.5-7B: helped=4 hurt=9 net=-5
+Saved → ./graphs/analysis/rerun/ablation/raw_medrag_graphbasedrag_raw_vs_medrag_helped_hurt.png
+  BioMistral-7B: helped=11 hurt=6 net=+5
+  Llama-3.1-8B: helped=9 hurt=11 net=-2
+  Qwen2.5-7B: helped=3 hurt=6 net=-3
+Saved → ./graphs/analysis/rerun/ablation/raw_medrag_graphbasedrag_medrag_vs_graphbasedrag_helped_hurt.png
+
+============================================================
+5.3.2: Graph-based RAG vs Graph-based RAG (Textbook)
+============================================================
+Saved → ./graphs/analysis/rerun/ablation/s532_graph_vs_graphtextbook_accuracy.png
+Saved → ./graphs/analysis/rerun/ablation/s532_graph_vs_graphtextbook_per_model.png
+  [SKIP] No domain data for s532_graph_vs_graphtextbook
+  BioMistral-7B: helped=16 hurt=9 net=+7
+  Llama-3.1-8B: helped=18 hurt=9 net=+9
+  Qwen2.5-7B: helped=14 hurt=9 net=+5
+Saved → ./graphs/analysis/rerun/ablation/s532_graph_vs_graphtextbook_helped_hurt.png
+Saved → ./graphs/analysis/rerun/ablation/s532_graph_vs_graphtextbook_delta_heatmap.png
+
+============================================================
+5.3.3: Graph-based RAG vs Graph-based RAG (PubMed)
+============================================================
+Saved → ./graphs/analysis/rerun/ablation/s533_graph_vs_graphtextbook_accuracy.png
+Saved → ./graphs/analysis/rerun/ablation/s533_graph_vs_graphtextbook_per_model.png
+  [SKIP] No domain data for s533_graph_vs_graphtextbook
+  BioMistral-7B: helped=11 hurt=11 net=+0
+  Llama-3.1-8B: helped=16 hurt=13 net=+3
+  Qwen2.5-7B: helped=11 hurt=7 net=+4
+Saved → ./graphs/analysis/rerun/ablation/s533_graph_vs_graphtextbook_helped_hurt.png
+Saved → ./graphs/analysis/rerun/ablation/s533_graph_vs_graphtextbook_delta_heatmap.png
+
+============================================================
+5.3.4: Graph-based RAG vs Graph-based RAG (Textbook) vs Graph-based RAG (PubMed) vs MedHireRAG
+============================================================
+Saved → ./graphs/analysis/rerun/ablation/s534_corpus_ablation_accuracy.png
+Saved → ./graphs/analysis/rerun/ablation/s534_corpus_ablation_per_model.png
+  [SKIP] No domain data for s534_corpus_ablation
+Saved → ./graphs/analysis/rerun/ablation/s534_corpus_ablation_delta_heatmap.png
+  BioMistral-7B: helped=14 hurt=9 net=+5
+  Llama-3.1-8B: helped=17 hurt=10 net=+7
+  Qwen2.5-7B: helped=13 hurt=5 net=+8
+Saved → ./graphs/analysis/rerun/ablation/s534_corpus_ablation_kg_vs_medhirerag_helped_hurt.png
+  BioMistral-7B: helped=4 hurt=6 net=-2
+  Llama-3.1-8B: helped=3 hurt=5 net=-2
+  Qwen2.5-7B: helped=5 hurt=2 net=+3
+Saved → ./graphs/analysis/rerun/ablation/s534_corpus_ablation_kg_vs_medhirerag_helped_hurt.png
+  BioMistral-7B: helped=12 hurt=7 net=+5
+  Llama-3.1-8B: helped=11 hurt=7 net=+4
+  Qwen2.5-7B: helped=9 hurt=5 net=+4
+Saved → ./graphs/analysis/rerun/ablation/s534_corpus_ablation_kg_vs_medhirerag_helped_hurt.png
+
+============================================================
+OVERALL PROGRESSION
+============================================================
+  BioMistral-7B: Raw=41.5% → MedRAG=42.0% → Graph-based RAG=44.5% → Graph-based RAG (Textbook)=48.0% → Graph-based RAG (PubMed)=44.5% → MedHireRAG=47.0%
+  Llama-3.1-8B: Raw=60.0% → MedRAG=54.0% → Graph-based RAG=53.0% → Graph-based RAG (Textbook)=57.5% → Graph-based RAG (PubMed)=54.5% → MedHireRAG=56.5%
+  Qwen2.5-7B: Raw=58.5% → MedRAG=56.0% → Graph-based RAG=54.5% → Graph-based RAG (Textbook)=57.0% → Graph-based RAG (PubMed)=56.5% → MedHireRAG=58.5%
+Saved → ./graphs/analysis/rerun/ablation/00_overall_progression.png
+
+============================================================
+RAW MODEL PERFORMANCE
+============================================================
+Saved → ./graphs/analysis/rerun/ablation/raw_model_accuracy.png
+
+============================================================
+RAW MODEL vs MEDRAG
+============================================================
+Saved → ./graphs/analysis/rerun/ablation/raw_vs_medrag_accuracy.png
+Saved → ./graphs/analysis/rerun/ablation/raw_vs_medrag_per_model.png
+  [SKIP] No domain data for raw_vs_medrag
+Saved → ./graphs/analysis/rerun/ablation/raw_vs_medrag_delta_heatmap.png
+  BioMistral-7B: helped=6 hurt=5 net=+1
+  Llama-3.1-8B: helped=6 hurt=18 net=-12
+  Qwen2.5-7B: helped=4 hurt=9 net=-5
+Saved → ./graphs/analysis/rerun/ablation/raw_vs_medrag_helped_hurt.png
+
+============================================================
+SUMMARY TABLE
+============================================================
+
+Model        Raw          MedRAG       Graph-based RAG Graph-based RAG (Textbook) Graph-based RAG (PubMed) MedHireRAG  
+BioMistral-7B 41.5         42.0         44.5         48.0         44.5         47.0        
+Llama-3.1-8B 60.0         54.0         53.0         57.5         54.5         56.5        
+Qwen2.5-7B   58.5         56.0         54.5         57.0         56.5         58.5        

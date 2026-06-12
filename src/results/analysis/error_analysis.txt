@@ -1,125 +1,546 @@
-============================================================
-ERROR ANALYSIS: RAG HELPS vs HURTS vs NO CHANGE
-============================================================
 
-========================================
-Model: BioMistral
-========================================
-  Total questions:  200
-  RAG helped:        21 (10.5%)
-  RAG hurt:           8 (4.0%)
-  Both correct:      76 (38.0%)
-  Both wrong:        95 (47.5%)
-  Net RAG effect:   +13 questions
+======================================================================
+MODEL: Llama-3.1-8B
+======================================================================
+Raw columns: ['id', 'question', 'ground_truth', 'raw_answer', 'model_answer', 'is_correct']
+RAG columns: ['id', 'question', 'ground_truth', 'raw_answer', 'model_answer', 'is_correct']
 
-  Domain breakdown — RAG helped:
-    Disorders                      18
-    Anatomy                        3
+Helped: 11, Hurt: 14, Net: -3
 
-  Domain breakdown — RAG hurt:
-    Disorders                      8
+--- HURT CASES (correct without RAG, wrong with RAG) ---
 
-  Sample questions where RAG HELPED (BioMistral):
-    Q: Two weeks after undergoing an emergency cardiac catherization with stenting for unstable angina pect...
-    Domain: Disorders
+[HURT 1] ID: 21
+Question: A 3-month-old infant is brought to her pediatrician because she coughs and seems to have difficulty breathing while feeding. In addition, she seems to have less energy compared to other babies and appears listless throughout the day. She was born by cesarean section to a G1P1 woman with no prior medical history and had a normal APGAR score at birth. Her parents say that she has never been observed
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.90
+Confidence:     Very High
+--------------------------------------------------
 
-    Q: A 20-year-old man comes to the physician because of worsening gait unsteadiness and bilateral hearin...
-    Domain: Disorders
+[HURT 2] ID: 37
+Question: A 3-month-old boy presents to his pediatrician with persistent diarrhea, oral candidiasis, and signs and symptoms suggestive of respiratory syncytial virus (RSV) pneumonia. His weight is in the 10th percentile. He is being evaluated for an immunodeficiency disease. Laboratory results for the HIV are negative by PCR. Which of the following is the most likely cause of these findings in this patient?
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.60
+Confidence:     Medium
+--------------------------------------------------
 
-    Q: A 62-year-old patient has been hospitalized for a week due to a stroke. One week into the hospitaliz...
-    Domain: Anatomy
+[HURT 3] ID: 63
+Question: An 80-year-old man is transferred from a step-down unit to a med-surg floor in the hospital. He had undergone a successful hernia surgery 14 hours ago. Before the surgery, he was pre-treated with atropine, scopolamine, and morphine and recovered well in the PACU after the surgery. There were no complications in the step-down unit and the patient continued to recover. On the med-surg floor, his tem
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.50
+Confidence:     Medium
+--------------------------------------------------
 
+[HURT 4] ID: 101
+Question: A 65-year old man presents with gradually worsening rigidity of his arms and legs and slowness in performing tasks. He says he has also noticed hand tremors, which increase at rest and decrease with focused movements. On examination, the patient does not swing his arms while walking and has a shortened, shuffling gait. An antiviral drug is prescribed which alleviates the patient’s symptoms. Which 
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.80
+Confidence:     High
+--------------------------------------------------
 
-  Sample questions where RAG HURT (BioMistral):
-    Q: A 65-year-old man is brought to the emergency department 30 minutes after the onset of acute chest p...
-    Domain: Disorders
+[HURT 5] ID: 107
+Question: A 29-year-old man comes in for evaluation of infertility. He has been trying to conceive for over 2 years with his wife and previous evaluation of his wife's fertility revealed no abnormalities. Physical exam reveals a tall man with long extremities, sparse body hair, gynecomastia, and small testes. Laboratory studies reveal increased serum follicle-stimulating hormone concentration and an increas
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
 
-    Q: A 46-year-old man is brought to the emergency department for evaluation of altered mental status. He...
-    Domain: Disorders
+[HURT 6] ID: 122
+Question: A 28-year-old gravida 1 at 32 weeks gestation is evaluated for an abnormal ultrasound that showed fetal microcephaly. Early in the 1st trimester, she had fevers and headaches for 1 week. She also experienced myalgias, arthralgias, and a pruritic maculopapular rash. The symptoms resolved without any medications. A week prior to her symptoms, she had traveled to Brazil where she spent most of the ev
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.70
+Confidence:     High
+--------------------------------------------------
 
-    Q: A 22-year-old woman is brought to the emergency department because of a 2-day history of fever, inte...
-    Domain: Disorders
+[HURT 7] ID: 123
+Question: A 41-year-old G3P1 woman presents with a sudden onset throbbing headache, tinnitus, nausea, and left-sided weakness. Patient has no significant past medical history and takes no medications.  Her last two pregnancies ended with spontaneous abortions before the 10th week of gestation. No significant family history. Her vital signs include: blood pressure 130/90 mm Hg, pulse 58/min, respiratory rate
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.30
+Confidence:     Low
+--------------------------------------------------
 
+[HURT 8] ID: 131
+Question: A 43-year-old man comes to the emergency department with nausea, abdominal discomfort, diarrhea, and progressive perioral numbness for the past 24 hours. 3 days ago, he underwent a total thyroidectomy for treatment of papillary thyroid cancer. His only medication is a multivitamin supplement. He appears fatigued. While measuring the patient's blood pressure, the nurse observes a spasm in the patie
+Ground truth: B
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.70
+Confidence:     High
+--------------------------------------------------
 
-========================================
-Model: Llama
-========================================
-  Total questions:  200
-  RAG helped:        10 (5.0%)
-  RAG hurt:          15 (7.5%)
-  Both correct:     105 (52.5%)
-  Both wrong:        70 (35.0%)
-  Net RAG effect:   -5 questions
+[HURT 9] ID: 132
+Question: A 68-year-old woman presents with left lower quadrant pain that worsens with defecation. She describes the pain as 'crampy'. She also says she has suffered from mild constipation for the past few years. The patient denies any recent weight change or urinary symptoms. Her last menstrual period was 16 years ago. Her body temperature is 37.8°C (100.0°F), pulse is 102/min, respiratory rate is 16/min, 
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.80
+Confidence:     High
+--------------------------------------------------
 
-  Domain breakdown — RAG helped:
-    Disorders                      9
-    Anatomy                        1
+[HURT 10] ID: 137
+Question: A 36-year-old woman comes to the clinic because of tearing and a foreign body sensation in her eyes bilaterally, which has gradually worsened over the last several weeks. She also notes having occasional palpitations, nervousness, sweating, and heat intolerance. Her past medical history is unremarkable. She reports a 20-pack-year smoking history and is currently a daily smoker. Physical examinatio
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.50
+Confidence:     Medium
+--------------------------------------------------
 
-  Domain breakdown — RAG hurt:
-    Disorders                      14
-    Procedures                     1
+--- HELPED CASES (wrong without RAG, correct with RAG) ---
 
-  Sample questions where RAG HELPED (Llama):
-    Q: A 67-year-old man with transitional cell carcinoma of the bladder comes to the physician because of ...
-    Domain: Disorders
+[HELPED 1] ID: 1
+Question: A 67-year-old man with transitional cell carcinoma of the bladder comes to the physician because of a 2-day history of ringing sensation in his ear. He received this first course of neoadjuvant chemotherapy 1 week ago. Pure tone audiometry shows a sensorineural hearing loss of 45 dB. The expected beneficial effect of the drug that caused this patient's symptoms is most likely due to which of the f
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.40
+Confidence:     Low
+--------------------------------------------------
 
-    Q: A 3-week-old male newborn is brought to the physician because of an inward turning of his left foref...
-    Domain: Anatomy
+[HELPED 2] ID: 29
+Question: A 3-week-old male newborn is brought to the physician because of an inward turning of his left forefoot. He was born at 38 weeks' gestation by cesarean section because of breech presentation. The pregnancy was complicated by oligohydramnios. Examination shows concavity of the medial border of the left foot with a skin crease just below the ball of the great toe. The lateral border of the left foot
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.60
+Confidence:     Medium
+--------------------------------------------------
 
-    Q: A 67-year-old male is seen by neurology after he was noticed to be speaking strangely by his family....
-    Domain: Disorders
+[HELPED 3] ID: 31
+Question: A 72-year-old woman is admitted to the intensive care unit for shortness of breath and palpitations. A cardiac catheterization is performed and measurements of the left ventricular volume and pressure at different points in the cardiac cycle are obtained. The patient's pressure-volume loop (gray) is shown with a normal pressure-volume loop (black) for comparison. Which of the following is the most
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.70
+Confidence:     High
+--------------------------------------------------
 
+[HELPED 4] ID: 39
+Question: A 67-year-old male is seen by neurology after he was noticed to be speaking strangely by his family. After acute treatment with tissue plasminogen activator (tPA), the patient is able to recover most of his speech. Subsequent neurologic exam finds that the patient is fluent while speaking and is able to comprehend both one and two step instructions. Noticeably the patient remains unable to complet
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.50
+Confidence:     Medium
+--------------------------------------------------
 
-  Sample questions where RAG HURT (Llama):
-    Q: A 23-year-old woman comes to the physician because she is embarrassed about the appearance of her na...
-    Domain: Disorders
+[HELPED 5] ID: 52
+Question: A 65-year-old man comes to the physician because of a 1-week history of yellowish discoloration of his skin and generalized pruritus. Examination shows jaundice of the skin and scleral icterus. Urinalysis shows an elevated concentration of bilirubin and a low concentration of urobilinogen. Which of the following is the most likely underlying cause of these findings?
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.90
+Confidence:     Very High
+--------------------------------------------------
 
-    Q: A 3-month-old infant is brought to her pediatrician because she coughs and seems to have difficulty ...
-    Domain: Disorders
+[HELPED 6] ID: 78
+Question: A newborn is found to be extremely cyanotic immediately after birth. He then develops progressive respiratory failure and is admitted to the neonatal ICU. A single loud S2 heart sound is appreciated as well as a machine-like murmur at the left upper sternal border. Radiography shows an enlarged "egg-shaped" heart. The newborn is then taken for a atrial septostomy to alleviate the condition pending
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
 
-    Q: A 67-year-old man who was diagnosed with arthritis 16 years ago presents with right knee swelling an...
-    Domain: Disorders
+[HELPED 7] ID: 84
+Question: A 30-year-old woman comes to the physician because she has been unable to conceive for 3 years. Analysis of her husband's semen has shown normal sperm counts during this time. The patient also reports episodic pelvic and back pain accompanied by painful diarrhea for 5 years. She has about one such episode on average per month for 4–6 days. She has taken ibuprofen for the pain, which has provided s
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.60
+Confidence:     Medium
+--------------------------------------------------
 
+[HELPED 8] ID: 106
+Question: A 50-year-old man presents to his primary care doctor following an inguinal hernia repair. The patient reports no pain in his lower abdomen or groin, no constipation, and states that he enjoys his usual diet. He denies any use of alcohol, tobacco, or illicit drugs. He has returned to work as a cruise ship attendant. Preoperative workup included chest radiography which demonstrated an opacification
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.40
+Confidence:     Low
+--------------------------------------------------
 
-========================================
-Model: Qwen
-========================================
-  Total questions:  200
-  RAG helped:        13 (6.5%)
-  RAG hurt:          12 (6.0%)
-  Both correct:     105 (52.5%)
-  Both wrong:        70 (35.0%)
-  Net RAG effect:   +1 questions
+[HELPED 9] ID: 116
+Question: A 16-year-old boy with a seizure disorder and cognitive delay is brought to the physician because of progressively worsening right lower extremity weakness for the past 6 months. He does not make eye contact and sits very close to his mother. Physical examination shows a grade 3/6 holosystolic murmur at the cardiac apex. Neurological examination shows decreased strength in the right lower leg with
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.50
+Confidence:     Medium
+--------------------------------------------------
 
-  Domain breakdown — RAG helped:
-    Disorders                      12
-    Procedures                     1
+[HELPED 10] ID: 170
+Question: A 25-year-old man presents to the emergency department with altered mental status. He was found down in the middle of the street. His past medical history is unknown. His temperature is 99.0°F (37.2°C), blood pressure is 104/64 mmHg, pulse is 70/min, respirations are 5/min, and oxygen saturation is 91% on room air. The patient is being resuscitated in the trauma bay. Which of the following was mos
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.50
+Confidence:     Medium
+--------------------------------------------------
 
-  Domain breakdown — RAG hurt:
-    Disorders                      11
-    Anatomy                        1
+Question length analysis:
+  Helped mean length: 101.2 words
+  Hurt mean length:   110.6 words
+  Overall mean:       115.2 words
 
-  Sample questions where RAG HELPED (Qwen):
-    Q: A 72-year-old woman is brought to the physician by her daughter because of a 6-month history of wors...
-    Domain: Disorders
+======================================================================
+MODEL: BioMistral-7B
+======================================================================
+Raw columns: ['id', 'question', 'ground_truth', 'raw_answer', 'model_answer', 'is_correct']
+RAG columns: ['id', 'question', 'ground_truth', 'raw_answer', 'model_answer', 'is_correct']
 
-    Q: A 59-year-old man is evaluated for progressive joint pain. There is swelling and tenderness over the...
-    Domain: Disorders
+Helped: 16, Hurt: 5, Net: +11
 
-    Q: A newborn is found to be extremely cyanotic immediately after birth. He then develops progressive re...
-    Domain: Disorders
+--- HURT CASES (correct without RAG, wrong with RAG) ---
 
+[HURT 1] ID: 1
+Question: A 67-year-old man with transitional cell carcinoma of the bladder comes to the physician because of a 2-day history of ringing sensation in his ear. He received this first course of neoadjuvant chemotherapy 1 week ago. Pure tone audiometry shows a sensorineural hearing loss of 45 dB. The expected beneficial effect of the drug that caused this patient's symptoms is most likely due to which of the f
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.55
+Confidence:     Medium
+--------------------------------------------------
 
-  Sample questions where RAG HURT (Qwen):
-    Q: A 7-year-old boy is brought to his pediatrician’s office for a follow-up visit. He was diagnosed wit...
-    Domain: Disorders
+[HURT 2] ID: 35
+Question: A 67-year-old man who was diagnosed with arthritis 16 years ago presents with right knee swelling and pain. His left knee was swollen a few weeks ago, but now with both joints affected, he has difficulty walking and feels frustrated. He also has back pain which makes it extremely difficult to move around and be active during the day. He says his pain significantly improves with rest. He also suffe
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.50
+Confidence:     Medium
+--------------------------------------------------
 
-    Q: A 72-year-old woman is admitted to the intensive care unit for shortness of breath and palpitations....
-    Domain: Disorders
+[HURT 3] ID: 43
+Question: A healthy 23-year-old male is undergoing an exercise stress test as part of his physiology class. If blood were to be sampled at different locations before and after the stress test, which area of the body would contain the lowest oxygen content at both time points?
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.40
+Confidence:     Low
+--------------------------------------------------
 
-    Q: A 2-year-old boy is brought to the physician for evaluation of pallor and increasing lethargy for 2 ...
-    Domain: Disorders
+[HURT 4] ID: 102
+Question: The patient is given prophylactic labetalol and magnesium sulfate. Examination shows absent deep tendon reflexes bilaterally. Which of the following is the most appropriate next step in the management of this patient?
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.40
+Confidence:     Low
+--------------------------------------------------
 
+[HURT 5] ID: 155
+Question: A 19-year-old man is brought to the emergency department by ambulance because of unusual behavior that started 3 hours ago while he was at a party. He has a history of major depressive disorder and seasonal allergies. His mother has a history of anxiety. He drinks 5 beers on the weekends. Current medications include amitriptyline and diphenhydramine. The patient does not respond to questions and r
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.50
+Confidence:     Medium
+--------------------------------------------------
 
-Saved → ./graphs/analysis/error_rag_effect_breakdown.png
-Saved → ./graphs/analysis/error_domain_helped_hurt.png
+--- HELPED CASES (wrong without RAG, correct with RAG) ---
+
+[HELPED 1] ID: 12
+Question: A 20-year-old man comes to the physician because of worsening gait unsteadiness and bilateral hearing loss for 1 month. He has had intermittent tingling sensations on both cheeks over this time period. He has no history of serious medical illness and takes no medications. Audiometry shows bilateral sensorineural hearing loss. Genetic evaluation shows a mutation of a tumor suppressor gene on chromo
+Ground truth: B
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.55
+Confidence:     Medium
+--------------------------------------------------
+
+[HELPED 2] ID: 15
+Question: A 59-year-old overweight woman presents to the urgent care clinic with the complaint of severe abdominal pain for the past 2 hours. She also complains of a dull pain in her back with nausea and vomiting several times. Her pain has no relation with food. Her past medical history is significant for recurrent abdominal pain due to cholelithiasis. Her father died at the age of 60 with some form of abd
+Ground truth: B
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.85
+Confidence:     High
+--------------------------------------------------
+
+[HELPED 3] ID: 45
+Question: A man is brought into the emergency department by the police department. The officer state that the man has been arrested multiple times for public alcohol intoxication, but recently became homeless. On exam, the man is behaving erratically. His vitals are all within normal limits. He appears confused and has a slurred speech. On gait exam, the patient is ataxic and cannot stand without support fo
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.45
+Confidence:     Low
+--------------------------------------------------
+
+[HELPED 4] ID: 48
+Question: A 29-year-old primigravid woman at 35 weeks' gestation is admitted to the hospital in labor. She has no history of serious medical illness. She has had an uncomplicated pregnancy. Her last ultrasound at 22 weeks' gestation was normal. On admission, fetal heartbeats cannot be detected by fetal doppler monitor. Ultrasound shows decreased amniotic fluid levels and no evidence of fetal movement, respi
+Ground truth: B
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.35
+Confidence:     Low
+--------------------------------------------------
+
+[HELPED 5] ID: 60
+Question: A 14-year-old girl is brought to the physician by her father because of fever, chills, abdominal pain, and profuse non-bloody diarrhea. Her symptoms began one week ago, when she had several days of low-grade fever and constipation. She returned from Indonesia 2 weeks ago, where she spent the summer with her grandparents. Her temperature is 39.3°C (102.8°F). Examination shows diffuse abdominal tend
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.80
+Confidence:     High
+--------------------------------------------------
+
+[HELPED 6] ID: 72
+Question: A 56-year-old man presents to the emergency department for progressively worsening fatigue, malaise, fever, and abdominal pain. He reports that his symptoms began approximately 1 week ago and he has noticed episodes of diarrhea. He recently started melatonin and magnesium supplementation in hopes of improving his sleep. Medical history is significant for alcohol use disorder that required multiple
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.65
+Confidence:     Medium
+--------------------------------------------------
+
+[HELPED 7] ID: 78
+Question: A newborn is found to be extremely cyanotic immediately after birth. He then develops progressive respiratory failure and is admitted to the neonatal ICU. A single loud S2 heart sound is appreciated as well as a machine-like murmur at the left upper sternal border. Radiography shows an enlarged "egg-shaped" heart. The newborn is then taken for a atrial septostomy to alleviate the condition pending
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.75
+Confidence:     High
+--------------------------------------------------
+
+[HELPED 8] ID: 84
+Question: A 30-year-old woman comes to the physician because she has been unable to conceive for 3 years. Analysis of her husband's semen has shown normal sperm counts during this time. The patient also reports episodic pelvic and back pain accompanied by painful diarrhea for 5 years. She has about one such episode on average per month for 4–6 days. She has taken ibuprofen for the pain, which has provided s
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.80
+Confidence:     High
+--------------------------------------------------
+
+[HELPED 9] ID: 90
+Question: A 32-year-old woman comes to the physician because of a 3-week history of intermittent loose stools and a 1.2-kg (2.6-lb) weight loss. She immigrated to the US from Uganda 6 weeks ago. Abdominal examination shows diffuse tenderness with no guarding or rebound. The liver is firm and palpable 3 cm below the right costal margin, and the spleen is palpable just below the left costal margin. Her leukoc
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.55
+Confidence:     Medium
+--------------------------------------------------
+
+[HELPED 10] ID: 95
+Question: A 40-year-old man presents to his primary-care doctor for a follow-up of his hypertension. He is asymptomatic at his office visit and denies any new complaints. He has a 10-year history of hypertension that remains poorly controlled on maximum doses of lisinopril, hydrochlorothiazide, and amlodipine. His past medical history is otherwise unremarkable. He has no smoking history, drinks alcohol occa
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.80
+Confidence:     High
+--------------------------------------------------
+
+Question length analysis:
+  Helped mean length: 107.8 words
+  Hurt mean length:   79.8 words
+  Overall mean:       115.2 words
+
+======================================================================
+MODEL: Qwen2.5-7B
+======================================================================
+Raw columns: ['id', 'question', 'ground_truth', 'raw_answer', 'model_answer', 'is_correct']
+RAG columns: ['id', 'question', 'ground_truth', 'raw_answer', 'model_answer', 'is_correct']
+
+Helped: 12, Hurt: 12, Net: +0
+
+--- HURT CASES (correct without RAG, wrong with RAG) ---
+
+[HURT 1] ID: 16
+Question: A 7-year-old boy is brought to his pediatrician’s office for a follow-up visit. He was diagnosed with asthma when he was 3 years old and has since been on treatment for the condition. He is currently on a β-agonist inhaler because of exacerbation of his symptoms. He has observed that his symptoms are more prominent in springtime, especially when the new flowers are blooming. His mother has a backy
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HURT 2] ID: 31
+Question: A 72-year-old woman is admitted to the intensive care unit for shortness of breath and palpitations. A cardiac catheterization is performed and measurements of the left ventricular volume and pressure at different points in the cardiac cycle are obtained. The patient's pressure-volume loop (gray) is shown with a normal pressure-volume loop (black) for comparison. Which of the following is the most
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HURT 3] ID: 58
+Question: A 2-year-old boy is brought to the physician for evaluation of pallor and increasing lethargy for 2 days. One week ago, he experienced abdominal pain, vomiting, and bloody diarrhea that have since subsided. The patient's father states that they returned early from a 6-week roadtrip in Mexico because of these symptoms. His parents have been giving him oral rehydration solution. His immunizations ar
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HURT 4] ID: 64
+Question: A healthy 19-year-old man presents to his primary care provider complaining of painless “blisters” in his mouth. He reports that he noticed a white film on his tongue and the sides of his mouth 2 days ago while brushing his teeth. The film was easily brushed off. He also complains of a bitter metallic taste in his mouth but otherwise denies pain, burning, dysphagia, or hoarseness. He is otherwise 
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.70
+Confidence:     High
+--------------------------------------------------
+
+[HURT 5] ID: 69
+Question: A 65-year-old man with a history of hypertension, obesity, and alcoholic cirrhosis is seen in clinic for follow-up. He feels well and currently drinks 5 glasses of wine each night. Medications include atenolol and lisinopril. On physical exam, temperature is 98.1 deg F (36.7 deg C), blood pressure is 151/82 mmHg, pulse is 71/min, and respirations are 14/min. He has spider angiomata on his chest; n
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.80
+Confidence:     High
+--------------------------------------------------
+
+[HURT 6] ID: 71
+Question: A 27-year-old man presents to the emergency department after a motor vehicle collision. The patient was the front seat unrestrained driver in a head on collision. The patient’s echocardiogram (ECG) is notable only for sinus tachycardia. His temperature is 99.5°F (37.5°C), blood pressure is 107/58 mmHg, pulse is 120/min, respirations are 17/min, and oxygen saturation is 98% on room air. The patient
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HURT 7] ID: 104
+Question: A 66-year-old male presents to his primary care physician to discuss his increasing shortness of breathover the last 3 months. He notes that this is particularly obvious when he is mowing his lawn or climbing the stairs in his home. His past medical history is significant for hypertension that is well-controlled with lisinopril. His vital signs are as follows: T 37.6 C, HR 88, BP 136/58, RR 18, Sp
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HURT 8] ID: 114
+Question: A 41-year-old man presents to the emergency department with a 6-hour history of muscle cramping, decreased appetite, and diarrhea. He says that these symptoms came on rapidly but does not recall anything that may have triggered the episode. He has never experienced these symptoms before. His past medical history is significant for obesity, sleep apnea, and type 2 diabetes that is well controlled o
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HURT 9] ID: 135
+Question: A medical researcher is studying the physiology of the immune system in order to better understand the effects of HIV on patients. He isolates a group of cells that are shown by flow cytometry to be positive for the cell surface marker CD8. He then mixes this cell population with a group of infected cells, crosslinks extracellular interactions, and immunoprecipitates the CD8 protein. He identifies
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.70
+Confidence:     High
+--------------------------------------------------
+
+[HURT 10] ID: 155
+Question: A 19-year-old man is brought to the emergency department by ambulance because of unusual behavior that started 3 hours ago while he was at a party. He has a history of major depressive disorder and seasonal allergies. His mother has a history of anxiety. He drinks 5 beers on the weekends. Current medications include amitriptyline and diphenhydramine. The patient does not respond to questions and r
+Ground truth: E
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.60
+Confidence:     Medium
+--------------------------------------------------
+
+--- HELPED CASES (wrong without RAG, correct with RAG) ---
+
+[HELPED 1] ID: 53
+Question: A 72-year-old woman is brought to the physician by her daughter because of a 6-month history of worsening short-term memory deficits and social withdrawal. Treatment with galantamine is initiated. Two weeks later, the patient develops vomiting, mild crampy abdominal pain, and watery, nonbloody diarrhea. Which of the following is the most appropriate pharmacotherapy?
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 2] ID: 77
+Question: A 59-year-old man is evaluated for progressive joint pain. There is swelling and tenderness over the first, second, and third metacarpophalangeal joints of both hands. His hand radiograph is shown. He has had diabetes mellitus for 2 years which is not well controlled with medications. Lab studies show a transferrin saturation of 88% and serum ferritin of 1,200 ng/mL. Which of the following best re
+Ground truth: B
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 3] ID: 78
+Question: A newborn is found to be extremely cyanotic immediately after birth. He then develops progressive respiratory failure and is admitted to the neonatal ICU. A single loud S2 heart sound is appreciated as well as a machine-like murmur at the left upper sternal border. Radiography shows an enlarged "egg-shaped" heart. The newborn is then taken for a atrial septostomy to alleviate the condition pending
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 4] ID: 95
+Question: A 40-year-old man presents to his primary-care doctor for a follow-up of his hypertension. He is asymptomatic at his office visit and denies any new complaints. He has a 10-year history of hypertension that remains poorly controlled on maximum doses of lisinopril, hydrochlorothiazide, and amlodipine. His past medical history is otherwise unremarkable. He has no smoking history, drinks alcohol occa
+Ground truth: D
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 5] ID: 102
+Question: The patient is given prophylactic labetalol and magnesium sulfate. Examination shows absent deep tendon reflexes bilaterally. Which of the following is the most appropriate next step in the management of this patient?
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 6] ID: 109
+Question: A 28-year-old man comes to the physician because of diarrhea and crampy abdominal pain for 5 weeks. He has had up to 4 bowel movements per day. Several times he noticed mucoid strings with the stool. He has abdominal bloating. Over the past month, has had a 3.2-kg (7-lb) weight loss. He has not had fever, cough, or bloody stools. He had a painful rash on his lower extremity 3 weeks ago that resolv
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 7] ID: 129
+Question: A 41-year-old man presents to the emergency room with sudden onset of blurry vision one hour ago. He states that he was resting at home when he noticed he had difficulty reading. Currently, he is also starting to see double, and is seeing two images on top of each other. Earlier today, he felt ill with nausea, vomiting, and watery diarrhea, which he attributed to food he had eaten at a picnic the 
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 0.60
+Confidence:     Medium
+--------------------------------------------------
+
+[HELPED 8] ID: 133
+Question: A 67-year-old man presents to his primary care physician for erectile dysfunction. He states that for the past month he has been unable to engage in sexual intercourse with his wife despite having appropriate sexual desire. He also endorses deep and burning buttock and hip pain when walking, which is relieved by rest. The patient states that he does not have erections at night or in the morning. H
+Ground truth: B
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 9] ID: 153
+Question: A 71-year-old man comes to the physician for a routine visit. His psychiatric history is significant for major depression with psychotic features. He was diagnosed after his wife died from pancreatic cancer four years earlier. Three years ago, he deliberately overdosed on sleeping pills. Today, he feels well but still wakes up frequently at night and cannot sleep through the night. He lives alone 
+Ground truth: A
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+[HELPED 10] ID: 159
+Question: A 9-year-old boy is brought to a physician by his mother for evaluation of generalized weakness, increased urination, and increased thirst. The mother mentions that her boy is always tired, and seems to be getting worse. He prefers watching television rather than going out and playing with other kids. Furthermore, he has had frequent episodes of constipation since birth. Except for frequent cravin
+Ground truth: C
+Raw answer:   
+RAG answer:   
+UQ consistency: 1.00
+Confidence:     Very High
+--------------------------------------------------
+
+Question length analysis:
+  Helped mean length: 113.0 words
+  Hurt mean length:   122.8 words
+  Overall mean:       115.2 words

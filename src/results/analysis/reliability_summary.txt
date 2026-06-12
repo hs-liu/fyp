@@ -1,0 +1,31 @@
+============================================================
+RELIABILITY METRICS — MedHireRAG vs MedHireUQRAG
+(MedHireUQRAG evaluated on majority-vote predictions)
+============================================================
+
+--- BioMistral-7B ---
+  MedHireRAG (greedy): 47.0%
+  MedHireUQRAG (majority, best T=0.7):
+    ECE:            0.2111
+    AUC:            0.6353
+    Full acc:       46.5%
+    VH accuracy:    64.6% (24.0% coverage)
+    High+ accuracy: 54.2% (53.5% coverage)
+
+--- Llama-3.1-8B ---
+  MedHireRAG (greedy): 56.5%
+  MedHireUQRAG (majority, best T=0.7):
+    ECE:            0.1582
+    AUC:            0.7091
+    Full acc:       55.5%
+    VH accuracy:    71.4% (56.0% coverage)
+    High+ accuracy: 64.6% (73.5% coverage)
+
+--- Qwen2.5-7B ---
+  MedHireRAG (greedy): 58.5%
+  MedHireUQRAG (majority, best T=0.7):
+    ECE:            0.0390
+    AUC:            0.5597
+    Full acc:       58.5%
+    VH accuracy:    61.6% (92.5% coverage)
+    High+ accuracy: 59.2% (98.0% coverage)

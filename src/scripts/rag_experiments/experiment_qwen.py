@@ -10,7 +10,7 @@ from src.scripts.rag.retrieval_utils import get_context, build_rag_prompt, load_
 
 N_TEST          = 200
 MAX_CHUNK_CHARS = 400
-RESULTS_DIR     = "./results"
+RESULTS_DIR     = "./results/rerun"
 CHECKPOINT_PATH = f"{RESULTS_DIR}/results_qwen.csv"
 SUMMARY_PATH    = f"{RESULTS_DIR}/more_test_summary.txt"
 os.makedirs(RESULTS_DIR, exist_ok=True)
